@@ -21,24 +21,30 @@
 
 ## 阶段与验收边界
 
-用户已明确的 Stage 1–8、11–12 编号保持不变。Stage 9、10、13 只给候选位置，待后续任务确定，不把建议描述成已经授权实施。
+用户已明确以下 Stage 0–13 正式路线；本次只校正计划，不实施 Stage 1–13。
+
+```text
+Stage 0: PASS
+Governance Setup: PASS
+Stage 1-13: PENDING
+```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
 | --- | --- | --- | --- |
-| 0（本次） | 真实架构、风险、教育遗留、配置 Smoke 基线 | 原目录 | 逐项证据；未验证项明确 SKIPPED；单提交 |
-| 1 | YAML sidecar Metadata + Pydantic 验证 | Processor 前的元数据适配，复用原 Loader | 合法/非法字段、缺失 sidecar、文件映射、错误定位；不创建最终 Milvus Schema |
-| 2 | 文件 SHA256、规范化 Child SHA256、身份合约 | process_documents / add_documents | 相同文件/内容稳定身份；source 目录不碰撞；切分策略变更有可追踪版本 |
-| 3 | 最终 Manufacturing Milvus Schema/Index | VectorStore adapter | 新旧集合隔离、字段/索引确认、Schema 版本与迁移回滚 |
-| 4 | Version Manifest、增量 Upsert、差集 Delete | 离线 orchestration | V1 A/B/C → V2 A/B/D 无 stale C；失败后可重试恢复；文档删除/版本切换 |
-| 5 | 制造业 LLM Intent Router | 原分类与策略边界 | 型号/报警/维保意图、实体抽取与兜底；不继承教育“通用知识”绕检索的假设 |
-| 6 | Metadata Filter Pipeline | hybrid_search source expr | 型号/制造商/知识类型隔离，表达式安全构造，未抽到字段的策略 |
-| 7 | Parent Aggregation | _doc_from_hit / _get_unique_parent_docs | parent_id、metadata、score、child_hit_count、排序稳定；子查询统一融合 |
-| 8 | BM25 工业术语与阈值 | mysql_qa.retrieval / preprocess | 冷启动/热启动一致，型号/报警码不破坏，语料规模影响可测，source 过滤 |
-| 9（候选） | 工业生成/引用与不足知识处理 | prompts/new_rag_system | 标出来源/版本；无上下文时不编造维修步骤 |
-| 10（候选） | 多轮设备上下文与运维业务整合 | conversations / history | 同一会话换型号时不串知识，保留 provenance |
-| 11 | Redis TTL/版本、FastAPI 生命周期/并发、HTTP 完整答案、SSE | app/new_main/RedisClient | 不重复生成；取消/错误/流完成；真实依赖 readiness；旧 WebSocket 兼容方案 |
-| 12 | Hit@K / MRR / RAGAS 与参数选择 | 独立 retrieval evaluator | 带期望 Document/Child/Parent ID 的标注集；隔离型号/报警；留原始召回与配置快照 |
-| 13（候选） | 部署、运行文档与发布检查 | Docker/Compose | 完整外部服务约定、资源/模型/构建上下文隔离、可复现启动/停止 |
+| 0 | Project Baseline Audit & Manufacturing Migration Preparation | 原目录 | 逐项证据；未验证项明确 SKIPPED；单提交 |
+| 1 | Manufacturing Document Schema + YAML Metadata | Processor 前的元数据适配，复用原 Loader | 合法/非法字段、缺失 sidecar、文件映射、错误定位；不创建最终 Milvus Schema |
+| 2 | Parent-Child + Document / Child SHA256 Fingerprints | process_documents / add_documents | 相同文件/内容稳定身份；source 目录不碰撞；切分策略变更有可追踪版本 |
+| 3 | Milvus Manufacturing Schema | VectorStore adapter | 新旧集合隔离、字段/索引确认、Schema 版本与迁移回滚 |
+| 4 | Versioned Ingestion + Incremental Upsert + Delta Delete | 离线 orchestration | V1 A/B/C → V2 A/B/D 无 stale C；失败后可重试恢复；文档删除/版本切换 |
+| 5 | Query Analysis: Intent Recognition + Entity Extraction | 原分类与策略边界 | 型号/报警/维保意图、实体抽取与兜底；不继承教育“通用知识”绕检索的假设 |
+| 6 | Metadata Filter + Hybrid Retrieval | hybrid_search source expr | 型号/制造商/知识类型隔离，表达式安全构造，未抽到字段的策略 |
+| 7 | Parent Aggregation + Reranker Refactor | _doc_from_hit / _get_unique_parent_docs | parent_id、metadata、score、child_hit_count、排序稳定；子查询统一融合 |
+| 8 | Alarm Code / FAQ / BM25 Fast Path | mysql_qa.retrieval / preprocess | 冷启动/热启动一致，型号/报警码不破坏，语料规模影响可测，source 过滤 |
+| 9 | Query Rewrite + Retrieval Strategy Governance | query_classifier / strategy_selector / new_rag_system | 改写与策略有边界、可观测、可回退，避免改写丢失型号/报警实体 |
+| 10 | Answer Generation + Citations + Evidence Guard | prompts / new_rag_system | 答案来源、版本引用与证据约束；缺知识时不编造处理步骤 |
+| 11 | FastAPI + SSE + Redis Cache Governance | app/new_main/RedisClient | 不重复生成；取消/错误/流完成；真实依赖 readiness；旧 WebSocket 兼容方案 |
+| 12 | Retrieval Evaluation + Hit@K + MRR + RAGAS | 独立 retrieval evaluator | 带期望 Document/Child/Parent ID 的标注集；隔离型号/报警；留原始召回与配置快照 |
+| 13 | Docker + Integration Tests + README + Final Acceptance | Docker / Compose / README / 现有测试 | 完整依赖约定、集成测试、启动/停止与最终验收 |
 
 Dense/Sparse 权重保持 `0.8 / 0.3`；Dense param 的 nprobe 字面值保持 10。Parent/Child 本地示例与 Docker 当前有配置漂移。此阶段不选择“最佳值”，Stage 12 用制造业检索回放决定。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
 

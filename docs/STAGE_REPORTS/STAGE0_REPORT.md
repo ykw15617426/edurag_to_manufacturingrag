@@ -4,7 +4,13 @@
 
 ## Status
 
-**PARTIAL**。源代码审计、渐进迁移边界、制造业术语设计、遗留清单、低风险调整及一个 Stage 0 提交已准备。实际 Smoke：7 PASS、9 SKIPPED、0 FAIL。缺依赖阻止了核心 RAG/FastAPI 的真实 import 与初始化验证；不能声称完整 RAG 系统已稳定运行。
+```text
+Stage 0 Task Completion: PASS
+Historical Smoke Tests: 7 passed / 9 skipped / 0 failed
+Full Integration Readiness: NO
+```
+
+**技术验证 PARTIAL**。源代码审计、渐进迁移边界、制造业术语设计、遗留清单、低风险调整及一个 Stage 0 提交已准备。实际 Smoke：7 PASS、9 SKIPPED、0 FAIL。缺依赖阻止了核心 RAG/FastAPI 的真实 import 与初始化验证；不能声称完整 RAG 系统已稳定运行。
 
 ## 1. Repository Baseline
 
@@ -48,11 +54,11 @@ rag_main --data-processing + 明确 data 根目录
 → 4096 字符截断 → 同步 LLM stream → WebSocket token 响应 → 写历史
 ```
 
-HTTP 仅 next 一次，遇 RAG 返回 WebSocket 指示，网页随后重发同一 query；不能认为 HTTP 完整执行上述链路。完整 Schema、Index、字段和端点说明见 [CURRENT_ARCHITECTURE.md](CURRENT_ARCHITECTURE.md)。
+HTTP 仅 next 一次，遇 RAG 返回 WebSocket 指示，网页随后重发同一 query；不能认为 HTTP 完整执行上述链路。完整 Schema、Index、字段和端点说明见 [CURRENT_ARCHITECTURE.md](../CURRENT_ARCHITECTURE.md)。
 
 ## 3. Existing Capabilities
 
-完整 `Capability | Status | File | Notes` 矩阵见 [架构文档第 4 节](CURRENT_ARCHITECTURE.md#4-已有能力矩阵)，包含全部要求项和 Missing 能力。状态为代码事实：Implemented 不代表本次集成验证 PASS；Partial 为路径存在但有实际缺口；Legacy 为旧入口/教学路径；Missing 为当前主系统无实现。
+完整 `Capability | Status | File | Notes` 矩阵见 [架构文档第 4 节](../CURRENT_ARCHITECTURE.md#4-已有能力矩阵)，包含全部要求项和 Missing 能力。状态为代码事实：Implemented 不代表本次集成验证 PASS；Partial 为路径存在但有实际缺口；Legacy 为旧入口/教学路径；Missing 为当前主系统无实现。
 
 可复用：多格式解析/OCR、两级切分、BGE-M3 Dense/Sparse、Milvus Hybrid、两类索引、WeightedRanker、CrossEncoder、BM25/Redis/MySQL、策略增强、FastAPI/WebSocket。教育二分类、Parent Aggregation、增量入库、RAGAS/Compose 均有缺口。SSE、制造业 YAML/Pydantic Metadata、SHA256、Version Manifest、差集删除、Hit@K/MRR 尚未实现。
 
@@ -100,7 +106,7 @@ VectorStore 使用 `BGEM3EmbeddingFunction(use_f16=False)`，demo 写 `use_fp16=
 
 ## 5. EduRAG Legacy
 
-完整清单：[EDURAG_LEGACY_INVENTORY.md](EDURAG_LEGACY_INVENTORY.md)，31 个文件、1,152 个命中行、69 个历史资产。范围和二进制正文未 OCR 的限制在清单开头明确。
+完整清单：[EDURAG_LEGACY_INVENTORY.md](../EDURAG_LEGACY_INVENTORY.md)，31 个文件、1,152 个命中行、69 个历史资产。范围和二进制正文未 OCR 的限制在清单开头明确。
 
 | Category | 清理/迁移对象 | 本次动作 |
 | --- | --- | --- |
@@ -178,9 +184,15 @@ VectorStore 使用 `BGEM3EmbeddingFunction(use_f16=False)`，demo 写 `use_fp16=
 
 提交策略：只创建一个 `refactor: establish manufacturing RAG migration baseline` 提交。提交前执行 git diff、git status、git diff --check，并检查暂存文件；不纳入 .env、config.ini、API 密钥、实际密码、权重或新增大型语料。原有简历/数据无改动。
 
+2026-10-01 发布状态更新：Stage 0 已提交并成功推送；本次治理整理再次核对远端 main。此更新不改变以上历史审计与测试结论。
+
 ```text
-commit hash: 此报告随 Stage 0 提交保存；git log -1 --format=%H -- docs/STAGE0_REPORT.md 可获取该提交
-push status: not pushed
+commit hash: b6db2e8d70f6c701975e24cefd10a04514139d2e
+commit message: refactor: establish manufacturing RAG migration baseline
+Stage 0 Git Commit: PASS
+Stage 0 GitHub Push: PASS
+Stage 0 Remote Verification: PASS
+origin/main at verification: b6db2e8d70f6c701975e24cefd10a04514139d2e
 ```
 
-本请求要求完成一个 Stage 0 commit，未要求发布此次改造；本次不 push。最终 commit hash、工作区状态与暂存检查的实际结果在交付回复中给出。此处不回写同一提交的哈希，避免文档自引用导致哈希变化。
+报告原路径为 docs/STAGE0_REPORT.md；本次移至 docs/STAGE_REPORTS/STAGE0_REPORT.md。上文 Stage 0 Changes Made 表保留提交时的原路径作为历史记录。

@@ -6,8 +6,16 @@
 
 - [当前真实架构](docs/CURRENT_ARCHITECTURE.md)
 - [制造业迁移阶段计划与术语基线](docs/MANUFACTURING_MIGRATION_PLAN.md)
-- [Stage 0 检查、问题和测试结果](docs/STAGE0_REPORT.md)
+- [Stage 0 检查、问题和测试结果](docs/STAGE_REPORTS/STAGE0_REPORT.md)
 - [教育遗留逐文件、逐行清单](docs/EDURAG_LEGACY_INVENTORY.md)
+
+## 项目治理与文档入口
+
+- [仓库维护约定](AGENTS.md)
+- [项目工作区说明](.agent/README.md)与[维护计划](.agent/PLANS.md)
+- [正式文档索引](docs/README.md)与[治理设置报告](docs/STAGE_REPORTS/REPOSITORY_GOVERNANCE_SETUP_REPORT.md)
+
+Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。本次仅整理治理和文档，Stage 1 尚未开始。
 
 ## 运行前提
 
