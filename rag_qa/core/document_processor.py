@@ -2,6 +2,7 @@
     文档处理器：rag_qa/core/document_processor.py
 """
 import os
+from collections import Counter, defaultdict
 from base.config import config
 from base.logger import logger
 from datetime import datetime
@@ -15,6 +16,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders.markdown import UnstructuredMarkdownLoader
 from langchain_text_splitters import MarkdownTextSplitter
 from rag_qa.ingestion.metadata_loader import load_with_metadata
+from rag_qa.ingestion.fingerprints import sha256_content, build_parent_id, build_child_id
 
 # 定义支持的文件类型及其对应的加载器字典
 document_loaders = {
@@ -93,6 +95,8 @@ def process_documents(directory_path,
     child_splitter = ChineseRecursiveTextSplitter(chunk_size=child_chunk_size, chunk_overlap=child_chunk_overlap)
     markdown_parent_splitter = MarkdownTextSplitter(chunk_size=parent_chunk_size, chunk_overlap=parent_chunk_overlap)
     markdown_child_splitter = MarkdownTextSplitter(chunk_size=child_chunk_size, chunk_overlap=child_chunk_overlap)
+    # Span all Loader outputs for the same business document (e.g. multiple pages).
+    parent_occurrences = defaultdict(Counter)
 
     for i, doc in enumerate(documents):
         # 获取文档的扩展名
@@ -105,18 +109,36 @@ def process_documents(directory_path,
         parent_docs = parent_splitter_to_use.split_documents([doc])
         for j, parent_doc in enumerate(parent_docs):
             # 为父块文档添加元数据
-            # 父块ID doc_{i}_parent_{j}
-            parent_doc.metadata["id"] = f'doc_{i}_parent_{j}'
+            # Legacy 保留位置 ID；Manufacturing 使用业务 namespace + 内容指纹。
+            if metadata_mode == "manufacturing":
+                document_id = parent_doc.metadata["document_id"]
+                parent_hash = sha256_content(parent_doc.page_content)
+                occurrence = parent_occurrences[document_id][parent_hash]
+                parent_occurrences[document_id][parent_hash] += 1
+                parent_doc.metadata["parent_content_sha256"] = parent_hash
+                parent_doc.metadata["id"] = build_parent_id(document_id, parent_hash, occurrence)
+            else:
+                parent_doc.metadata["id"] = f'doc_{i}_parent_{j}'
             parent_doc.metadata["parent_content"] = parent_doc.page_content
             # 获取所有的子块文档
             child_docs = child_splitter_to_use.split_documents([parent_doc])
+            child_occurrences = Counter()
             # 遍历子块文档
             for k, child_doc in enumerate(child_docs):
                 # 为子块文档添加元数据
                 child_doc.metadata["parent_id"] = parent_doc.metadata["id"]
                 child_doc.metadata["parent_content"] = parent_doc.page_content
-                # 子块ID doc_{i}_parent_{j}_child_{k}
-                child_doc.metadata["id"] = parent_doc.metadata["id"] + f'_child_{k}'
+                # Child occurrence 只在当前 Parent 的相同内容中计数。
+                if metadata_mode == "manufacturing":
+                    child_hash = sha256_content(child_doc.page_content)
+                    occurrence = child_occurrences[child_hash]
+                    child_occurrences[child_hash] += 1
+                    child_doc.metadata["child_content_sha256"] = child_hash
+                    child_doc.metadata["id"] = build_child_id(
+                        document_id, parent_doc.metadata["id"], child_hash, occurrence)
+                    child_doc.metadata["child_id"] = child_doc.metadata["id"]
+                else:
+                    child_doc.metadata["id"] = parent_doc.metadata["id"] + f'_child_{k}'
                 child_chunks.append(child_doc)
                 logger.info(f"处理文档成功:父块{parent_doc.metadata['id']}:子块:{child_doc.metadata['id']}")
                 logger.warning('=' * 100)

@@ -122,7 +122,7 @@ def test_invalid_cycle(cycle):
         MaintenanceCycle(**cycle)
 
 
-@pytest.mark.parametrize("field", ["equipement_model", "document_sha256", "child_content_sha256",
+@pytest.mark.parametrize("field", ["equipement_model", "document_sha256", "parent_content_sha256", "child_content_sha256",
                                      "parent_id", "child_id", "ingestion_version", "vector_id",
                                      "created_at", "source", "file_path", "timestamp", "metadata_source"])
 def test_unknown_or_system_fields(field):
@@ -352,7 +352,8 @@ def test_real_parent_child_metadata(tmp_path):
     for child in children:
         assert child.metadata["equipment_model"] == "MZ-2000"
         assert child.metadata["alarm_code"] == "E102"
-        assert child.metadata["id"].startswith("doc_0_parent_")
-        assert child.metadata["parent_id"].startswith("doc_0_parent_")
+        assert len(child.metadata["id"]) == 64
+        assert len(child.metadata["parent_id"]) == 64
+        assert child.metadata["child_id"] == child.metadata["id"]
         assert "document_id:" not in child.page_content
         assert child.metadata["file_path"] == str(path)

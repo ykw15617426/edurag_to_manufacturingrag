@@ -31,7 +31,7 @@
 
 MaintenanceCycle 支持正的有限数值 value + unit，或非空字符串 trigger，也可以同时有完整周期和 trigger。unit 为 hour / day / week / month / year / cycle。value/unit 必须成对，即使有 trigger 也不能提供残缺的数值周期。拒绝零/负数、布尔值、数字字符串、无穷值、未知单位和未知字段；trigger 不建立额外企业规则词典。
 
-顶层及 MaintenanceCycle 均 `extra=forbid`。拼写错误和系统字段均失败，包括 document_sha256、child_content_sha256、parent_id、child_id、ingestion_version、vector_id、created_at，以及 source/file_path/timestamp/source_file/metadata_source。后续身份与版本字段不能由 YAML 伪造。
+顶层及 MaintenanceCycle 均 `extra=forbid`。拼写错误和系统字段均失败，包括 document_sha256、parent_content_sha256、child_content_sha256、parent_id、child_id、ingestion_version、vector_id、created_at，以及 source/file_path/timestamp/source_file/metadata_source。后续身份与版本字段不能由 YAML 伪造。
 
 ## 来源与安全解析
 
@@ -61,7 +61,7 @@ Front Matter 经验证后，只有正文写入生命周期受控的临时同名/
 
 业务 Metadata + source_file（绝对路径）+ metadata_source（front_matter/sidecar）加入 Document.metadata；若 Loader 已持有同名字段，明确拒绝。现有处理器继续设置 source（目录名去 `_data`）、file_path（原输入路径）、timestamp（加载时间），与业务字段分离。source 仍是 Legacy 分类来源，不冒充设备业务标签。
 
-现有 Splitter 负责 Metadata 继承，Parent/Child 仍为 `doc_i_parent_j` / `doc_i_parent_j_child_k`。没有 Document SHA256 / Child SHA256。当前 VectorStore 不持久化新增业务字段，不应将此接口直接当作完成的制造业 Milvus 摄取链路。
+现有 Splitter 负责 Metadata 继承。Legacy Parent/Child 保持 `doc_i_parent_j` / `doc_i_parent_j_child_k`；Stage 2 Manufacturing 已增加原文件与内容 SHA256 和稳定身份，规则见 [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md)。当前 VectorStore 不完整持久化业务字段/指纹，不应将此接口直接当作完成的制造业 Milvus 摄取链路。
 
 ## Synthetic examples
 
@@ -103,3 +103,9 @@ part_number: BRG-6205-ZZ
 ```
 
 测试命令：`python -m pytest tests/test_manufacturing_metadata.py -q -rs`。核心测试只需要仓库已声明的 Pydantic、PyYAML 和 requirements-dev 的 pytest；真实 Parent-Child 测试缺 Loader/LangChain 依赖时明确 SKIPPED。详细实测见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。
+
+## System-generated Stage 2 fields
+
+Stage 1 业务合约不增加 YAML 可写字段；document_sha256、parent_content_sha256、child_content_sha256、parent_id、child_id/id 均由系统生成，YAML 仍禁止提供。Loaded Document 增加原主文件 byte fingerprint；Child 继承业务字段、原文件 Hash、Parent 内容 Hash，并增加 Child 内容 Hash、稳定 parent_id 与相等的 child_id/id。
+
+sidecar bytes 不参与 document_sha256；同一主文件更改 sidecar，原文件 Hash 可以不变。该字段不是业务版本或 Metadata 指纹，Stage 4 不可仅靠它做跨运行判断。

@@ -7,6 +7,7 @@ import yaml
 from pydantic import ValidationError
 
 from rag_qa.schemas.manufacturing_metadata import ManufacturingDocumentMetadata
+from rag_qa.ingestion.fingerprints import sha256_file
 
 
 class ManufacturingMetadataError(ValueError):
@@ -125,6 +126,8 @@ def resolve_metadata(source_file):
 def load_with_metadata(source_file, load_file):
     """load_file(path) uses the caller's existing loader; no new parsing engine."""
     resolved = resolve_metadata(source_file)  # fail before the file loader runs
+    # Hash the original file, never the sanitized Front Matter body/sidecar.
+    document_sha256 = sha256_file(source_file)
     if resolved.body is None:
         documents = load_file(str(source_file))
     else:
@@ -139,6 +142,7 @@ def load_with_metadata(source_file, load_file):
                     if document.metadata.get(key) == str(sanitized):
                         document.metadata[key] = str(source_file)
     additions = dict(resolved.business_metadata,
+                     document_sha256=document_sha256,
                      source_file=str(resolved.source_file.resolve()),
                      metadata_source=resolved.metadata_source)
     for document in documents:

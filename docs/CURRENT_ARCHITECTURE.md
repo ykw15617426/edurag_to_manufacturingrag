@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1/2 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -169,7 +169,7 @@ Query/改写内容 → BGE-M3([query])
 | 旧非流式 RAG / CLI | Legacy | old_main.py；rag_system.py；sql_main.py | 保留回归参照 |
 | 语义 splitter / demo Agent | Legacy | edu_model_text_spliter.py；demo/ | 主链路没有调用 |
 | YAML / Pydantic Metadata | Implemented | schemas/manufacturing_metadata.py；ingestion/metadata_loader.py；document_processor.py | Stage 1 显式 manufacturing 模式；核心单元测试通过，真实 Loader/分块集成缺依赖未验证 |
-| Document/Child SHA256 | Missing | document_processor.py；vector_store.py | Stage 2 |
+| Document/Parent/Child SHA256 | Implemented | ingestion/fingerprints.py；metadata_loader.py；document_processor.py | Stage 2 制造业 Metadata；未持久化到 Milvus |
 | Version Manifest / stale delete | Missing | vector_store.py | Stage 4 |
 
 ## 5. 配置、部署与评估基线
@@ -196,4 +196,12 @@ Dockerfile `COPY . .`，没有 `.dockerignore`：本地密钥/权重/简历可�
 
 字段与边界见 [正式合约](MANUFACTURING_METADATA_SCHEMA.md)，实测见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。当前有效 Parent/Child size 为 512/128、overlap 为 120/30，未改变配置或入库参数。位置 ID 仍为 doc_i_parent_j_child_k；旧数据/模型/集合不动。
 
-SHA256 / Milvus Manufacturing Schema / Versioning 仍未实现。VectorStore 仍按旧字段写入，不持久化新增制造业 Metadata，现有 CLI/在线入口仍为 Legacy；不能据此声称制造业端到端检索可用。真实 Parent-Child 集成测试因依赖缺失 SKIPPED，Full Integration Readiness: NO。
+Stage 1 当时 SHA256 / Milvus Manufacturing Schema / Versioning 未实现；SHA256 的后续实现见下述 Stage 2 增量。VectorStore 仍按旧字段写入，不持久化新增制造业 Metadata，现有 CLI/在线入口仍为 Legacy；不能据此声称制造业端到端检索可用。真实 Parent-Child 集成测试因依赖缺失 SKIPPED，Full Integration Readiness: NO。
+
+## 7. Stage 2 增量（2026-10-02）
+
+Manufacturing File → Stage 1 Metadata Resolver → Raw Document SHA256 → Existing Loader → Parent Split → Parent Content SHA256 + Stable Parent ID → Child Split → Child Content SHA256 + Stable Child ID。只有 manufacturing 模式生效；默认 Legacy 位置 ID 保留。原文件 Hash 流式计算，Front Matter 临时正文和 sidecar 不作为 Hash 输入。
+
+稳定 ID 以 document_id 为业务 namespace，规范化内容 Hash 和同内容 occurrence 构成确定性 JSON 编码；不包含版本、路径、时间或全局位置。完全重复块保留并区分；业务 Metadata 与 parent_content 保留。详细算法及稳定性限制见 [指纹合约](MANUFACTURING_FINGERPRINTS.md)，验证见 [Stage 2 报告](STAGE_REPORTS/STAGE2_REPORT.md)。
+
+Milvus Manufacturing Schema: Missing；Version Manifest: Missing；Delta Delete: Missing。VectorStore 未修改：PK 仍 MD5(metadata["id"])，业务字段/指纹没有完整持久化。无跨运行 Skip 或摄取编排。真实 Loader/Parent-Child 集成仍缺依赖，Full Integration Readiness: NO。

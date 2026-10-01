@@ -21,20 +21,21 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；2026-10-01 授权执行 Stage 1，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1 已完成；2026-10-02 授权执行 Stage 2，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
 Governance Setup: PASS
 Stage 1: PASS
-Stage 2-13: PENDING
+Stage 2: PASS
+Stage 3-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
 | --- | --- | --- | --- |
 | 0 | Project Baseline Audit & Manufacturing Migration Preparation | 原目录 | 逐项证据；未验证项明确 SKIPPED；单提交 |
 | 1 | Manufacturing Document Schema + YAML Metadata | Processor 前的元数据适配，复用原 Loader | 合法/非法字段、缺失 sidecar、文件映射、错误定位；不创建最终 Milvus Schema |
-| 2 | Parent-Child + Document / Child SHA256 Fingerprints | process_documents / add_documents | 相同文件/内容稳定身份；source 目录不碰撞；切分策略变更有可追踪版本 |
+| 2 | Parent-Child + Document / Child SHA256 Fingerprints | process_documents / add_documents | 原文件/Parent/Child 指纹；document_id 命名空间、重复 occurrence 与版本无关身份；不持久化切分版本状态 |
 | 3 | Milvus Manufacturing Schema | VectorStore adapter | 新旧集合隔离、字段/索引确认、Schema 版本与迁移回滚 |
 | 4 | Versioned Ingestion + Incremental Upsert + Delta Delete | 离线 orchestration | V1 A/B/C → V2 A/B/D 无 stale C；失败后可重试恢复；文档删除/版本切换 |
 | 5 | Query Analysis: Intent Recognition + Entity Extraction | 原分类与策略边界 | 型号/报警/维保意图、实体抽取与兜底；不继承教育“通用知识”绕检索的假设 |
@@ -86,6 +87,12 @@ knowledge_type 定义：manual 操作/说明；alarm 报警码；fault 现象/�
 
 这不代表完整运行 readiness。运行环境当前缺 FastAPI/LangChain/Milvus 等依赖；模型只确认目录存在；服务连通性与 API 模型可用性未验证。完整集成、现有生产检索无损验证仍是阻碍项，应在需要实际入库/在线验证前补齐。不得把这些问题带着“全部测试通过”的标签进入下一阶段。
 
-## Stage 1 交付与 Stage 2 依赖
+## Stage 1 交付与当时的 Stage 2 依赖
 
-实现及测试证据见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PENDING；Readiness: YES（限定身份/指纹设计），不是实施授权。后续应基于已校验业务字段设计文档与子块指纹，保留当前位置 ID 的兼容边界。Milvus 持久化业务字段属于 Stage 3，版本与增量属于 Stage 4；本次未访问数据库或写入集合。
+实现及测试证据见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。Stage 1 交付时 Stage 2: PENDING、Readiness: YES（限定身份/指纹设计）；当前状态以上方阶段表为准，不构成后续阶段实施授权。后续应基于已校验业务字段设计文档与子块指纹，保留当前位置 ID 的兼容边界。Milvus 持久化业务字段属于 Stage 3，版本与增量属于 Stage 4；本次未访问数据库或写入集合。
+
+## Stage 2 交付与 Stage 3 依赖
+
+Stage 2 仅生成指纹与稳定身份，算法以 [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md) 为准，实测见 [Stage 2 报告](STAGE_REPORTS/STAGE2_REPORT.md)。原文件 Hash 不含 sidecar；业务版本判断不能仅用 document_sha256，需在 Stage 4 考虑 document_id、document_version、validated metadata / manifest state。
+
+Stage 3: PENDING；Readiness: YES（限定制造业持久化设计），不是实施授权。当前 VectorStore 不完整持久化业务字段/指纹，Schema、PK 和集合未修改。Manifest、跨运行 Skip、增量编排和 Delta Delete 均留 Stage 4。
