@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0）
+# 当前真实架构（Stage 0 基线 + Stage 1 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -168,7 +168,7 @@ Query/改写内容 → BGE-M3([query])
 | 完整 Compose stack | Partial | docker-compose.yml | 仅 edurag-app，无数据库依赖服务 |
 | 旧非流式 RAG / CLI | Legacy | old_main.py；rag_system.py；sql_main.py | 保留回归参照 |
 | 语义 splitter / demo Agent | Legacy | edu_model_text_spliter.py；demo/ | 主链路没有调用 |
-| YAML / Pydantic Metadata | Missing | document_processor.py | API 请求模型已用 Pydantic，不是文档 schema |
+| YAML / Pydantic Metadata | Implemented | schemas/manufacturing_metadata.py；ingestion/metadata_loader.py；document_processor.py | Stage 1 显式 manufacturing 模式；核心单元测试通过，真实 Loader/分块集成缺依赖未验证 |
 | Document/Child SHA256 | Missing | document_processor.py；vector_store.py | Stage 2 |
 | Version Manifest / stale delete | Missing | vector_store.py | Stage 4 |
 
@@ -189,3 +189,11 @@ Stage 0 不统一这些业务值，避免默默改变已入库切分边界；Sta
 Dockerfile `COPY . .`，没有 `.dockerignore`：本地密钥/权重/简历可能进入构建上下文或镜像，即便被 .gitignore 排除。Stage 0 没有构建镜像、启动容器、改库、执行训练或入库。
 
 评估文件：rag_evaluate_data.json 为 30 条，small 为 5 条，字段 question/context/answer/ground_truth。脚本对预填数据调用 RAGAS 四项指标，并直接 `DataFrame([result])` 输出对象信息。两个 CSV 是历史输出，不能作为本次通过证据。分类训练文件虽叫 model_generic_5000.json，实际是 **486 条 JSONL**；注释“90%+”没有本次实验支撑。
+
+## 6. Stage 1 增量（2026-10-01）
+
+真实新增链路：Manufacturing File → Metadata Resolver → Safe YAML → Pydantic Validation → Existing Loader → Document.metadata → Existing Parent-Child。入口为 Processor 的 `metadata_mode="manufacturing"`，默认 legacy；不按目录名检测业务域。Front Matter 在原 Loader 前剥离，二进制使用完整文件名 sidecar；不替换 OCR 或 Splitter。非法 Metadata/来源冲突明确抛异常，业务字段与 Loader 字段冲突拒绝。
+
+字段与边界见 [正式合约](MANUFACTURING_METADATA_SCHEMA.md)，实测见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。当前有效 Parent/Child size 为 512/128、overlap 为 120/30，未改变配置或入库参数。位置 ID 仍为 doc_i_parent_j_child_k；旧数据/模型/集合不动。
+
+SHA256 / Milvus Manufacturing Schema / Versioning 仍未实现。VectorStore 仍按旧字段写入，不持久化新增制造业 Metadata，现有 CLI/在线入口仍为 Legacy；不能据此声称制造业端到端检索可用。真实 Parent-Child 集成测试因依赖缺失 SKIPPED，Full Integration Readiness: NO。

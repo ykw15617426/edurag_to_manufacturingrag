@@ -14,6 +14,7 @@ from rag_qa.edu_text_spliter.edu_chinese_recursive_text_splitter import ChineseR
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders.markdown import UnstructuredMarkdownLoader
 from langchain_text_splitters import MarkdownTextSplitter
+from rag_qa.ingestion.metadata_loader import load_with_metadata
 
 # 定义支持的文件类型及其对应的加载器字典
 document_loaders = {
@@ -38,7 +39,9 @@ document_loaders = {
 
 
 # 加载文档，参数是一个目录
-def load_documents_from_directory(directory_path):
+def load_documents_from_directory(directory_path, *, metadata_mode="legacy"):
+    if metadata_mode not in {"legacy", "manufacturing"}:
+        raise ValueError("metadata_mode must be legacy or manufacturing")
     # 初始化空列表，用于存储加载后的文档
     documents = []
     supported_extensions = document_loaders.keys()
@@ -55,13 +58,15 @@ def load_documents_from_directory(directory_path):
             else:
                 logger.info(f"支持该格式{file_extension}的文件正在加载....")
                 load_class = document_loaders[file_extension]
-                # 处理txt文件对应的加载器
-                if ".txt" == file_extension:
-                    loader = load_class(file_path, encoding='utf-8')
-                else:
-                    loader = load_class(file_path)
-                # 加载文档
-                load_docs = loader.load()
+                def load_file(loader_path):
+                    if ".txt" == file_extension:
+                        loader = load_class(loader_path, encoding='utf-8')
+                    else:
+                        loader = load_class(loader_path)
+                    return loader.load()
+
+                load_docs = (load_with_metadata(file_path, load_file)
+                             if metadata_mode == "manufacturing" else load_file(file_path))
                 # 遍历加载到的文档列表
                 for doc in load_docs:
                     doc.metadata['source'] = source
@@ -78,11 +83,12 @@ def process_documents(directory_path,
                       parent_chunk_size=config.PARENT_CHUNK_SIZE,
                       child_chunk_size=config.CHILD_CHUNK_SIZE,
                       parent_chunk_overlap=config.PARENT_CHUNK_OVERLAP,
-                      child_chunk_overlap=config.CHILD_CHUNK_OVERLAP):
+                      child_chunk_overlap=config.CHILD_CHUNK_OVERLAP,
+                      *, metadata_mode="legacy"):
     # 子块文档列表
     child_chunks = []
     # 加载指定目录下所有的文档
-    documents = load_documents_from_directory(directory_path)
+    documents = load_documents_from_directory(directory_path, metadata_mode=metadata_mode)
     parent_splitter = ChineseRecursiveTextSplitter(chunk_size=parent_chunk_size, chunk_overlap=parent_chunk_overlap)
     child_splitter = ChineseRecursiveTextSplitter(chunk_size=child_chunk_size, chunk_overlap=child_chunk_overlap)
     markdown_parent_splitter = MarkdownTextSplitter(chunk_size=parent_chunk_size, chunk_overlap=parent_chunk_overlap)

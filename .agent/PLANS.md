@@ -1,6 +1,6 @@
 # 项目维护计划
 
-更新日期：2026-10-01。
+更新日期：2026-10-02。
 
 ## 已确认检查点
 
@@ -12,9 +12,10 @@
 | Stage 0 Remote Verification | PASS | 本次 git ls-remote 核对为相同 SHA |
 | Stage 0 Task Completion | PASS | 审计交付与 Git 发布均已完成；不等于完整集成就绪 |
 | Governance Setup | PASS | Commit、Push、Remote Verification 均已通过，验证时工作区 clean |
-| Stage 1–13 | PENDING | 本次用户明确禁止开始 Stage 1 |
+| Stage 1 | PASS | Schema/Parser 验证、Commit/Push/Remote Verification 完成；集成限制见报告 |
+| Stage 2–13 | PENDING | 尚未授权实施 |
 
-## 当前任务：Repository Governance & Documentation Setup
+## 已完成任务：Repository Governance & Documentation Setup
 
 范围：治理约定、工作区说明、计划、正式文档索引与报告归档。保留原审计内容；不修改业务代码、测试、依赖、配置、数据或模型。
 
@@ -30,6 +31,20 @@
 
 ## 下一步边界
 
-正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权开始 Stage 1。
+正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-等待后续任务明确范围；不自行进入 Stage 1。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+等待后续任务明确范围；不自行进入 Stage 2。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+
+## 当前任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
+
+状态：PASS。开始 HEAD：`64809b23ee507dd50067e91333dc818a5053224e`；main；起始工作区 clean，fetch 后 HEAD == origin/main。
+
+- [x] 读取治理、Stage 0 文档、Loader/Splitter/Processor、配置、依赖和测试。
+- [x] 实现独立 Pydantic Schema、安全 YAML Resolver、显式 manufacturing 模式。
+- [x] 验证 Schema/Parser、Legacy 兼容和 Metadata 传播；缺依赖明确 SKIPPED。
+- [x] 更新架构/迁移计划/Schema 文档与 Stage 1 报告，审阅 Diff。
+- [x] Commit、Push、fetch/远端 SHA 与工作区 clean 核对。
+
+不修改旧语料、切分参数、Chunk ID、模型或数据库。Stage 2–13 保持 PENDING。
+
+Stage 1 锁定版本验证：105 passed / 10 skipped（核心 98 passed / 1 skipped；Smoke 7 passed / 9 skipped）。报告：[STAGE1_REPORT.md](../docs/STAGE_REPORTS/STAGE1_REPORT.md)。SKIPPED 不代表真实集成通过。

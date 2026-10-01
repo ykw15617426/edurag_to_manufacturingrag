@@ -6,7 +6,7 @@
 
 **采用现有目录内渐进迁移，不新建平行 manufacturing_rag 系统。** Loader、Parent/Child、BGE-M3、Milvus、Reranker 是可复用核心；新建整套引擎会复制依赖与缺陷、使两套运行入口分叉。Stage 0 只建立设计边界，待相应阶段再添加有实现需求的模块；不创建无调用的空包来制造完成度。
 
-| 目标边界 | 现有复用点 | 后续最小扩展位置（设计，尚未创建） |
+| 目标边界 | 现有复用点 | 最小扩展位置（schemas/ingestion 已在 Stage 1 创建，其余为设计） |
 | --- | --- | --- |
 | schemas | API Pydantic 模型经验 | rag_qa/schemas：文档 Metadata 合约 |
 | ingestion | edu_document_loaders、document_processor | rag_qa/ingestion：sidecar metadata、身份、版本编排；复用原解析器 |
@@ -21,12 +21,13 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；本次只校正计划，不实施 Stage 1–13。
+用户已明确以下 Stage 0–13 正式路线；2026-10-01 授权执行 Stage 1，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
 Governance Setup: PASS
-Stage 1-13: PENDING
+Stage 1: PASS
+Stage 2-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -50,7 +51,7 @@ Dense/Sparse 权重保持 `0.8 / 0.3`；Dense param 的 nprobe 字面值保持 1
 
 ## 制造业术语与 Metadata 候选合约
 
-这是设计文档，**不是已接入/已验证的 Pydantic Schema，也没有 YAML Parser**。
+以下保留 Stage 0 候选设计。Stage 1 已实现单文档 Pydantic 合约与安全 YAML Parser，具体约束以 [MANUFACTURING_METADATA_SCHEMA.md](MANUFACTURING_METADATA_SCHEMA.md) 为准；不等于最终 Milvus Schema。
 
 | 字段 | 候选类型 | 语义/约束 |
 | --- | --- | --- |
@@ -62,12 +63,12 @@ Dense/Sparse 权重保持 `0.8 / 0.3`；Dense param 的 nprobe 字面值保持 1
 | fault_type | optional string | 故障分类词典待真实文档确认，不先编造封闭枚举 |
 | fault_symptom | optional string | 原始故障现象；不可替代正文 |
 | maintenance_type | optional string | 保养/检修类型，按实际材料确定规范值 |
-| maintenance_cycle | optional object（候选） | value/unit/trigger，支持运行小时、日历、状态触发；Stage 1 决定具体结构 |
+| maintenance_cycle | optional object（候选） | value/unit/trigger，支持运行小时、日历、状态触发；Stage 1 已实现 value+unit 或 trigger |
 | part_number | optional string | 备件号，保留前导零、连字符与制造商语义 |
 
 建议增加 `document_id`、`document_version`、`source_path`、`title`、`effective_date`、`language`，区分业务版本和摄取时间。`document_sha256`、`child_content_sha256`、chunk/parent ID、ingestion_version 属系统生成字段，Stage 2/4 实现，不能让用户 YAML 伪造已入库状态。
 
-单一 sidecar 初步描述一个文档的型号/知识类型；跨多个型号、多知识类型手册不能直接无损压成一个标签。Stage 1 要明确列表支持还是节级继承/覆盖。fault/maintenance/parts 的条件必填与企业词典由实际设备资料验证，不在 Stage 0 猜成最终规范。
+单一 sidecar 初步描述一个文档的型号/知识类型；跨多个型号、多知识类型手册不能直接无损压成一个标签。Stage 1 仅支持单个型号/知识类型，不实现列表或节级覆盖；多型号材料需后续真实资料设计。fault/maintenance/parts 的条件必填与企业词典由实际设备资料验证，不在 Stage 0 猜成最终规范。
 
 knowledge_type 定义：manual 操作/说明；alarm 报警码；fault 现象/原因/处置；maintenance 周期/步骤；parameter 技术参数；parts 配件/备件；case 历史事件。case 需区分事实记录和推荐处理，禁止将教学数据或示例案例声称真实维修记录。
 
@@ -84,3 +85,7 @@ knowledge_type 定义：manual 操作/说明；alarm 报警码；fault 现象/�
 **YES：可以进入限定的 Schema/YAML 设计与离线单元实现。** 现有调用边界、复用点、后续 TODO 和最小检查命令已明确。
 
 这不代表完整运行 readiness。运行环境当前缺 FastAPI/LangChain/Milvus 等依赖；模型只确认目录存在；服务连通性与 API 模型可用性未验证。完整集成、现有生产检索无损验证仍是阻碍项，应在需要实际入库/在线验证前补齐。不得把这些问题带着“全部测试通过”的标签进入下一阶段。
+
+## Stage 1 交付与 Stage 2 依赖
+
+实现及测试证据见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PENDING；Readiness: YES（限定身份/指纹设计），不是实施授权。后续应基于已校验业务字段设计文档与子块指纹，保留当前位置 ID 的兼容边界。Milvus 持久化业务字段属于 Stage 3，版本与增量属于 Stage 4；本次未访问数据库或写入集合。
