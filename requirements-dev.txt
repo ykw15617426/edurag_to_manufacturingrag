@@ -1,0 +1,2 @@
+# Stage 0 smoke test runner; separate from the existing runtime dependency lock.
+pytest>=8,<9

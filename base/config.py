@@ -5,6 +5,7 @@
 import configparser
 # 导入路径操作库
 import os
+import ast
 
 class Config:
     # 初始化配置，加载 config.ini 文件
@@ -27,7 +28,7 @@ class Config:
         # 读取配置文件 config.ini
         self.config.read(config_file, encoding='utf-8')
 
-        # --> 从.env文件中获取配置，找不到则从config.ini中获取，再找不到使用 fallback备选值
+        # 环境变量 > config.ini > fallback；本模块不自动加载 .env 文件。
         # MySQL 配置
         # MySQL 主机地址
         self.MYSQL_HOST = os.getenv('MYSQL_HOST', self.config.get('mysql', 'host', fallback='localhost'))
@@ -46,7 +47,7 @@ class Config:
         # Redis 端口
         self.REDIS_PORT = int(os.getenv('REDIS_PORT', self.config.getint('redis', 'port', fallback=6379)))
         # Redis 密码
-        self.REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', self.config.getint('redis', 'password', fallback='123456'))
+        self.REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', self.config.get('redis', 'password', fallback='123456'))
         # Redis 数据库编号
         self.REDIS_DB = int(os.getenv('REDIS_DB', self.config.get('redis', 'db', fallback=0)))
 
@@ -97,7 +98,7 @@ class Config:
 
         # 应用配置
         # 有效来源列表
-        self.VALID_SOURCES = eval(
+        self.VALID_SOURCES = ast.literal_eval(
             os.getenv('VALID_SOURCES',
                       self.config.get('app', 'valid_sources', fallback='["ai", "java", "test", "ops", "bigdata"]')))
         # 客服电话

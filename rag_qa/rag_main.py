@@ -1,10 +1,10 @@
 import os
 from base.config import config
 from base.logger import logger
-from core.document_processor import process_documents  # 导入处理文档的函数
-from core.vector_store import VectorStore
+from rag_qa.core.document_processor import process_documents  # 导入处理文档的函数
+from rag_qa.core.vector_store import VectorStore
 # 老的rag_system模块，该模块测试用它
-from core.rag_system import RAGSystem
+from rag_qa.core.rag_system import RAGSystem
 from openai import OpenAI  # 使用 OpenAI 接口
 
 # RAG核心函数

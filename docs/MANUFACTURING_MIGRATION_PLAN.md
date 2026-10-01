@@ -1,0 +1,80 @@
+# 制造业设备智能运维 RAG 渐进迁移计划
+
+## Stage 0 决策
+
+面向企业内部设备运维、维修与技术人员，覆盖操作手册、型号参数、报警、故障、维保、备件、历史案例。本阶段建立代码与测试基线，不向现有运行链路注入制造业业务。
+
+**采用现有目录内渐进迁移，不新建平行 manufacturing_rag 系统。** Loader、Parent/Child、BGE-M3、Milvus、Reranker 是可复用核心；新建整套引擎会复制依赖与缺陷、使两套运行入口分叉。Stage 0 只建立设计边界，待相应阶段再添加有实现需求的模块；不创建无调用的空包来制造完成度。
+
+| 目标边界 | 现有复用点 | 后续最小扩展位置（设计，尚未创建） |
+| --- | --- | --- |
+| schemas | API Pydantic 模型经验 | rag_qa/schemas：文档 Metadata 合约 |
+| ingestion | edu_document_loaders、document_processor | rag_qa/ingestion：sidecar metadata、身份、版本编排；复用原解析器 |
+| retrieval | vector_store | rag_qa/retrieval：过滤/聚合策略；基础 Milvus adapter 留原模块并分步迁移 |
+| query | query_classifier、strategy_selector | rag_qa/query：制造业意图与实体；不把教育分类器当制造业分类器 |
+| generation | prompts、new_rag_system | rag_qa/generation：工业 Prompt；在线编排仍接 new_main |
+| evaluation | rag_assessment | rag_qa/evaluation：检索标注/回放，历史教育结果隔离保留 |
+| infrastructure | base、mysql_qa clients | 先复用 clients，后续按需求拆 adapter；不复制数据库层 |
+| api | app.py | 保留现有入口，Stage 11 才演进协议/生命周期 |
+
+移动/重命名可复用 edu_* 文件时要保留过渡导入或同时修所有引用，并先跑回归；原逻辑与入口不会在 Stage 0 被绕开。
+
+## 阶段与验收边界
+
+用户已明确的 Stage 1–8、11–12 编号保持不变。Stage 9、10、13 只给候选位置，待后续任务确定，不把建议描述成已经授权实施。
+
+| Stage | 目标 | 入口/复用 | 验收重点 |
+| --- | --- | --- | --- |
+| 0（本次） | 真实架构、风险、教育遗留、配置 Smoke 基线 | 原目录 | 逐项证据；未验证项明确 SKIPPED；单提交 |
+| 1 | YAML sidecar Metadata + Pydantic 验证 | Processor 前的元数据适配，复用原 Loader | 合法/非法字段、缺失 sidecar、文件映射、错误定位；不创建最终 Milvus Schema |
+| 2 | 文件 SHA256、规范化 Child SHA256、身份合约 | process_documents / add_documents | 相同文件/内容稳定身份；source 目录不碰撞；切分策略变更有可追踪版本 |
+| 3 | 最终 Manufacturing Milvus Schema/Index | VectorStore adapter | 新旧集合隔离、字段/索引确认、Schema 版本与迁移回滚 |
+| 4 | Version Manifest、增量 Upsert、差集 Delete | 离线 orchestration | V1 A/B/C → V2 A/B/D 无 stale C；失败后可重试恢复；文档删除/版本切换 |
+| 5 | 制造业 LLM Intent Router | 原分类与策略边界 | 型号/报警/维保意图、实体抽取与兜底；不继承教育“通用知识”绕检索的假设 |
+| 6 | Metadata Filter Pipeline | hybrid_search source expr | 型号/制造商/知识类型隔离，表达式安全构造，未抽到字段的策略 |
+| 7 | Parent Aggregation | _doc_from_hit / _get_unique_parent_docs | parent_id、metadata、score、child_hit_count、排序稳定；子查询统一融合 |
+| 8 | BM25 工业术语与阈值 | mysql_qa.retrieval / preprocess | 冷启动/热启动一致，型号/报警码不破坏，语料规模影响可测，source 过滤 |
+| 9（候选） | 工业生成/引用与不足知识处理 | prompts/new_rag_system | 标出来源/版本；无上下文时不编造维修步骤 |
+| 10（候选） | 多轮设备上下文与运维业务整合 | conversations / history | 同一会话换型号时不串知识，保留 provenance |
+| 11 | Redis TTL/版本、FastAPI 生命周期/并发、HTTP 完整答案、SSE | app/new_main/RedisClient | 不重复生成；取消/错误/流完成；真实依赖 readiness；旧 WebSocket 兼容方案 |
+| 12 | Hit@K / MRR / RAGAS 与参数选择 | 独立 retrieval evaluator | 带期望 Document/Child/Parent ID 的标注集；隔离型号/报警；留原始召回与配置快照 |
+| 13（候选） | 部署、运行文档与发布检查 | Docker/Compose | 完整外部服务约定、资源/模型/构建上下文隔离、可复现启动/停止 |
+
+Dense/Sparse 权重保持 `0.8 / 0.3`；Dense param 的 nprobe 字面值保持 10。Parent/Child 本地示例与 Docker 当前有配置漂移。此阶段不选择“最佳值”，Stage 12 用制造业检索回放决定。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
+
+## 制造业术语与 Metadata 候选合约
+
+这是设计文档，**不是已接入/已验证的 Pydantic Schema，也没有 YAML Parser**。
+
+| 字段 | 候选类型 | 语义/约束 |
+| --- | --- | --- |
+| equipment_type | string | 企业约定设备类型词典；不能从教育 source 直接映射 |
+| equipment_model | string | 完整型号，保留前导零、符号；规范化别名须可追溯 |
+| manufacturer | string | 制造商规范名，品牌/别名规则另定 |
+| knowledge_type | enum string | manual / alarm / fault / maintenance / parameter / parts / case |
+| alarm_code | optional string | 报警码按字符串保留；同一码在不同设备可能含义不同 |
+| fault_type | optional string | 故障分类词典待真实文档确认，不先编造封闭枚举 |
+| fault_symptom | optional string | 原始故障现象；不可替代正文 |
+| maintenance_type | optional string | 保养/检修类型，按实际材料确定规范值 |
+| maintenance_cycle | optional object（候选） | value/unit/trigger，支持运行小时、日历、状态触发；Stage 1 决定具体结构 |
+| part_number | optional string | 备件号，保留前导零、连字符与制造商语义 |
+
+建议增加 `document_id`、`document_version`、`source_path`、`title`、`effective_date`、`language`，区分业务版本和摄取时间。`document_sha256`、`child_content_sha256`、chunk/parent ID、ingestion_version 属系统生成字段，Stage 2/4 实现，不能让用户 YAML 伪造已入库状态。
+
+单一 sidecar 初步描述一个文档的型号/知识类型；跨多个型号、多知识类型手册不能直接无损压成一个标签。Stage 1 要明确列表支持还是节级继承/覆盖。fault/maintenance/parts 的条件必填与企业词典由实际设备资料验证，不在 Stage 0 猜成最终规范。
+
+knowledge_type 定义：manual 操作/说明；alarm 报警码；fault 现象/原因/处置；maintenance 周期/步骤；parameter 技术参数；parts 配件/备件；case 历史事件。case 需区分事实记录和推荐处理，禁止将教学数据或示例案例声称真实维修记录。
+
+## 教育内容的隔离和保留
+
+- 当前 `rag_qa/data/`、`mysql_qa/data/`、`rag_qa/classify_data/`、`rag_qa/rag_assessment/` 标记为教育历史基线。完整路径与命中行见 EDURAG_LEGACY_INVENTORY.md；本阶段零删除、零移动。
+- 暂不物理重命名数据目录，避免破坏 `VALID_SOURCES`、脚本路径与现有入库方式。新制造业资料应使用独立、明确批准的根目录和集合，后续再建立归档策略。
+- `demo/` 保留为教学参考，不从 app 导入，不把示例 Agent、Chroma、SSE React 草稿记为在线能力。
+- 教育类别、客服模板、品牌 UI、训练标签语义、jpkb 教育表是后续替换对象。loader/splitter/logger 等通用实现可保留并择机重命名。
+- 须在部署使用前移除旧软件激活示例和未接入原型；“必须删除”是后续生产内容要求，本阶段不批量删除历史数据。
+
+## Stage 1 readiness
+
+**YES：可以进入限定的 Schema/YAML 设计与离线单元实现。** 现有调用边界、复用点、后续 TODO 和最小检查命令已明确。
+
+这不代表完整运行 readiness。运行环境当前缺 FastAPI/LangChain/Milvus 等依赖；模型只确认目录存在；服务连通性与 API 模型可用性未验证。完整集成、现有生产检索无损验证仍是阻碍项，应在需要实际入库/在线验证前补齐。不得把这些问题带着“全部测试通过”的标签进入下一阶段。

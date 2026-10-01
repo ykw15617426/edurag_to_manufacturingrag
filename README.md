@@ -1,0 +1,61 @@
+# EduRAG → 制造业设备智能运维 RAG
+
+本仓库正在从教育问答迁移到制造业内部设备运维知识问答。当前完成的是 **Stage 0 基线审计与准备**，现有运行链路仍使用教育领域数据、分类和提示词。制造业 Metadata、文档版本管理、增量删除、SSE 和检索评估尚未实现。
+
+## 审计文档
+
+- [当前真实架构](docs/CURRENT_ARCHITECTURE.md)
+- [制造业迁移阶段计划与术语基线](docs/MANUFACTURING_MIGRATION_PLAN.md)
+- [Stage 0 检查、问题和测试结果](docs/STAGE0_REPORT.md)
+- [教育遗留逐文件、逐行清单](docs/EDURAG_LEGACY_INVENTORY.md)
+
+## 运行前提
+
+从仓库根目录执行命令。现有 `requirements.txt` 是原项目完整依赖列表，本次未重新锁定依赖或验证全量安装。Dockerfile 使用 Python 3.10.20；Stage 0 检查环境为 Python 3.13.9，二者不能视为同一验证环境。
+
+```powershell
+python -m pip install -r requirements.txt
+Copy-Item config.example.ini config.ini
+```
+
+编辑本地 `config.ini` 的数据库、服务地址、模型与密钥；也可设置同名环境变量。优先级为 **进程环境变量 > config.ini > 代码 fallback**。`base/config.py` 不会自动加载 `.env`；Docker Compose 会用 `.env` 做变量替换，和直接运行 Python 有区别。复制示例只是配置起点，不会准备依赖服务。
+
+需要自行准备：
+
+- MySQL 数据库和 `jpkb` 教育问答表。`MySQLClient.create_table/insert_data` 是手工初始化方法，CSV 入库不是幂等操作。
+- Redis 和 Milvus；Milvus 数据库需预先存在，VectorStore 才会创建/加载集合。
+- 本地 `rag_qa/models/` 下的 `bge-m3`、`bge-reranker-large`、`bert-base-chinese` 和经过训练的 `bert_query_classifier`。本机存在这些目录，但 Stage 0 未验证权重完整性/推理。
+- 可用的 DashScope 配置。示例中密钥为空，须自行填写；模型名沿用原项目，未验证在线可用性。
+
+```powershell
+python app.py
+```
+
+服务入口固定为 `http://localhost:8080`，浏览器访问根路径。按 `Ctrl+C` 停止。模块导入会立即初始化模型和客户端并尝试创建会话表，不是无副作用的 import。`/health` 仅返回固定 healthy，不代表依赖就绪。
+
+纯 RAG 入库入口（会写 Milvus，Stage 0 未实际执行）：
+
+```powershell
+python -m rag_qa.rag_main --data-processing --data-dir ./rag_qa/data
+```
+
+参数须指向包含 `ai_data/java_data/...` 的上级目录。历史默认 `./data/ai_data` 与内部拼接逻辑不匹配，暂留审计 TODO，故使用显式路径。旧命令行问答入口为 `python old_main.py`、`python -m mysql_qa.sql_main`；在线应用使用 `new_main.py`。
+
+`docker-compose.yml` 只定义应用容器。它不会启动 MySQL、Redis、Milvus、etcd、MinIO，也没有随 Git 发布模型权重。不要把 `docker compose up --build` 理解为完整可运行的部署方案。
+
+## Stage 0 Smoke Tests
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m pytest tests/test_stage0_smoke.py -q -rs
+```
+
+缺失依赖会逐项显示 SKIPPED；不使用假模型/假数据库冒充集成通过。Document Processor 是函数模块，初始化检查覆盖真实 splitter、TXT loader 和分块流程。FastAPI app 的真实导入会访问外部资源，完整环境准备后才执行：
+
+```powershell
+$env:STAGE0_LIVE_SMOKE = '1'
+python -m pytest tests/test_stage0_smoke.py -q -rs
+Remove-Item Env:STAGE0_LIVE_SMOKE
+```
+
+即使设置该开关，缺依赖仍会 SKIPPED；已具备依赖时的运行错误会 FAIL。测试不调用付费生成 API，不跑教育分类训练，不刷新生产知识库。现有数据、demo 和 RAGAS 结果均保留为历史基线。
