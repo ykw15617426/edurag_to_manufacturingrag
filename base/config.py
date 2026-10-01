@@ -62,6 +62,9 @@ class Config:
         # Milvus 集合名
         self.MILVUS_COLLECTION_NAME = os.getenv('MILVUS_COLLECTION_NAME',
                                                 self.config.get('milvus', 'collection_name', fallback='edurag'))
+        self.MILVUS_MANUFACTURING_COLLECTION_NAME = os.getenv(
+            'MILVUS_MANUFACTURING_COLLECTION_NAME',
+            self.config.get('milvus', 'manufacturing_collection_name', fallback='manufacturing_rag_v1'))
 
         # LLM 配置
         # LLM 模型名

@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1/2 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–3 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -169,7 +169,7 @@ Query/改写内容 → BGE-M3([query])
 | 旧非流式 RAG / CLI | Legacy | old_main.py；rag_system.py；sql_main.py | 保留回归参照 |
 | 语义 splitter / demo Agent | Legacy | edu_model_text_spliter.py；demo/ | 主链路没有调用 |
 | YAML / Pydantic Metadata | Implemented | schemas/manufacturing_metadata.py；ingestion/metadata_loader.py；document_processor.py | Stage 1 显式 manufacturing 模式；核心单元测试通过，真实 Loader/分块集成缺依赖未验证 |
-| Document/Parent/Child SHA256 | Implemented | ingestion/fingerprints.py；metadata_loader.py；document_processor.py | Stage 2 制造业 Metadata；未持久化到 Milvus |
+| Document/Parent/Child SHA256 | Implemented | ingestion/fingerprints.py；metadata_loader.py；document_processor.py | Stage 2 指纹；Stage 3 制造业写入映射已实现，真实 Milvus 未验证 |
 | Version Manifest / stale delete | Missing | vector_store.py | Stage 4 |
 
 ## 5. 配置、部署与评估基线
@@ -204,4 +204,12 @@ Manufacturing File → Stage 1 Metadata Resolver → Raw Document SHA256 → Exi
 
 稳定 ID 以 document_id 为业务 namespace，规范化内容 Hash 和同内容 occurrence 构成确定性 JSON 编码；不包含版本、路径、时间或全局位置。完全重复块保留并区分；业务 Metadata 与 parent_content 保留。详细算法及稳定性限制见 [指纹合约](MANUFACTURING_FINGERPRINTS.md)，验证见 [Stage 2 报告](STAGE_REPORTS/STAGE2_REPORT.md)。
 
-Milvus Manufacturing Schema: Missing；Version Manifest: Missing；Delta Delete: Missing。VectorStore 未修改：PK 仍 MD5(metadata["id"])，业务字段/指纹没有完整持久化。无跨运行 Skip 或摄取编排。真实 Loader/Parent-Child 集成仍缺依赖，Full Integration Readiness: NO。
+Stage 2 当时 Milvus Manufacturing Schema: Missing；Version Manifest: Missing；Delta Delete: Missing。该阶段 VectorStore 未修改：PK 仍 MD5(metadata["id"])，业务字段/指纹没有完整持久化。无跨运行 Skip 或摄取编排。真实 Loader/Parent-Child 集成仍缺依赖，Full Integration Readiness: NO。
+
+## 8. Stage 3 增量（2026-10-02）
+
+制造业离线调用新增显式 `VectorStore(schema_mode="manufacturing")`：File → Metadata → Fingerprints → Parent/Child → Metadata preflight → Dense+Sparse → Strict Row Mapping → 独立 Manufacturing Collection。复用原 VectorStore/BGE-M3，不自动替换 app/new_main/rag_main 的 Legacy 默认。
+
+默认集合 manufacturing_rag_v1、系统 schema_version=manufacturing_v1，32 个明确字段、auto_id=False、dynamic fields=False、稳定 Child ID 直接 PK；业务字段、三种指纹和 provenance 有持久化代码路径，周期 value/unit/trigger 扁平化，optional 使用原生 NULL。已有集合在使用前检查字段/PK/dim/nullable/容量/index；不匹配失败、不自动 drop。Legacy 集合、Schema 和 MD5 PK 保持原行为。详见 [存储合约](MANUFACTURING_MILVUS_SCHEMA.md) 与 [Stage 3 报告](STAGE_REPORTS/STAGE3_REPORT.md)。
+
+真实 pymilvus 2.5.4 Schema/Index 构建及 NULL Upsert 编码已离线验证；真实 Milvus 服务/BGE 端到端写入未验证。版本 Manifest、Cross-run document skip、Delta/Stale Delete、制造业 Intent/Metadata Filter 和 Parent Aggregation Refactor 仍未实现。稳定 PK 不等于增量摄取完成，旧版本消失的块仍可能残留。Full Integration Readiness: NO。

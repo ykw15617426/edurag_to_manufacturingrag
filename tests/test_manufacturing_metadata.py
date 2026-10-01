@@ -124,7 +124,7 @@ def test_invalid_cycle(cycle):
 
 @pytest.mark.parametrize("field", ["equipement_model", "document_sha256", "parent_content_sha256", "child_content_sha256",
                                      "parent_id", "child_id", "ingestion_version", "vector_id",
-                                     "created_at", "source", "file_path", "timestamp", "metadata_source"])
+                                     "created_at", "schema_version", "source", "file_path", "timestamp", "metadata_source"])
 def test_unknown_or_system_fields(field):
     with pytest.raises(ValidationError):
         ManufacturingDocumentMetadata(**valid(**{field: "spoof"}))

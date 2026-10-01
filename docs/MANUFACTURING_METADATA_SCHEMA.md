@@ -61,7 +61,7 @@ Front Matter 经验证后，只有正文写入生命周期受控的临时同名/
 
 业务 Metadata + source_file（绝对路径）+ metadata_source（front_matter/sidecar）加入 Document.metadata；若 Loader 已持有同名字段，明确拒绝。现有处理器继续设置 source（目录名去 `_data`）、file_path（原输入路径）、timestamp（加载时间），与业务字段分离。source 仍是 Legacy 分类来源，不冒充设备业务标签。
 
-现有 Splitter 负责 Metadata 继承。Legacy Parent/Child 保持 `doc_i_parent_j` / `doc_i_parent_j_child_k`；Stage 2 Manufacturing 已增加原文件与内容 SHA256 和稳定身份，规则见 [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md)。当前 VectorStore 不完整持久化业务字段/指纹，不应将此接口直接当作完成的制造业 Milvus 摄取链路。
+现有 Splitter 负责 Metadata 继承。Legacy Parent/Child 保持 `doc_i_parent_j` / `doc_i_parent_j_child_k`；Stage 2 Manufacturing 已增加原文件与内容 SHA256 和稳定身份，规则见 [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md)。Stage 3 已增加制造业显式持久化路径，见 [存储合约](MANUFACTURING_MILVUS_SCHEMA.md)；真实服务写入和版本摄取尚未验证，不应将此接口直接当作完整制造业摄取链路。
 
 ## Synthetic examples
 
@@ -109,3 +109,7 @@ part_number: BRG-6205-ZZ
 Stage 1 业务合约不增加 YAML 可写字段；document_sha256、parent_content_sha256、child_content_sha256、parent_id、child_id/id 均由系统生成，YAML 仍禁止提供。Loaded Document 增加原主文件 byte fingerprint；Child 继承业务字段、原文件 Hash、Parent 内容 Hash，并增加 Child 内容 Hash、稳定 parent_id 与相等的 child_id/id。
 
 sidecar bytes 不参与 document_sha256；同一主文件更改 sidecar，原文件 Hash 可以不变。该字段不是业务版本或 Metadata 指纹，Stage 4 不可仅靠它做跨运行判断。
+
+## Stage 3 storage mapping
+
+业务 YAML 合约保持不变，schema_version 仍为禁止输入的系统字段。Manufacturing VectorStore 对 Metadata 重新校验并映射 32 个显式字段；MaintenanceCycle 扁平为 value/unit/trigger，未提供字段统一 nullable None。严格 Row Mapper 拒绝未知 Metadata；长度按 UTF-8 bytes 校验，超长不截断。详见存储合约。

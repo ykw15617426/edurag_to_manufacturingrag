@@ -49,7 +49,7 @@ Loaded Document 增加 document_sha256。Parent Metadata 增加 parent_content_s
 
 ## Persistence boundary
 
-Fingerprints exist in Document metadata, but Manufacturing Milvus persistence is **NOT IMPLEMENTED**。VectorStore.add_documents 仍只显式写旧字段，PK 仍 MD5(metadata["id"])。本阶段没有修改 Schema、PK、Collection、过滤、聚合或检索；Stage 3 再设计持久化。
+Stage 2 交付时 Fingerprints exist in Document metadata, but Manufacturing Milvus persistence was **NOT IMPLEMENTED**。Stage 3 后续已实现独立制造业集合、指纹字段与稳定 Child ID 直接 PK，详见 [存储合约](MANUFACTURING_MILVUS_SCHEMA.md)；Legacy PK 仍 MD5(metadata["id"])。本文件身份算法不变；真实服务写入/增量删除仍未验证或未实现。
 
 文件 Hash、Metadata 读取、Loader 并非文件系统原子快照，调用时源文件应静止；没有锁、Manifest 或跨运行状态。切分参数/算法变化仍可能改变内容边界和身份。
 

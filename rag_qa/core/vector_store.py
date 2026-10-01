@@ -14,18 +14,26 @@ from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
 # 导入 hashlib 模块，用于生成唯一ID 的哈希值
 import hashlib
+from rag_qa.core.milvus_schema import (
+    select_collection, ensure_manufacturing_collection,
+    validate_manufacturing_document, build_manufacturing_row,
+)
 
 
 # # 定义 VectorStore 类，封装向量存储和检索功能
 class VectorStore:
     # 初始化方法，设置向量存储的基本参数
     def __init__(self,
-                 collection_name=config.MILVUS_COLLECTION_NAME,
+                 collection_name=None,
                  host=config.MILVUS_HOST,
                  port=config.MILVUS_PORT,
-                 database=config.MILVUS_DATABASE_NAME):
+                 database=config.MILVUS_DATABASE_NAME,
+                 *, schema_mode="legacy"):
         # 设置 Milvus 集合名称
-        self.collection_name = collection_name
+        self.schema_mode = schema_mode
+        self.collection_name = select_collection(
+            schema_mode, collection_name, config.MILVUS_COLLECTION_NAME,
+            config.MILVUS_MANUFACTURING_COLLECTION_NAME)
         # 设置 Milvus 主机地址
         self.host = host
         # 设置 Milvus 端口号
@@ -55,6 +63,9 @@ class VectorStore:
 
     # 定义私有方法，创建或加载 Milvus 集合
     def _create_or_load_collection(self):
+        if self.schema_mode == "manufacturing":
+            ensure_manufacturing_collection(self.client, self.collection_name, self.dense_dim)
+            return
         # 检查指定集合是否已存在
         if not self.client.has_collection(self.collection_name):
             # 创建集合 Schema，禁用自动 ID，启用动态字段
@@ -111,6 +122,20 @@ class VectorStore:
 
     # 定义方法，存储文档到向量数据库
     def add_documents(self, documents):
+        if self.schema_mode == "manufacturing":
+            # Validate the entire batch before embedding/upsert; no partial invalid writes.
+            for doc in documents:
+                validate_manufacturing_document(doc)
+            if not documents:
+                logger.error("没有数据存储到向量数据库")
+                return
+            embeddings = self.embedding_function([doc.page_content for doc in documents])
+            rows = [build_manufacturing_row(
+                doc, embeddings["dense"][i], self.get_sparse_dict(embeddings, i), self.dense_dim)
+                for i, doc in enumerate(documents)]
+            self.client.upsert(collection_name=self.collection_name, data=rows)
+            logger.info(f"已存储 {len(rows)} 个制造业文档到向量数据库")
+            return
         data = []
         # 向量化
         texts = [doc.page_content for doc in documents]
@@ -141,6 +166,10 @@ class VectorStore:
 
     # 定义方法，处理稀疏向量 选中代码，ctrl+alt+M --> 提取函数
     def get_sparse_dict(self, embeddings, i):
+        if self.schema_mode == "manufacturing":
+            # Select a 2-D CSR row for both scipy sparse matrices and sparse arrays.
+            row = embeddings["sparse"].tocsr()[[i], :]
+            return dict(zip(row.indices, row.data))
         # 初始化稀疏向量字典
         sparse_vector = {}
         try:

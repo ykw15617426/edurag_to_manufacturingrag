@@ -21,14 +21,15 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1 已完成；2026-10-02 授权执行 Stage 2，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1/2 已完成；2026-10-02 授权执行 Stage 3，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
 Governance Setup: PASS
 Stage 1: PASS
 Stage 2: PASS
-Stage 3-13: PENDING
+Stage 3: PASS
+Stage 4-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -91,8 +92,14 @@ knowledge_type 定义：manual 操作/说明；alarm 报警码；fault 现象/�
 
 实现及测试证据见 [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md)。Stage 1 交付时 Stage 2: PENDING、Readiness: YES（限定身份/指纹设计）；当前状态以上方阶段表为准，不构成后续阶段实施授权。后续应基于已校验业务字段设计文档与子块指纹，保留当前位置 ID 的兼容边界。Milvus 持久化业务字段属于 Stage 3，版本与增量属于 Stage 4；本次未访问数据库或写入集合。
 
-## Stage 2 交付与 Stage 3 依赖
+## Stage 2 交付与当时的 Stage 3 依赖
 
 Stage 2 仅生成指纹与稳定身份，算法以 [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md) 为准，实测见 [Stage 2 报告](STAGE_REPORTS/STAGE2_REPORT.md)。原文件 Hash 不含 sidecar；业务版本判断不能仅用 document_sha256，需在 Stage 4 考虑 document_id、document_version、validated metadata / manifest state。
 
-Stage 3: PENDING；Readiness: YES（限定制造业持久化设计），不是实施授权。当前 VectorStore 不完整持久化业务字段/指纹，Schema、PK 和集合未修改。Manifest、跨运行 Skip、增量编排和 Delta Delete 均留 Stage 4。
+Stage 2 交付时 Stage 3: PENDING、Readiness: YES（限定制造业持久化设计）；当前状态以上方阶段表为准。当时 VectorStore 不完整持久化业务字段/指纹，Schema、PK 和集合未修改。Manifest、跨运行 Skip、增量编排和 Delta Delete 均留 Stage 4。
+
+## Stage 3 交付与 Stage 4 依赖
+
+存储规则见 [MANUFACTURING_MILVUS_SCHEMA.md](MANUFACTURING_MILVUS_SCHEMA.md)，代码与实测见 [Stage 3 报告](STAGE_REPORTS/STAGE3_REPORT.md)。独立集合、严格 32 字段、稳定 Child PK、业务/指纹 row 映射和现有 Schema/Index 检查已实现；真实服务/BGE 持久化仍需 Live 验证。
+
+Stage 4: PENDING；Readiness: YES（限定版本/增量设计），不是授权。Stable PK enables Stage 4; it does not replace Stage 4。后续需设计 Manifest、业务版本/Metadata 状态、跨运行判断、差异与删除；不能只依赖不含 sidecar 的主文件 Hash。Milvus 新旧集合不自动迁移，Schema mismatch 需明确迁移方案，本阶段没有版本激活/回滚或删除。

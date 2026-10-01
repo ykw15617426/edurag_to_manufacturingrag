@@ -6,7 +6,7 @@
 
 Stage 0 已提交并推送：`b6db2e8d70f6c701975e24cefd10a04514139d2e`。历史审计与测试限制见 [Stage 0 报告](docs/STAGE_REPORTS/STAGE0_REPORT.md)。Git 发布完成不等于完整集成验证通过。
 
-Stage 1: PASS。当前任务为 Stage 2 — Parent-Child + Document / Child SHA256 Fingerprints；只实现制造业指纹与稳定身份，保留 Legacy 位置 ID。Stage 3–13 为 PENDING；迁移计划中的 readiness 或 TODO 不构成实施授权。每次工作以用户当次要求的阶段和范围为准，不自动推进后续 Stage。
+Stage 1/2: PASS。Last Completed Stage: Stage 3 — PASS；Active Stage: NONE。Stage 4–13 为 PENDING；迁移计划中的 readiness 或 TODO 不构成实施授权。每次工作以用户当次要求的阶段和范围为准，不自动推进后续 Stage。
 
 ## 开始工作
 
