@@ -75,3 +75,5 @@ Full Integration Readiness: NO
 ```
 
 本次已完成提交、推送、fetch 和远端一致性核对，再回写上述 PASS；本次治理提交的发布状态回写只整理治理提交本身，Stage 0 历史节点不变。最终 SHA 在交付回复中提供，不预写当前提交自身 SHA。
+
+2026-10-01 治理规则更正：正式任务产生需保留的仓库文件变化时，验证和 Diff 审阅后默认自动 Commit、Push、fetch/远端验证并确认 clean，无需用户另行要求 Push；无变化不创建空提交。同步失败须记 PARTIAL，自动同步仅覆盖当前任务合法修改，Git Safety 与 Stage 1 PENDING 保持有效。本次仅修改治理文件，使用独立提交 `chore: enforce automatic github sync workflow`；最终发布结果及 SHA 以本次交付回复为准。

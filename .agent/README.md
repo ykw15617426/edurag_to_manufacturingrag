@@ -11,4 +11,6 @@
 
 开始任务时先核对用户范围和 Git 状态，再更新 PLANS；结束时记录真实验证结果与交付位置。用户未要求下一阶段时只保留待办，不自动实施。
 
+产生需保留文件变化的正式任务，验证及 Diff 审阅后默认自动 Commit、Push、fetch/远端核对并确认 clean，无需单独要求 Push；无仓库变化则无需提交或推送。具体规则见 AGENTS.md，自动同步不扩大业务任务范围。
+
 阶段报告统一放在 `docs/STAGE_REPORTS/`。历史报告保留当时的审计/测试结论；必要的后续状态更正明确注明日期。Stage 0 技术验证仍为 PARTIAL，其 Commit/Push/Remote Verification 已为 PASS，两者分别记录。

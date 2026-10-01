@@ -28,7 +28,7 @@ Stage 0 已提交并推送：`b6db2e8d70f6c701975e24cefd10a04514139d2e`。历史
 - 代码修改：运行与改动相关的现有检查；Smoke 命令为 `python -m pytest tests/test_stage0_smoke.py -q -rs`。该命令会导入配置，但完整 app import 有显式 live 开关。
 - 每个验证记录 command、result 和 PASS/FAIL/SKIPPED/NOT RUN。缺依赖或模型只说明实际限制，不能将源码编译、mock 或目录存在当作集成 PASS。
 - 修改长任务时维护 `.agent/PLANS.md`；交付报告存入 `docs/STAGE_REPORTS/`，链接回事实文档，避免复制全部历史审计。
-- Commit/Push 按当前会话已明确授权的范围执行；不为已授权操作重复请求确认。未经请求不自动发布；报告实际 hash、工作区与 push 状态。推送成功后更新相关发布记录并核对远端。
+- 任何产生需要保留的仓库文件变化的正式任务，在完成任务并通过相应验证后，必须自动 Commit、Push 和 Remote Verification；这是本项目默认授权，不需要用户每个 Stage 再次要求 Push。范围仅限当前任务的合法修改。
 
 用户明确指令优先；本文件只约束仓库维护流程，不扩大任务授权范围。
 
@@ -38,8 +38,31 @@ Stage 0 已提交并推送：`b6db2e8d70f6c701975e24cefd10a04514139d2e`。历史
 - Stage-based development：阶段定义以迁移计划为准；只执行用户当前明确的 Stage，Stage 1–13 未开始时标记 PENDING。
 - Source of Truth：CURRENT_ARCHITECTURE 只描述当前真实能力；MANUFACTURING_MIGRATION_PLAN 描述未来路线；Stage Report 持久化阶段证据；PLANS 记录当前执行状态。冲突时以实际源码、已执行结果和用户最新要求校正，不把计划当事实。
 - 禁止虚构功能、禁止虚构测试、禁止虚构指标；区分任务完成、测试通过范围和 Full Integration Readiness。
-- Git Safety：保留用户工作区，限定暂存文件，禁止混入业务源码或秘密；不 amend/squash 已完成的 Stage 0 提交。
-- Commit + Push：用户要求发布阶段时，完成提交及推送才算交付，不只停留在本地文件。
+- Git Safety：保留用户工作区，限定暂存文件，禁止混入当前任务无关的用户改动或秘密；不 amend/squash 已完成的 Stage 0 提交。禁止 git reset --hard、git clean -fd、git checkout . 等破坏用户已有工作的操作。
+- Commit + Push：所有产生需保留文件变化的正式任务必须自动提交并推送到当前已配置的正确远端分支，不以本地修改作为最终交付。
 - Remote Verification：推送后 fetch，核对 Local HEAD == origin/<branch>，并确认 Working Tree clean；失败则记录 PARTIAL 与真实错误。
 - GitHub 作为已完成阶段的持久状态：已完成的治理/阶段文档须随授权的提交发布；只有 Commit、Push、Remote Verification 和 clean 全满足，发布任务状态才为 PASS。
 - Stage Report 持久化规则：报告放在 docs/STAGE_REPORTS/，包含文件变更、源码范围、command/result、状态及限制；最终 SHA 在回复中提供，不预写当前提交自身的哈希。
+
+## 默认 GitHub 同步工作流
+
+For every formal task that changes repository files:
+
+```text
+Read
+→ Plan when needed
+→ Modify
+→ Test / Validate
+→ Review Diff
+→ Update Documentation when applicable
+→ Commit
+→ Push
+→ Fetch / Verify Remote
+→ Confirm Working Tree Clean
+```
+
+- 只要产生需要保留的仓库文件变化，就必须 Commit；Commit 后默认 Push 到当前已配置的正确远端分支。
+- Push 后必须 fetch 并验证 `Local HEAD == origin/<current-branch>`，同时确认 `Working Tree == clean`。
+- 审阅后若 `Repository Changes: NONE`，则 `Commit: NOT REQUIRED`、`Push: NOT REQUIRED`；禁止为制造 Git 历史创建空 Commit。
+- 若实现和验证已通过但 Push 失败，记录 `Implementation: PASS`、`Validation: PASS`、`GitHub Sync: FAIL`、`Overall Status: PARTIAL`，并提供真实错误；不得虚构同步完成。
+- 自动 Commit + Push 不扩大任务权限，不自动推进下一阶段，不借机提交用户无关修改。若用户已有无关改动，保留并报告；只提交本任务修改，不为追求 clean 而删除或覆盖用户工作。
