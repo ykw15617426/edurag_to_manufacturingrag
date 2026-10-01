@@ -1,0 +1,21 @@
+.idea
+/**/models
+/**/core/bert_results
+/**/*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+config.ini
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Generated logs and local vector databases
+logs/
+chroma_db/
