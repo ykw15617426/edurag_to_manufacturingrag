@@ -2,7 +2,7 @@
 
 2026-10-02。main / 起始 `13dfecfc2d773f7445c1ad0cd1794d5d881dbfd8`；Working Tree clean，fetch后HEAD == origin/main。只执行当前授权Stage 8。
 
-Implementation: PASS。Validation: PASS。GitHub Sync: PENDING。Overall Status: IN PROGRESS。Full Integration Readiness: NO。
+Implementation: PASS。Validation: PASS。GitHub Sync: PASS。Overall Status: PASS。Full Integration Readiness: NO。
 
 ## Changes and scope
 
@@ -28,7 +28,7 @@ Windows / Python3.13.9，沿用ignored `.venv/stage1-validation`。执行 `.venv
 
 12 skipped：Stage 3 Live未启用1；Stage 1/2真实Loader/分块各1；Smoke缺完整模型/API/应用/数据库依赖9。安装rank-bm25只消除了该缺包名称，其余缺包保留，Smoke仍7/9。真实MySQL/Redis、Milvus/BGE/CrossEncoder/LLM、线上/端到端 NOT RUN；Stage 7 scorer/Document fixture仍仅隔离控制证明。
 
-`git diff --check`: PASS。5个Python文件ast.parse(feature_version=(3,10))/compile PASS（3.10仅语法，实际运行3.13）；8个Markdown相对链接PASS。38个Legacy/Stage 2–7/配置/依赖/历史报告文件与起始HEAD内容一致PASS，任务变更范围与Diff审阅PASS。新进程package import不导入Legacy/外部BM25库/模型/数据库/config PASS；索引依赖延迟到Corpus初始化。不将synthetic或真实BM25离线算法测试当作Full Integration PASS。
+`git diff --check`: PASS。5个Python文件ast.parse(feature_version=(3,10))/compile PASS（3.10仅语法，实际运行3.13）；8个Markdown相对链接PASS。38个Legacy/Stage 2–7/配置/依赖/历史报告文件与起始HEAD内容一致PASS，`git diff --cached --check`: PASS，限定暂存13个文件；任务变更范围与Diff审阅PASS。新进程package import不导入Legacy/外部BM25库/模型/数据库/config PASS；索引依赖延迟到Corpus初始化。不将synthetic或真实BM25离线算法测试当作Full Integration PASS。
 
 ## Limits and deferred work
 
@@ -36,6 +36,6 @@ Windows / Python3.13.9，沿用ignored `.venv/stage1-validation`。执行 `.venv
 
 ## Git and handoff
 
-Commit message: `feat: add manufacturing faq fast path`。仅本Stage合法修改，Commit/Push/fetch/Remote Verification/clean检查待完成，最终SHA在回复提供，不预写本报告自身哈希。
+实现Commit: `0ee768337902fb1100f6afe0d23b18aa4880bc74`；message: `feat: add manufacturing faq fast path`。限定13个本Stage文件，Commit/Push/Remote Verification: PASS；`git push origin main`、`git fetch origin`成功，`git rev-parse HEAD` == `git rev-parse origin/main`，`git status` 为Working Tree clean。完成状态通过独立文档提交正常发布，不amend/force push；最终SHA在回复中提供，不预写当前状态提交自身哈希。Last Completed Stage: Stage 8 — PASS；Active Stage: NONE；Stage 9–13 PENDING。
 
 Stage 9 Readiness: YES（限定已有统一Evidence/快路径决策与Parent fallback接口供设计）。Stage 9–13 PENDING，不自动实施；Full Integration Readiness: NO。发布核验后停止。

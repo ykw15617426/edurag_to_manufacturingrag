@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–7 已完成；2026-10-02 授权执行 Stage 8，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–8 已完成；2026-10-02 已按授权完成 Stage 8，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -33,7 +33,7 @@ Stage 4: PASS
 Stage 5: PASS
 Stage 6: PASS
 Stage 7: PASS
-Stage 8: IN PROGRESS
+Stage 8: PASS
 Stage 9-13: PENDING
 ```
 
