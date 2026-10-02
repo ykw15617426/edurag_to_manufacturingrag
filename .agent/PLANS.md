@@ -2,7 +2,7 @@
 
 更新日期：2026-10-02。
 
-Last Completed Stage: Stage 7 — PASS；Active Stage: NONE；Stage 8–13: PENDING。
+Last Completed Stage: Stage 7 — PASS；Active Stage: Stage 8 — IN PROGRESS；Stage 9–13: PENDING。
 
 ## 已确认检查点
 
@@ -21,7 +21,8 @@ Last Completed Stage: Stage 7 — PASS；Active Stage: NONE；Stage 8–13: PEND
 | Stage 5 | PASS | QueryAnalysis/信任规则、验证及 Git 发布完成；真实 LLM/在线限制见报告 |
 | Stage 6 | PASS | Filter/Child Hybrid Retrieval、离线验证及 Git 发布完成；真实服务/模型未验证 |
 | Stage 7 | PASS | Parent 身份/Metadata 聚合、稳定重排、验证与 Git 发布完成；真实模型未执行 |
-| Stage 8–13 | PENDING | 尚未授权实施 |
+| Stage 8 | IN PROGRESS | 当前授权：Alarm / FAQ / BM25 Fast Path |
+| Stage 9–13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
 
@@ -41,7 +42,7 @@ Last Completed Stage: Stage 7 — PASS；Active Stage: NONE；Stage 8–13: PEND
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-Stage 7 已完成，等待后续任务明确范围；不自行进入 Stage 8。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+当前执行 Stage 8；不自行进入 Stage 9。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -149,3 +150,19 @@ Stage 6 实现提交 `320849e59e913de7e1521d669cff81fbdec126cb` 已正常 Push�
 报告：[STAGE7_REPORT.md](../docs/STAGE_REPORTS/STAGE7_REPORT.md)。Full Integration Readiness: NO；Stage 8–13 PENDING。
 
 Stage 7 实现提交 `3427cc372f0accab7ec92b82b92c56fafa7ce660` 已正常 Push，fetch 后 HEAD == origin/main，Working Tree clean；完成状态通过独立文档提交正常发布，最终 SHA 在回复中核验提供，不重写历史。
+
+
+## 当前任务：Stage 8 — Alarm Code / FAQ / BM25 Fast Path
+
+状态：IN PROGRESS。起始HEAD：`13dfecfc2d773f7445c1ad0cd1794d5d881dbfd8`；main；Working Tree clean；fetch后HEAD == origin/main。
+
+- [x] 阅读治理/Stage 5–7合约、源码和Legacy FAQ/Redis/MySQL/在线链路，核对基线。
+- [x] 实现approved strict Entry/Corpus、canonical snapshot、Exact Alarm/FAQ与歧义保护。
+- [x] 标识符保护tokenizer、真实BM25 raw ranking、hard兼容范围、显式acceptance policy。
+- [x] Evidence-only输出、runtime error/拒绝回退Stage 7、原query/analysis/k保留。
+- [x] 62项Stage 8与历史回归：606 passed / 0 failed / 12 skipped；记录扩容raw score/rank/size。
+- [x] 文档/导航更新，真实服务/模型/线上NOT RUN；未实施Stage 9。
+- [x] 语法/链接/保护范围、完整Diff审阅。
+- [ ] Commit、Push、fetch/远端一致与Working Tree clean核验。
+
+仅在ignored验证venv安装requirements已锁定rank-bm25==0.2.2，没有改依赖/配置/Legacy/Stage 6–7实现或连接数据库。报告：[STAGE8_REPORT.md](../docs/STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9–13 PENDING；Full Integration Readiness: NO。

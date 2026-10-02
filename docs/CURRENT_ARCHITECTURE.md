@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–7 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–8 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -151,10 +151,11 @@ Query/改写内容 → BGE-M3([query])
 | Upsert | Partial | vector_store.py:113 | 按位置 PK upsert；无版本增量和 stale delete |
 | Metadata Filter | Partial | vector_store.py:176 | 只有 source 字符串表达式，无制造业字段过滤 |
 | Legacy Parent Aggregation | Partial | vector_store.py:236 | set 正文去重，身份/metadata/score 丢失 |
-| BM25 | Partial | mysql_qa/retrieval/bm25_search.py | FAQ 全库 softmax，冷启动候选 tuple 类型问题 |
+| Legacy BM25 | Partial | mysql_qa/retrieval/bm25_search.py | FAQ 全库 softmax，冷启动候选 tuple 类型问题 |
 | Redis | Implemented | mysql_qa/cache/redis_client.py | corpus/答案 JSON 缓存；无 TTL/版本 |
 | MySQL | Implemented | mysql_qa/db/mysql_client.py；new_main.py | jpkb + conversations；CSV 导入非幂等 |
 | Query Classification | Partial | query_classifier.py | 教育二分类；缺训练模型时新建分类头，不能视为可靠分类 |
+| Manufacturing FAQ Fast Path | Implemented | retrieval/fast_path.py；manufacturing_bm25.py | Stage 8 approved Corpus、exact/歧义guard、raw BM25、Evidence/fallback；生产质量未评估 |
 | Manufacturing Parent Retrieval | Implemented | retrieval/parent_aggregation.py；parent_reranker.py；manufacturing_retriever.py | Stage 7 身份/Metadata/命中统计与父块重排；真实模型/在线未验证 |
 | Manufacturing Query Analysis | Implemented | query/analyzer.py；entities.py；classifier.py；schemas.py | Stage 5 规则/结构化语义边界；真实 LLM/在线未验证 |
 | Strategy Selector | Implemented | strategy_selector.py | 同步 LLM 字符串选择器，不是制造业 Intent Router |
@@ -249,4 +250,13 @@ synthetic core、独立进程阻断 Legacy/模型/API import 和 Stage 0–4 回
 
 现有 vector_store.reranker 对 [原 query, parent_content] 评分，rerank_score 与 best_retrieval_score 分别保留；稳定 tie 后按 config.CANDIDATE_M 截断为完整 Parent Documents。空不调模型、单 Parent 仍评分；异常/数量错误/NaN/inf/non-scalar fail closed。默认 k 已由独立10改为延迟读取 config.RETRIEVAL_K；fallback5/Top-M fallback2和 ANN 参数不变。
 
-Stage 7 79 项 synthetic/scorer/recording 测试与历史回归通过，总计544 passed / 0 failed / 12 skipped；真实 CrossEncoder/BGE/Milvus和在线未执行。VectorStore/filters/Legacy/在线代码、存储/摄取/查询合约及配置不改。合约见 [Parent 检索](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8–13 PENDING；Full Integration Readiness: NO。
+Stage 7 79 项 synthetic/scorer/recording 测试与历史回归通过，总计544 passed / 0 failed / 12 skipped；真实 CrossEncoder/BGE/Milvus和在线未执行。VectorStore/filters/Legacy/在线代码、存储/摄取/查询合约及配置不改。合约见 [Parent 检索](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 7交付时Stage 8–13 PENDING；Stage 8增量见下节。Full Integration Readiness: NO。
+
+
+## 13. Stage 8 增量（2026-10-02）
+
+`FastPathCorpus`由调用方批准的制造业Entry构建，严格Metadata/身份验证和canonical snapshot重建一致；不连接教育jpkb或Redis。`ManufacturingFastPath`优先hard-compatible唯一报警、normalized exact FAQ，再raw BM25排名；跨型号/重复含义与未安全确认code拒绝短路。所有hard ID保持，不猜实体；只有显式policy才允许BM25接受。
+
+Tokenizer保持标识符大小写/-/_/前导零，中文用char/bigram；BM25复用requirements锁定的BM25Okapi，保留raw score/rank/total与scope size，不softmax。接受结果只提供Evidence和provenance；拒绝或search异常记录原因后原query/analysis/k回退Stage 7，Stage 7错误继续抛出。Legacy、在线和Stage 6/7实现未变。
+
+62项Stage 8核心与Stage 0–7回归：606 passed / 0 failed / 12 skipped；真实BM25离线算法已运行，真实服务/模型/端到端NOT RUN。合约见 [制造业快路径](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9–13 PENDING，Full Integration Readiness: NO。

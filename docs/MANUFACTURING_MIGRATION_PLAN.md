@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–7 已完成；2026-10-02 已按授权完成 Stage 7，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–7 已完成；2026-10-02 授权执行 Stage 8，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -33,7 +33,8 @@ Stage 4: PASS
 Stage 5: PASS
 Stage 6: PASS
 Stage 7: PASS
-Stage 8-13: PENDING
+Stage 8: IN PROGRESS
+Stage 9-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -131,4 +132,11 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 按 parent_id 聚合 Child，保留全部 Parent/业务/来源属性并检查冲突，max 检索分数、命中统计与稳定 rank 不丢失。现有 CrossEncoder 对 Parent 正文评分，分别保留两个分数，稳定排序后按 config.CANDIDATE_M 返回 Parent Evidence；模型错误 fail closed。k默认统一 config.RETRIEVAL_K，不调配置值，Stage 6 hard/soft控制和 Legacy 原样保留。
 
-合约见 [MANUFACTURING_PARENT_RETRIEVAL.md](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8 Readiness: YES（限定 Parent Evidence 接口设计输入）；Stage 8–13 PENDING。未实现 BM25/报警 fast path、Rewrite/策略/生成/SSE/tuning；真实模型/服务未验证，Full Integration Readiness: NO。
+合约见 [MANUFACTURING_PARENT_RETRIEVAL.md](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8 Readiness: YES（限定 Parent Evidence 接口设计输入）；Stage 7交付时Stage 8–13 PENDING，当前状态以上方阶段表为准。未实现 BM25/报警 fast path、Rewrite/策略/生成/SSE/tuning；真实模型/服务未验证，Full Integration Readiness: NO。
+
+
+## Stage 8 交付与 Stage 9 边界
+
+批准制造业FAQ/alarm Entry与canonical snapshot、标识符保护tokenizer、Exact Alarm/FAQ与歧义拒绝、raw BM25/hard范围/显式接受policy已实现。默认BM25只给候选，接受只给Evidence；失败/拒绝回退现有Stage 7 Parent检索，不接入在线最终答案，不复用教育BM25业务语义。
+
+合约见 [MANUFACTURING_FAST_PATH.md](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9 Readiness: YES（限定统一Evidence/决策与fallback接口设计）；Stage 9–13 PENDING。Query Rewrite/HyDE/subquery/backtracking/strategy、Generation/Citations、Redis TTL/SSE和阈值tuning均未实施；Full Integration Readiness: NO。
