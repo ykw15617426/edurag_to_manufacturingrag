@@ -2,7 +2,7 @@
 
 更新日期：2026-10-02。
 
-Last Completed Stage: Stage 9 — PASS；Active Stage: Stage 10 — IN PROGRESS；Stage 11–13: PENDING。
+Last Completed Stage: Stage 10 — PASS；Active Stage: NONE；Stage 11–13: PENDING。
 
 ## 已确认检查点
 
@@ -23,7 +23,7 @@ Last Completed Stage: Stage 9 — PASS；Active Stage: Stage 10 — IN PROGRESS�
 | Stage 7 | PASS | Parent 身份/Metadata 聚合、稳定重排、验证与 Git 发布完成；真实模型未执行 |
 | Stage 8 | PASS | approved证据快路径、raw BM25、验证及Git发布完成；真实服务/线上未执行 |
 | Stage 9 | PASS | 严格策略/保护/融合、689 passed / 12 skipped及Git发布完成 |
-| Stage 10 | IN PROGRESS | Evidence normalization/guard、结构化生成及claim引用验证；发布待验证 |
+| Stage 10 | PASS | Evidence/结构化生成/claim引用guard、813 passed / 12 skipped及Git发布完成 |
 | Stage 11–13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
@@ -44,7 +44,7 @@ Last Completed Stage: Stage 9 — PASS；Active Stage: Stage 10 — IN PROGRESS�
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-当前仅执行已授权Stage 10，完成后停止，不自行进入Stage 11。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+Stage 10已完成，当前停止，不自行进入Stage 11。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -189,9 +189,9 @@ Stage 8实现提交 `0ee768337902fb1100f6afe0d23b18aa4880bc74` 已正常Push；f
 Stage 9实现提交 `66e3b32e64fbde9e14e011fccbed19c9c1d1dba0` 已正常Push；fetch后Local HEAD == origin/main，Working Tree clean。完成状态通过独立文档提交正常发布，最终SHA在回复中核验提供，不重写历史。
 
 
-## 当前任务：Stage 10 — Answer Generation + Citations + Evidence Guard
+## 已完成任务：Stage 10 — Answer Generation + Citations + Evidence Guard
 
-状态：IN PROGRESS；起始HEAD：`90bff8baffceefa83f270d52f075efd4ad3ae778`；main；初始工作区clean，fetch后HEAD == origin/main。
+状态：PASS；起始HEAD：`90bff8baffceefa83f270d52f075efd4ad3ae778`；main；初始工作区clean，fetch后HEAD == origin/main。
 
 - [x] 读取治理、Stage 5/7–9合约/报告、Evidence真实接口与Legacy prompt/new_rag_system。
 - [x] 统一Parent/FastPath正常化、稳定Evidence ID、事实/版本冲突与hard defense-in-depth。
@@ -199,6 +199,8 @@ Stage 9实现提交 `66e3b32e64fbde9e14e011fccbed19c9c1d1dba0` 已正常Push；f
 - [x] 124项核心与Stage 0–10回归：813 passed / 0 failed / 12 skipped。
 - [x] 生成合约/报告、架构、状态与导航最小同步；真实模型/API/线上NOT RUN。
 - [x] 最终AST/相对链接/Diff/保护范围复核。
-- [ ] Commit、Push、fetch/equal与clean核验。
+- [x] Commit、Push、fetch/equal与clean核验。
 
 不改Stage 2–9/Legacy/在线/配置/依赖/旧数据，不开始Stage 11。报告：[STAGE10_REPORT.md](../docs/STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11–13 PENDING；Full Integration Readiness: NO。
+
+Stage 10实现提交 `699b730bb5ff9502395318020d4cc9cd5bc22c2a` 已正常Push；fetch后Local HEAD == origin/main，Working Tree clean。完成状态以独立文档提交正常发布，最终SHA在回复核验提供，不重写历史。

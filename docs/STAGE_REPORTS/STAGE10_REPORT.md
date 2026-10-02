@@ -1,6 +1,6 @@
 # Stage 10 — Answer Generation + Citations + Evidence Guard
 
-日期：2026-10-02。branch：main；起始HEAD：`90bff8baffceefa83f270d52f075efd4ad3ae778`，fetch后Local HEAD == origin/main，初始Working Tree clean。Implementation/核心Validation已完成；GitHub Sync PENDING，发布后更新。最终SHA在回复核验提供，不预写本提交自身SHA。
+日期：2026-10-02。branch：main；起始HEAD：`90bff8baffceefa83f270d52f075efd4ad3ae778`，fetch后Local HEAD == origin/main，初始Working Tree clean。Stage 10: PASS；Implementation/Validation/GitHub Sync: PASS；实现提交已正常push/fetch/equal/clean核验，完成状态以独立文档提交发布。最终SHA在回复核验提供，不预写本提交自身SHA。
 
 ## 实现与文件范围
 
@@ -21,7 +21,7 @@ python指仓库ignored `.venv/stage1-validation/Scripts/python.exe`（Python3.13
 | Stage 0–10完整回归（下方命令） | 813 passed / 0 failed / 12 skipped | PASS |
 | Python AST / 相对文档链接 / `git diff --check` / Diff及保护范围审阅 | 7文件AST、124相对链接目标、补丁及受保护源码范围通过 | PASS |
 | Real LLM/API、CrossEncoder/BGE、Live Milvus、online端到端 | 未执行；不是完整集成PASS | NOT RUN |
-| Commit / Push / Fetch / equal / clean | 待发布 | PENDING |
+| Commit / Push / Fetch / equal / clean | 实现提交正常Push；fetch后Local HEAD == origin/main，Working Tree clean | PASS |
 
 ```powershell
 .venv/stage1-validation/Scripts/python.exe -m pytest tests/test_manufacturing_evidence.py tests/test_manufacturing_generation.py tests/test_manufacturing_query_rewrite.py tests/test_manufacturing_strategy.py tests/test_manufacturing_bm25.py tests/test_manufacturing_fast_path.py tests/test_parent_aggregation.py tests/test_manufacturing_parent_retrieval.py tests/test_manufacturing_metadata_filters.py tests/test_manufacturing_retrieval.py tests/test_manufacturing_query_analysis.py tests/test_manifest_store.py tests/test_versioned_ingestion.py tests/test_manufacturing_milvus_schema.py tests/test_manufacturing_fingerprints.py tests/test_manufacturing_metadata.py tests/test_stage0_smoke.py -q -rs --tb=short
@@ -38,3 +38,7 @@ Stage 2 IDs/Stage 3 Schema/Stage 4 Manifest/Stage 5 QueryAnalysis/Stage 6 Filter
 Completion由调用方实现API/finite timeout，核心不强耦合SDK也不终止永久阻塞callable。ASCII检查保守，可能拒绝新的英文普通词；数字格式不推理单位等价。系统仅检查引用/结构/显式token证据，不证明维修语义/完整蕴含/实际LLM安全性；无数字/ASCII的新中文步骤、中文数词与事实正确性需Stage 12评估。未声称模型免疫Prompt Injection。
 
 Stage 11–13 PENDING；Full Integration Readiness: NO。Stage 10发布完成后停止，不实现FastAPI/SSE/Redis TTL/session/tuning/Docker最终集成。
+
+## 发布证据
+
+实现Commit：`699b730bb5ff9502395318020d4cc9cd5bc22c2a`（`feat: add grounded manufacturing generation`）。已执行`git push`、`git fetch origin`、`git rev-parse HEAD`、`git rev-parse origin/main`、`git status --short`，两SHA一致且status为空：PASS。完成状态正常独立文档提交，不amend/force push；最终HEAD及clean在回复核验。Last Completed Stage: Stage 10 — PASS；Active Stage: NONE；Stage 11–13 PENDING。
