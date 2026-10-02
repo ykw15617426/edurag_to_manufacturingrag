@@ -6,6 +6,22 @@ import configparser
 # 导入路径操作库
 import os
 import ast
+import json
+import math
+
+
+def validate_manufacturing_origins(origins):
+    from urllib.parse import urlsplit
+    if not isinstance(origins, list):
+        raise ValueError('explicit manufacturing CORS origin list required')
+    for origin in origins:
+        if not isinstance(origin, str) or origin == '*' or any(c.isspace() for c in origin):
+            raise ValueError('explicit manufacturing CORS origins required')
+        parsed = urlsplit(origin)
+        if parsed.scheme not in ('http', 'https') or not parsed.hostname or parsed.path or parsed.query or parsed.fragment or parsed.username or parsed.password:
+            raise ValueError('invalid manufacturing CORS origin')
+        parsed.port  # Validate malformed or out-of-range ports.
+    return origins
 
 class Config:
     # 初始化配置，加载 config.ini 文件
@@ -81,6 +97,19 @@ class Config:
         self.DASHSCOPE_BASE_URL = os.getenv('DASHSCOPE_BASE_URL',
                                             self.config.get('llm', 'dashscope_base_url',
                                                             fallback='https://dashscope.aliyuncs.com/compatible-mode/v1'))
+
+        # 检索参数
+        # Manufacturing runtime protection only; not retrieval/performance tuning.
+        def setting(name, key, fallback):
+            return os.getenv(name, self.config.get('manufacturing', key, fallback=str(fallback)))
+        self.MANUFACTURING_LLM_TIMEOUT_SECONDS = float(setting('MANUFACTURING_LLM_TIMEOUT_SECONDS', 'llm_timeout_seconds', 30))
+        self.MANUFACTURING_REDIS_TIMEOUT_SECONDS = float(setting('MANUFACTURING_REDIS_TIMEOUT_SECONDS', 'redis_timeout_seconds', 2))
+        self.MANUFACTURING_CACHE_TTL_SECONDS = int(setting('MANUFACTURING_CACHE_TTL_SECONDS', 'cache_ttl_seconds', 300))
+        self.MANUFACTURING_FAST_PATH_SNAPSHOT_PATH = setting('MANUFACTURING_FAST_PATH_SNAPSHOT_PATH', 'fast_path_snapshot_path', '').strip()
+        self.MANUFACTURING_CORS_ORIGINS = json.loads(setting('MANUFACTURING_CORS_ORIGINS', 'cors_origins', '[]'))
+        if any(not math.isfinite(value) or value <= 0 for value in (self.MANUFACTURING_LLM_TIMEOUT_SECONDS, self.MANUFACTURING_REDIS_TIMEOUT_SECONDS)) or self.MANUFACTURING_CACHE_TTL_SECONDS <= 0:
+            raise ValueError('manufacturing timeouts/TTL must be positive and finite')
+        validate_manufacturing_origins(self.MANUFACTURING_CORS_ORIGINS)
 
         # 检索参数
         # 父块大小

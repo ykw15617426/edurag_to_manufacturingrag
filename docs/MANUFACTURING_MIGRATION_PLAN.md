@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–10 已完成；2026-10-02 已按授权完成 Stage 10，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–10 已完成；2026-10-02 正按授权执行 Stage 11，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -36,7 +36,8 @@ Stage 7: PASS
 Stage 8: PASS
 Stage 9: PASS
 Stage 10: PASS
-Stage 11-13: PENDING
+Stage 11: IN PROGRESS
+Stage 12-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -155,4 +156,11 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 统一Parent/FastPath EvidenceRecord、身份/来源/版本一致性/hard兼容保护、空证据静态不足、静态指令+JSON DATA、可注入严格JSON completion、逐claim有效引用和标识符/数字支持检查及真实来源Renderer已实现。模型/校验系统错误fail closed，不当作证据不足；不声称语义蕴含或实际模型免疫Prompt Injection。
 
-合约见 [MANUFACTURING_GENERATION.md](MANUFACTURING_GENERATION.md)，证据见 [Stage 10报告](STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11才处理FastAPI/SSE/Redis TTL/session与正式在线集成，本阶段未实现；Stage 11–13 PENDING，Full Integration Readiness: NO。现有Stage 2–9业务合约和Legacy代码保持，后续阶段需用户明确授权。
+合约见 [MANUFACTURING_GENERATION.md](MANUFACTURING_GENERATION.md)，证据见 [Stage 10报告](STAGE_REPORTS/STAGE10_REPORT.md)。Stage 10交付时Stage 11才处理FastAPI/SSE/Redis TTL/session与正式在线集成，当时未实现；Stage 11–13 PENDING，Full Integration Readiness: NO。现有Stage 2–9业务合约和Legacy代码保持，后续阶段需用户明确授权。
+
+
+## Stage 11 交付与 Stage 12 边界
+
+独立制造业FastAPI/lifespan、Stage 5→9→10 Service共享SDK/finite timeout、同步off-loop、JSON完整一次生成与只发validated answer的SSE、安全错误/单Terminal/断连检查、startup/readiness/关闭资源与显式CORS已实现。独立缓存answered-only/TTL/hashed query、只读Manifest与FastPath bytes修订、坏值delete-miss/Redis降级，不改旧在线及业务语义。
+
+合约见[MANUFACTURING_API.md](MANUFACTURING_API.md)、[MANUFACTURING_CACHE.md](MANUFACTURING_CACHE.md)；证据见[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。真实服务/模型/生产启动未验证；readiness仅初始化检查，不能强制停止同步线程。Stage 12–13 PENDING，Full Integration Readiness: NO；不开始RAGAS/Hit@K/MRR/tuning或Docker最终验收。

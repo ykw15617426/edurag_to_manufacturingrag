@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–10 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–11 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -6,6 +6,7 @@
 
 | 入口/目录 | 当前责任与边界 |
 | --- | --- |
+| `manufacturing_app.py` | Stage 11 独立FastAPI JSON/SSE；lifespan制造业runtime，import不构建客户端/模型 |
 | `app.py` | FastAPI、静态网页、问候短路、HTTP/WebSocket、会话 API；模块级创建 IntegratedQASystem |
 | `new_main.py` | 在线编排；MySQL/Redis/BM25 优先，流式 RAG 回退，MySQL 最近五轮历史 |
 | `old_main.py` | Legacy 非流式编排；使用 `rag_system.py` |
@@ -278,3 +279,14 @@ Tokenizer保持标识符大小写/-/_/前导零，中文用char/bigram；BM25复
 `StructuredAnswerGenerator(completion).generate(query, analysis, strategy_result)`以静态system约束supplied Evidence，正文/query仅JSON DATA；严格生成status/claims/evidence_ids，逐claim检查有效citation、原query或所引证据中的标识符与数字token。Renderer从结构化claims添加引用，列实际来源Metadata、不伪造页码或score可信度。FastPath同样进入生成，不直接原文当答案；timeout/网络/非法JSON/schema/幻觉均GenerationError，不假装证据不足。
 
 124项Stage 10核心及历史回归813 passed / 0 failed / 12 skipped；token guard不证明语义蕴含、维修操作正确或真实模型免疫Prompt Injection，ASCII新普通词也可能保守拒绝。transport timeout由completion控制；不调模型Context参数、不截断证据/整段Prompt。Stage 2–9实现与Legacy prompts/new_rag_system/在线/config保持，真实LLM/服务/线上端到端NOT RUN。合约见 [制造业生成](MANUFACTURING_GENERATION.md)，证据见 [Stage 10报告](STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11–13 PENDING；Full Integration Readiness: NO。
+
+
+## 16. Stage 11 增量（2026-10-02）
+
+`rag_qa/api`统一Service分析→KnowledgeRevision→cache→Stage 9检索→Stage 10生成，heavy同步工作均to_thread。Runtime在lifespan创建，一个OpenAI-compatible client共享分类/策略/生成，finite timeout、max_retries=0；显式approved FastPath snapshot启动加载与hash绑定，非法即not_ready，未配置None/默认BM25接受policy None。Legacy app/new_main/WebSocket/MySQL/教育FAQ/生成不变。
+
+JSON POST `/api/manufacturing/query`完整执行一次、严格请求、session仅correlation；SSE POST `/api/manufacturing/stream`只把guard后的answer_text分块，start/阶段/answer/citations/done或error一次，缓存hit不假装retrieval/generation。断连检查阻止后续阶段/缓存/发送；不能强杀已入同步线程的模型/服务调用或撤回已提交Redis命令，底层timeout提供边界。
+
+Manifest只读fingerprint派生active事实/revision，排除updated_at；在线mode=ro新连接不创建DB。Cache key hash包含revision+loaded snapshot bytes hash、query/analysis/model/k/Top-M及合约版本；answered-only且TTL、坏值delete+miss、Redis失败降级，不复用answer:{query}。base/config.py/example仅新增runtime/CORS参数，旧业务配置值不变。health live/ready分离、关闭持有clients，显式CORS无wildcard/credentials。
+
+94项Stage 11核心及Stage 0–10回归：907 passed / 0 failed / 12 skipped。实际FastAPI/StreamingResponse、临时SQLite与fake SDK验证控制，不是真实模型/服务端到端PASS。真实runtime启动/Redis/Milvus/BGE/CrossEncoder/API未执行，Full Integration Readiness: NO。合约：[API](MANUFACTURING_API.md)、[Cache](MANUFACTURING_CACHE.md)；证据：[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。Stage 12–13 PENDING。

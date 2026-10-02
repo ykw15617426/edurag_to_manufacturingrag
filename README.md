@@ -1,6 +1,6 @@
 # EduRAG → 制造业设备智能运维 RAG
 
-本仓库正在从教育问答迁移到制造业内部设备运维知识问答。Stage 0 基线与治理已完成；Stage 1 已实现制造业 Metadata 校验与显式处理模式，已完成发布验证。现有在线运行链路仍使用教育领域数据、分类和提示词；Stage 3 已实现显式制造业 Milvus Schema 与写入映射；真实服务验证尚未完成。Stage 4 已实现版本 Manifest、跨运行 Skip、增量摄取与显式/差集删除控制；真实服务验证尚未完成。Stage 5 已提供独立制造业 QueryAnalysis、规则实体与可注入 JSON 语义分类边界；真实 LLM 和在线接入未验证。Stage 6 已实现安全 Metadata Filter、保留硬标识符的软条件放宽和制造业 Child Hybrid Retrieval；真实 Milvus/模型和在线接入未验证。Stage 7 已实现按 parent_id 保留 Metadata/命中统计、父块 CrossEncoder 重排与配置 Top-M；真实重排模型未执行。Stage 8 已提供已批准制造业语料的Exact Alarm/FAQ与raw BM25证据快路径，默认BM25不短路，拒绝/错误回退Stage 7；真实服务和线上接入未验证。Stage 9 已实现严格DIRECT/REWRITE/SUBQUERY、意图限定快路径、标识符保护、多查询Child融合与原query一次Parent重排；未接入在线生成。Stage 10 已提供统一Evidence完整性/版本/hard保护、证据限定结构化生成、逐Claim引用/标识符/数字验证与实际来源渲染；真实LLM及在线接入未验证。SSE 和检索评估尚未实现。
+本仓库正在从教育问答迁移到制造业内部设备运维知识问答。Stage 0 基线与治理已完成；Stage 1 已实现制造业 Metadata 校验与显式处理模式，已完成发布验证。现有在线运行链路仍使用教育领域数据、分类和提示词；Stage 3 已实现显式制造业 Milvus Schema 与写入映射；真实服务验证尚未完成。Stage 4 已实现版本 Manifest、跨运行 Skip、增量摄取与显式/差集删除控制；真实服务验证尚未完成。Stage 5 已提供独立制造业 QueryAnalysis、规则实体与可注入 JSON 语义分类边界；真实 LLM 和在线接入未验证。Stage 6 已实现安全 Metadata Filter、保留硬标识符的软条件放宽和制造业 Child Hybrid Retrieval；真实 Milvus/模型和在线接入未验证。Stage 7 已实现按 parent_id 保留 Metadata/命中统计、父块 CrossEncoder 重排与配置 Top-M；真实重排模型未执行。Stage 8 已提供已批准制造业语料的Exact Alarm/FAQ与raw BM25证据快路径，默认BM25不短路，拒绝/错误回退Stage 7；真实服务和线上接入未验证。Stage 9 已实现严格DIRECT/REWRITE/SUBQUERY、意图限定快路径、标识符保护、多查询Child融合与原query一次Parent重排；未接入在线生成。Stage 10 已提供统一Evidence完整性/版本/hard保护、证据限定结构化生成、逐Claim引用/标识符/数字验证与实际来源渲染；真实LLM及在线接入未验证。Stage 11 已新增制造业FastAPI JSON/SSE独立入口、lifespan/线程边界、安全错误/断连及Manifest+FastPath修订TTL缓存；SSE只发送完整验证后的答案，原Legacy入口保持。真实服务启动及生产在线端到端未验证；检索评估尚未实现。
 
 ## 审计文档
 
@@ -15,7 +15,7 @@
 - [项目工作区说明](.agent/README.md)与[维护计划](.agent/PLANS.md)
 - [正式文档索引](docs/README.md)与[治理设置报告](docs/STAGE_REPORTS/REPOSITORY_GOVERNANCE_SETUP_REPORT.md)
 
-Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。Stage 1: PASS；[Metadata 合约与调用方式](docs/MANUFACTURING_METADATA_SCHEMA.md)，[Stage 1 报告](docs/STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PASS；[指纹与稳定身份](docs/MANUFACTURING_FINGERPRINTS.md)、[Stage 2 报告](docs/STAGE_REPORTS/STAGE2_REPORT.md)。Stage 3: PASS；[制造业存储合约](docs/MANUFACTURING_MILVUS_SCHEMA.md)、[Stage 3 报告](docs/STAGE_REPORTS/STAGE3_REPORT.md)。Stage 4: PASS；[版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)、[Stage 4 报告](docs/STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5: PASS；[查询分析合约](docs/MANUFACTURING_QUERY_ANALYSIS.md)、[Stage 5 报告](docs/STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6: PASS；[制造业检索合约](docs/MANUFACTURING_RETRIEVAL.md)、[Stage 6 报告](docs/STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7: PASS；[Parent 检索合约](docs/MANUFACTURING_PARENT_RETRIEVAL.md)、[Stage 7 报告](docs/STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8: PASS；[快路径合约](docs/MANUFACTURING_FAST_PATH.md)、[Stage 8 报告](docs/STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9: PASS；[检索策略合约](docs/MANUFACTURING_RETRIEVAL_STRATEGY.md)、[Stage 9 报告](docs/STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10: PASS；[生成合约](docs/MANUFACTURING_GENERATION.md)、[Stage 10 报告](docs/STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11–13 保持 PENDING，Full Integration Readiness: NO。
+Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。Stage 1: PASS；[Metadata 合约与调用方式](docs/MANUFACTURING_METADATA_SCHEMA.md)，[Stage 1 报告](docs/STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PASS；[指纹与稳定身份](docs/MANUFACTURING_FINGERPRINTS.md)、[Stage 2 报告](docs/STAGE_REPORTS/STAGE2_REPORT.md)。Stage 3: PASS；[制造业存储合约](docs/MANUFACTURING_MILVUS_SCHEMA.md)、[Stage 3 报告](docs/STAGE_REPORTS/STAGE3_REPORT.md)。Stage 4: PASS；[版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)、[Stage 4 报告](docs/STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5: PASS；[查询分析合约](docs/MANUFACTURING_QUERY_ANALYSIS.md)、[Stage 5 报告](docs/STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6: PASS；[制造业检索合约](docs/MANUFACTURING_RETRIEVAL.md)、[Stage 6 报告](docs/STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7: PASS；[Parent 检索合约](docs/MANUFACTURING_PARENT_RETRIEVAL.md)、[Stage 7 报告](docs/STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8: PASS；[快路径合约](docs/MANUFACTURING_FAST_PATH.md)、[Stage 8 报告](docs/STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9: PASS；[检索策略合约](docs/MANUFACTURING_RETRIEVAL_STRATEGY.md)、[Stage 9 报告](docs/STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10: PASS；[生成合约](docs/MANUFACTURING_GENERATION.md)、[Stage 10 报告](docs/STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11: IN PROGRESS；[API合约](docs/MANUFACTURING_API.md)、[Cache合约](docs/MANUFACTURING_CACHE.md)、[Stage 11报告](docs/STAGE_REPORTS/STAGE11_REPORT.md)。Stage 12–13 保持 PENDING，Full Integration Readiness: NO。
 
 ## 运行前提
 
@@ -67,3 +67,16 @@ Remove-Item Env:STAGE0_LIVE_SMOKE
 ```
 
 即使设置该开关，缺依赖仍会 SKIPPED；已具备依赖时的运行错误会 FAIL。测试不调用付费生成 API，不跑教育分类训练，不刷新生产知识库。现有数据、demo 和 RAGAS 结果均保留为历史基线。
+
+
+## 制造业独立API（Stage 11）
+
+完整依赖、本地模型、制造业Milvus与已初始化Stage 4 Manifest/LLM配置准备后，从仓库根目录运行：
+
+```powershell
+python -m uvicorn manufacturing_app:app --host 127.0.0.1 --port 8080
+```
+
+Ctrl+C停止；避免与旧app共用同一端口。POST `/api/manufacturing/query`返回完整validated JSON；POST `/api/manufacturing/stream`发送validated answer chunks，不是raw model tokens。GET `/health/live`只说明应用活着；`/health/ready`分别显示core/cache状态。session_id只有correlation，不提供多轮历史memory。环境/INI配置与curl请求体见[API合约](docs/MANUFACTURING_API.md)；缓存知识更新失效见[Cache合约](docs/MANUFACTURING_CACHE.md)。
+
+本次真实生产runtime启动/模型/API/数据库端到端NOT RUN；FastAPI TestClient和注入runtime测试通过不能当作真实Startup PASS。config.example.ini只给保护默认值；不提交实际密钥/config.ini。Stage 12–13 PENDING，Full Integration Readiness: NO。

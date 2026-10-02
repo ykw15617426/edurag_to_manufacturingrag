@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 import sqlite3
+import hashlib
 
 MANIFEST_SCHEMA_VERSION = "manifest_v1"
 _HASH = re.compile(r"[0-9a-f]{64}")
@@ -161,8 +162,37 @@ class SQLiteManifestStore:
     def close(self):
         self.connection.close()
 
+    def snapshot_fingerprint(self, collection_name=None):
+        """One read snapshot; exclude timestamp noise, preserve mutation semantics."""
+        return manifest_snapshot_fingerprint(self.connection, collection_name)
+
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
         self.close()
+
+
+def manifest_snapshot_fingerprint(connection, collection_name=None):
+    """Also usable with a mode=ro SQLite connection in online worker threads."""
+    if connection.execute("PRAGMA user_version").fetchone()[0] != 1:
+        raise ManifestCompatibilityError("initialized manifest_v1 required")
+    cursor = connection.execute("SELECT * FROM active_documents ORDER BY document_id")
+    names = [item[0] for item in cursor.description]
+    rows = cursor.fetchall()
+    records = []
+    for row in rows:
+        values = dict(zip(names, row))
+        count = values.pop("child_count")
+        values["child_ids"] = tuple(json.loads(values["child_ids"]))
+        record = ManifestRecord(**values)
+        if record.revision < 1 or count != record.child_count:
+            raise ManifestCompatibilityError("invalid manifest record")
+        if collection_name is not None and record.collection_name != collection_name:
+            raise ManifestCompatibilityError("manifest collection mismatch")
+        values = asdict(record)
+        values.pop("updated_at")
+        records.append(values)
+    payload = json.dumps(dict(manifest_schema_version=MANIFEST_SCHEMA_VERSION, active_documents=records),
+                         sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
