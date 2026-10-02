@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–4 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–5 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -155,6 +155,7 @@ Query/改写内容 → BGE-M3([query])
 | Redis | Implemented | mysql_qa/cache/redis_client.py | corpus/答案 JSON 缓存；无 TTL/版本 |
 | MySQL | Implemented | mysql_qa/db/mysql_client.py；new_main.py | jpkb + conversations；CSV 导入非幂等 |
 | Query Classification | Partial | query_classifier.py | 教育二分类；缺训练模型时新建分类头，不能视为可靠分类 |
+| Manufacturing Query Analysis | Implemented | query/analyzer.py；entities.py；classifier.py；schemas.py | Stage 5 规则/结构化语义边界；真实 LLM/在线未验证 |
 | Strategy Selector | Implemented | strategy_selector.py | 同步 LLM 字符串选择器，不是制造业 Intent Router |
 | HyDE | Implemented | new_rag_system.py:28 | 假设答案作为检索 query |
 | SubQuery | Partial | new_rag_system.py:48 | 子查询检索存在；无全局融合排序 |
@@ -222,4 +223,12 @@ Stage 2 当时 Milvus Manufacturing Schema: Missing；Version Manifest: Missing�
 
 新增 manufacturing 专用 query_iterator 管理方法完整读取文档，安全编码 document_id，Strong 查询、关闭 iterator、批量按 PK delete；Legacy 拒绝这些路径。目录先预检重复 ID，sidecar 不作主文件，无自动 prune。显式删除验证 empty 后才移除 Manifest。SQLite 事务不跨 Loader/模型/网络；仅支持串行单 worker，不是 distributed ACID，在线读取可能短暂混合快照。
 
-真实 SQLite、状态网关最终快照和失败恢复已验证；Processor/VectorStore 接线测试的 Loader/Splitter/模型/网络是替身，真实 Milvus/OCR/BGE 未运行。详见 [版本摄取合约](MANUFACTURING_VERSIONED_INGESTION.md) 和 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Intent/Entity、在线 Metadata Filter、Parent/Reranker/BM25/SSE/Evaluation 未实施，Full Integration Readiness: NO。
+真实 SQLite、状态网关最终快照和失败恢复已验证；Processor/VectorStore 接线测试的 Loader/Splitter/模型/网络是替身，真实 Milvus/OCR/BGE 未运行。详见 [版本摄取合约](MANUFACTURING_VERSIONED_INGESTION.md) 和 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Stage 4 交付时 Intent/Entity、在线 Metadata Filter、Parent/Reranker/BM25/SSE/Evaluation 未实施，Full Integration Readiness: NO。
+
+## 10. Stage 5 增量（2026-10-02）
+
+新增独立轻量 QueryAnalyzer：原 Query → 规则标识符/显式描述实体 → 可注入 semantic classifier JSON → Pydantic Schema 校验 → 原文证据与规则优先 merge → QueryAnalysis。六意图与 high/medium/low 定性置信度、rules/llm/hybrid/fallback 来源和 warning codes；无 classifier 为 rules，服务/JSON/Schema 异常保留规则结果降级。未导入教育 BERT、策略、配置凭据或 SDK，general 无绕检索决定。
+
+型号/报警/备件 ID 保留大小写/符号/前导零，日期/量值和无上下文 token 不猜；语义补值须原 query 完整文本证据，不能覆盖规则或改变确定性 token 角色。多值单字段拒绝任选，None + warning/low。不增加 Milvus Schema 字段、不生成 Filter、检索策略或答案；new_rag_system 和旧查询/策略文件原样保留。
+
+synthetic core、独立进程阻断 Legacy/模型/API import 和 Stage 0–4 回归通过；真实 LLM 分类质量、API 超时/JSON 支持和在线集成未验证。合约见 [查询分析文档](MANUFACTURING_QUERY_ANALYSIS.md)，证据见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6 根据 confidence/warnings 设计过滤策略，当前未实施，Full Integration Readiness: NO。

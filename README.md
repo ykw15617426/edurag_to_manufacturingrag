@@ -1,6 +1,6 @@
 # EduRAG → 制造业设备智能运维 RAG
 
-本仓库正在从教育问答迁移到制造业内部设备运维知识问答。Stage 0 基线与治理已完成；Stage 1 已实现制造业 Metadata 校验与显式处理模式，已完成发布验证。现有在线运行链路仍使用教育领域数据、分类和提示词；Stage 3 已实现显式制造业 Milvus Schema 与写入映射；真实服务验证尚未完成。Stage 4 已实现版本 Manifest、跨运行 Skip、增量摄取与显式/差集删除控制；真实服务验证尚未完成。SSE 和检索评估尚未实现。
+本仓库正在从教育问答迁移到制造业内部设备运维知识问答。Stage 0 基线与治理已完成；Stage 1 已实现制造业 Metadata 校验与显式处理模式，已完成发布验证。现有在线运行链路仍使用教育领域数据、分类和提示词；Stage 3 已实现显式制造业 Milvus Schema 与写入映射；真实服务验证尚未完成。Stage 4 已实现版本 Manifest、跨运行 Skip、增量摄取与显式/差集删除控制；真实服务验证尚未完成。Stage 5 已提供独立制造业 QueryAnalysis、规则实体与可注入 JSON 语义分类边界；真实 LLM 和在线接入未验证。SSE 和检索评估尚未实现。
 
 ## 审计文档
 
@@ -15,7 +15,7 @@
 - [项目工作区说明](.agent/README.md)与[维护计划](.agent/PLANS.md)
 - [正式文档索引](docs/README.md)与[治理设置报告](docs/STAGE_REPORTS/REPOSITORY_GOVERNANCE_SETUP_REPORT.md)
 
-Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。Stage 1: PASS；[Metadata 合约与调用方式](docs/MANUFACTURING_METADATA_SCHEMA.md)，[Stage 1 报告](docs/STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PASS；[指纹与稳定身份](docs/MANUFACTURING_FINGERPRINTS.md)、[Stage 2 报告](docs/STAGE_REPORTS/STAGE2_REPORT.md)。Stage 3: PASS；[制造业存储合约](docs/MANUFACTURING_MILVUS_SCHEMA.md)、[Stage 3 报告](docs/STAGE_REPORTS/STAGE3_REPORT.md)。Stage 4: PASS；[版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)、[Stage 4 报告](docs/STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5–13 保持 PENDING，Full Integration Readiness: NO。
+Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。Stage 1: PASS；[Metadata 合约与调用方式](docs/MANUFACTURING_METADATA_SCHEMA.md)，[Stage 1 报告](docs/STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PASS；[指纹与稳定身份](docs/MANUFACTURING_FINGERPRINTS.md)、[Stage 2 报告](docs/STAGE_REPORTS/STAGE2_REPORT.md)。Stage 3: PASS；[制造业存储合约](docs/MANUFACTURING_MILVUS_SCHEMA.md)、[Stage 3 报告](docs/STAGE_REPORTS/STAGE3_REPORT.md)。Stage 4: PASS；[版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)、[Stage 4 报告](docs/STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5: PASS；[查询分析合约](docs/MANUFACTURING_QUERY_ANALYSIS.md)、[Stage 5 报告](docs/STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6–13 保持 PENDING，Full Integration Readiness: NO。
 
 ## 运行前提
 

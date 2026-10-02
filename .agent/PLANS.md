@@ -2,7 +2,7 @@
 
 更新日期：2026-10-02。
 
-Last Completed Stage: Stage 4 — PASS；Active Stage: NONE；Stage 5–13: PENDING。
+Last Completed Stage: Stage 5 — PASS；Active Stage: NONE；Stage 6–13: PENDING。
 
 ## 已确认检查点
 
@@ -18,7 +18,8 @@ Last Completed Stage: Stage 4 — PASS；Active Stage: NONE；Stage 5–13: PEND
 | Stage 2 | PASS | 指纹/稳定身份、验证及 Git 发布完成；集成限制见报告 |
 | Stage 3 | PASS | 制造业 Schema/映射、验证及 Git 发布完成；集成限制见报告 |
 | Stage 4 | PASS | 版本/增量控制、验证及 Git 发布完成；真实集成限制见报告 |
-| Stage 5–13 | PENDING | 尚未授权实施 |
+| Stage 5 | PASS | QueryAnalysis/信任规则、验证及 Git 发布完成；真实 LLM/在线限制见报告 |
+| Stage 6–13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
 
@@ -38,7 +39,7 @@ Last Completed Stage: Stage 4 — PASS；Active Stage: NONE；Stage 5–13: PEND
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-等待后续任务明确范围；不自行进入 Stage 5。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+等待后续任务明确范围；不自行进入 Stage 6。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -97,3 +98,17 @@ Stage 3 锁定 SDK 回归：244 passed / 12 skipped（Stage 3 103/1；Stage 2 34
 仅支持单 worker / 单 writer，不修改 Stage 2 身份、Stage 3 Schema、Legacy 或检索/切分默认值。Stage 5–13 PENDING。
 
 Stage 4 回归：300 passed / 0 failed / 12 skipped（Stage 4 56/0；Stage 3 103/1；Stage 2 34/1；Stage 1 100/1；Smoke 7/9）。阻断真实 SDK/模型/应用运行依赖后核心 56 passed。语法、链接、Diff 与既有合约保留 PASS；真实 Milvus/OCR/BGE NOT RUN。报告：[STAGE4_REPORT.md](../docs/STAGE_REPORTS/STAGE4_REPORT.md)。
+
+## 已完成任务：Stage 5 — Query Analysis: Intent Recognition + Entity Extraction
+
+状态：PASS；开始 HEAD：`11f82044861f7b9eb8efa543e17e4d797be13790`；main；初始工作区 clean，fetch 后 HEAD == origin/main。
+
+- [x] 读取治理、当前架构、Stage 4 报告及教育查询/制造业字段真实代码。
+- [x] 实现轻量 QueryAnalysis、保守规则实体、注入 JSON 语义分类边界与 fallback。
+- [x] 核心 synthetic 测试及 Stage 0–4 回归；验证不导入 Legacy/模型/API。
+- [x] 增量文档、报告与 Diff 审阅。
+- [x] Commit、Push、fetch/远端与 clean 核对。
+
+只产出结构化分析；不调用教育 BERT、StrategySelector 或修改 new_rag_system，不实现 Stage 6 Filter/Hybrid Retrieval 或后续业务。
+
+Stage 5 回归：400 passed / 0 failed / 12 skipped（Stage 5 100/0；Stage 4 56/0；Stage 3 103/1；Stage 2 34/1；Stage 1 100/1；Smoke 7/9）。独立进程无 Legacy/SDK/模型导入验证通过；语法/链接/历史保留与 Diff PASS。真实 LLM/API/在线集成 NOT RUN；报告：[STAGE5_REPORT.md](../docs/STAGE_REPORTS/STAGE5_REPORT.md)。

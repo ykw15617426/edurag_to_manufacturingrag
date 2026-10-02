@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–3 已完成；2026-10-02 授权执行 Stage 4，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–4 已完成；2026-10-02 授权执行 Stage 5，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -30,7 +30,8 @@ Stage 1: PASS
 Stage 2: PASS
 Stage 3: PASS
 Stage 4: PASS
-Stage 5-13: PENDING
+Stage 5: PASS
+Stage 6-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -105,8 +106,14 @@ Stage 2 交付时 Stage 3: PENDING、Readiness: YES（限定制造业持久化�
 
 Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计），当前状态以上方阶段表为准。Stable PK enables Stage 4; it does not replace Stage 4。当时后续需设计 Manifest、业务版本/Metadata 状态、跨运行判断、差异与删除；不能只依赖不含 sidecar 的主文件 Hash。Milvus 新旧集合不自动迁移，Schema mismatch 需明确迁移方案，Stage 3 没有版本激活/回滚或删除。
 
-## Stage 4 交付与 Stage 5 依赖
+## Stage 4 交付与当时的 Stage 5 依赖
 
 版本摄取控制层、持久 SQLite Manifest、Metadata/Processing 指纹、实际快照 Skip/Diff、先 Upsert 后 Delete、最终验证后提交、幂等显式删除及失败重试已实现。仍限单 worker / 单 writer；版本不做大小排序；目录不自动 prune。Stage 2 算法、Stage 3 Schema 与检索/切分默认值保持。
 
-合约见 [MANUFACTURING_VERSIONED_INGESTION.md](MANUFACTURING_VERSIONED_INGESTION.md)，证据见 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5 Readiness: YES（限定已版本化知识快照的查询分析设计）；真实服务/模型端到端未验证，Full Integration Readiness: NO。Stage 5–13 PENDING，不自动推进。
+合约见 [MANUFACTURING_VERSIONED_INGESTION.md](MANUFACTURING_VERSIONED_INGESTION.md)，证据见 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5 Readiness: YES（限定已版本化知识快照的查询分析设计）；真实服务/模型端到端未验证，Full Integration Readiness: NO。Stage 4 交付时 Stage 5–13 PENDING；当前状态以上方阶段表为准，不自动推进。
+
+## Stage 5 交付与 Stage 6 依赖
+
+独立 QueryAnalysis、六意图/定性置信度、保守规则实体、可注入 JSON 语义分类边界、原文证据/规则优先/角色保护与 fallback 已实现。规则 synthetic 验证不是实际企业语义准确率；真实 LLM 尚未验收，旧教育 BERT/StrategySelector/new_rag_system 保留。
+
+合约见 [MANUFACTURING_QUERY_ANALYSIS.md](MANUFACTURING_QUERY_ANALYSIS.md)，实测见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6 Readiness: YES（限定 Filter 设计输入）；应结合 confidence/warnings 决定严格/放宽/无 Metadata Filter。此处为后续设计边界，不执行过滤、Hybrid Retrieval、Query Rewrite 或答案路由；general 不授权绕检索。Stage 6–13 PENDING，Full Integration Readiness: NO。
