@@ -2,7 +2,7 @@
 
 2026-10-02。开始 main / `545124c9acb7b2918b4c424a5de4af16cd9a2156`，初始 Working Tree clean；fetch 后 HEAD == origin/main。用户授权范围仅 Stage 6。
 
-Implementation: PASS。Validation: PASS。GitHub Sync: PENDING。Overall Status: IN PROGRESS。Full Integration Readiness: NO。
+Implementation: PASS。Validation: PASS。GitHub Sync: PASS。Overall Status: PASS。Full Integration Readiness: NO。
 
 ## Changes and source scope
 
@@ -26,7 +26,7 @@ Windows / Python 3.13.9，沿用 ignored `.venv/stage1-validation` 的 Pydantic 
 
 12 skipped：Stage 3 live 开关未启用 1；Stage 1/2 真实 Loader/分块各 1；Smoke 缺完整模型/API/应用/数据库依赖 9。Stage 6 Live Milvus: NOT RUN；STAGE6_LIVE_MILVUS 未启用，未提供或宣称执行 live harness。真实 BGE/Reranker、真实语义服务、在线/答案/端到端业务评估: NOT RUN。未连接/修改真实 edurag 或 manufacturing_rag_v1 集合。
 
-`git diff --check`: PASS。6 个新增/修改 Python 文件 ast.parse(feature_version=(3,10)) 与 compile: PASS（3.10 仅语法，实际运行 3.13）。8 个变更/新增 Markdown 相对链接: PASS。原 VectorStore 全部 11 个方法 AST 与开始 HEAD 完全一致: PASS；Stage 2–5 合约、Legacy/配置/数据/历史报告的变更范围保留检查 PASS。独立进程导入新 retrieval package 未导入 SDK/模型/Legacy/config: PASS。Git 发布后回写实际证据。
+`git diff --check`: PASS。6 个新增/修改 Python 文件 ast.parse(feature_version=(3,10)) 与 compile: PASS（3.10 仅语法，实际运行 3.13）。8 个变更/新增 Markdown 相对链接: PASS。原 VectorStore 全部 11 个方法 AST 与开始 HEAD 完全一致: PASS；Stage 2–5 合约、Legacy/配置/数据/历史报告的变更范围保留检查 PASS。独立进程导入新 retrieval package 未导入 SDK/模型/Legacy/config: PASS。`git diff --cached --check`: PASS；限定暂存 14 个文件。实现提交已正常 Push，fetch 后 HEAD == origin/main，Working Tree clean；本次增量回写完成状态。
 
 ## Limits and deferred work
 
@@ -36,6 +36,6 @@ Windows / Python 3.13.9，沿用 ignored `.venv/stage1-validation` 的 Pydantic 
 
 ## Git and handoff
 
-Commit message: `feat: add manufacturing filtered retrieval`。限定本阶段文件；Commit / Push / Remote Verification / Working Tree 检查待完成。最终 SHA 在回复提供，不预写报告自身哈希。
+实现 Commit: `320849e59e913de7e1521d669cff81fbdec126cb`；message: `feat: add manufacturing filtered retrieval`。限定本阶段 14 文件，Commit / Push / Remote Verification: PASS；`git push origin main` 与 `git fetch origin` 成功，`git rev-parse HEAD` == `git rev-parse origin/main`，`git status` 为 clean。完成状态通过独立文档提交正常发布，不 amend/force push，不重写已完成阶段历史；最终 SHA 在回复中提供，不预写当前状态提交自身哈希。Last Completed Stage: Stage 6 — PASS；Active Stage: NONE。
 
 Stage 7 Readiness: YES（限定已保留 Child Metadata、parent_id/parent_content 与排序信号的设计输入）。不是 Stage 7 实施授权；Stage 6 发布核验后停止。
