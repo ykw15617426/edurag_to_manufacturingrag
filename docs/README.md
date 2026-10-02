@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4–13: PENDING；Full Integration Readiness: NO。
+Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5–13: PENDING；Full Integration Readiness: NO。
 
 ## 文档职责
 
@@ -14,6 +14,8 @@ Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification
 | [MANUFACTURING_METADATA_SCHEMA.md](MANUFACTURING_METADATA_SCHEMA.md) | Stage 1 正式字段、来源、校验与调用约定 |
 | [MANUFACTURING_FINGERPRINTS.md](MANUFACTURING_FINGERPRINTS.md) | Stage 2 原文件/内容指纹、稳定身份与后续持久化边界 |
 | [MANUFACTURING_MILVUS_SCHEMA.md](MANUFACTURING_MILVUS_SCHEMA.md) | Stage 3 字段、NULL、PK、索引、集合隔离与兼容规则 |
+| [MANUFACTURING_VERSIONED_INGESTION.md](MANUFACTURING_VERSIONED_INGESTION.md) | Stage 4 Manifest、版本策略、差集清理与恢复合约 |
+| [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md) | 版本摄取实测、集成限制与 Git 发布证据 |
 | [Stage 3 报告](STAGE_REPORTS/STAGE3_REPORT.md) | 严格持久化代码、真实验证范围与发布证据 |
 | [Stage 2 报告](STAGE_REPORTS/STAGE2_REPORT.md) | 指纹/身份实现、真实测试与 Git 发布证据 |
 | [Stage 1 报告](STAGE_REPORTS/STAGE1_REPORT.md) | 实现范围、真实测试、兼容性和发布证据 |

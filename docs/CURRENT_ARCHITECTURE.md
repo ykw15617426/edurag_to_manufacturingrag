@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–3 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–4 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -170,7 +170,7 @@ Query/改写内容 → BGE-M3([query])
 | 语义 splitter / demo Agent | Legacy | edu_model_text_spliter.py；demo/ | 主链路没有调用 |
 | YAML / Pydantic Metadata | Implemented | schemas/manufacturing_metadata.py；ingestion/metadata_loader.py；document_processor.py | Stage 1 显式 manufacturing 模式；核心单元测试通过，真实 Loader/分块集成缺依赖未验证 |
 | Document/Parent/Child SHA256 | Implemented | ingestion/fingerprints.py；metadata_loader.py；document_processor.py | Stage 2 指纹；Stage 3 制造业写入映射已实现，真实 Milvus 未验证 |
-| Version Manifest / stale delete | Missing | vector_store.py | Stage 4 |
+| Version Manifest / stale delete | Implemented | ingestion/manifest_store.py；versioned_ingestion.py；vector_store.py admin | Stage 4 单 worker 控制已测试；Live 未验证 |
 
 ## 5. 配置、部署与评估基线
 
@@ -212,4 +212,14 @@ Stage 2 当时 Milvus Manufacturing Schema: Missing；Version Manifest: Missing�
 
 默认集合 manufacturing_rag_v1、系统 schema_version=manufacturing_v1，32 个明确字段、auto_id=False、dynamic fields=False、稳定 Child ID 直接 PK；业务字段、三种指纹和 provenance 有持久化代码路径，周期 value/unit/trigger 扁平化，optional 使用原生 NULL。已有集合在使用前检查字段/PK/dim/nullable/容量/index；不匹配失败、不自动 drop。Legacy 集合、Schema 和 MD5 PK 保持原行为。详见 [存储合约](MANUFACTURING_MILVUS_SCHEMA.md) 与 [Stage 3 报告](STAGE_REPORTS/STAGE3_REPORT.md)。
 
-真实 pymilvus 2.5.4 Schema/Index 构建及 NULL Upsert 编码已离线验证；真实 Milvus 服务/BGE 端到端写入未验证。版本 Manifest、Cross-run document skip、Delta/Stale Delete、制造业 Intent/Metadata Filter 和 Parent Aggregation Refactor 仍未实现。稳定 PK 不等于增量摄取完成，旧版本消失的块仍可能残留。Full Integration Readiness: NO。
+真实 pymilvus 2.5.4 Schema/Index 构建及 NULL Upsert 编码已离线验证；真实 Milvus 服务/BGE 端到端写入未验证。Stage 3 交付时版本 Manifest、Cross-run document skip、Delta/Stale Delete、制造业 Intent/Metadata Filter 和 Parent Aggregation Refactor 尚未实现。稳定 PK 不等于增量摄取完成，旧版本消失的块仍可能残留。Full Integration Readiness: NO。
+
+## 9. Stage 4 增量（2026-10-02）
+
+显式离线 VersionedIngestion：Source/Metadata preflight → SQLite Manifest 与版本冲突检查 → 完全未变时 Strong 实际 IDs 验证并 Skip；其余调用现有单文件 Loader/共享 Parent-Child → 输入再次校验 → 实际 IDs Diff → Upsert 完整 desired → 确认 desired 存在 → stable PK 删除 stale → 验证最终快照 → 最后 SQLite Manifest 提交。
+
+控制面 SQLiteManifestStore（manifest_v1）独立于数据面 manufacturing_v1，唯一 document_id active record、排序 Child JSON、revision CAS 与 UTC 更新时间。metadata_sha256 只 Hash Stage 1 规范业务字段；processing_signature 使用显式合约版本与实际切分参数。不改 Stage 2 Hash/ID、Stage 3 Schema/Row、Legacy、权重或 nprobe。
+
+新增 manufacturing 专用 query_iterator 管理方法完整读取文档，安全编码 document_id，Strong 查询、关闭 iterator、批量按 PK delete；Legacy 拒绝这些路径。目录先预检重复 ID，sidecar 不作主文件，无自动 prune。显式删除验证 empty 后才移除 Manifest。SQLite 事务不跨 Loader/模型/网络；仅支持串行单 worker，不是 distributed ACID，在线读取可能短暂混合快照。
+
+真实 SQLite、状态网关最终快照和失败恢复已验证；Processor/VectorStore 接线测试的 Loader/Splitter/模型/网络是替身，真实 Milvus/OCR/BGE 未运行。详见 [版本摄取合约](MANUFACTURING_VERSIONED_INGESTION.md) 和 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Intent/Entity、在线 Metadata Filter、Parent/Reranker/BM25/SSE/Evaluation 未实施，Full Integration Readiness: NO。

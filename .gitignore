@@ -19,3 +19,4 @@ venv/
 # Generated logs and local vector databases
 logs/
 chroma_db/
+runtime/

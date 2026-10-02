@@ -65,6 +65,10 @@ class Config:
         self.MILVUS_MANUFACTURING_COLLECTION_NAME = os.getenv(
             'MILVUS_MANUFACTURING_COLLECTION_NAME',
             self.config.get('milvus', 'manufacturing_collection_name', fallback='manufacturing_rag_v1'))
+        self.MANUFACTURING_MANIFEST_DB_PATH = os.getenv(
+            'MANUFACTURING_MANIFEST_DB_PATH',
+            self.config.get('ingestion', 'manufacturing_manifest_db_path',
+                            fallback=os.path.join(self.PROJECT_ROOT, 'runtime', 'manufacturing_manifest.sqlite3')))
 
         # LLM 配置
         # LLM 模型名

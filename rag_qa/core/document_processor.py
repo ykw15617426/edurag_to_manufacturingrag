@@ -87,10 +87,43 @@ def process_documents(directory_path,
                       parent_chunk_overlap=config.PARENT_CHUNK_OVERLAP,
                       child_chunk_overlap=config.CHILD_CHUNK_OVERLAP,
                       *, metadata_mode="legacy"):
-    # 子块文档列表
-    child_chunks = []
     # 加载指定目录下所有的文档
     documents = load_documents_from_directory(directory_path, metadata_mode=metadata_mode)
+    return _split_loaded_documents(documents, parent_chunk_size, child_chunk_size,
+                                   parent_chunk_overlap, child_chunk_overlap, metadata_mode=metadata_mode)
+
+
+def process_document_file(source_file,
+                          parent_chunk_size=config.PARENT_CHUNK_SIZE,
+                          child_chunk_size=config.CHILD_CHUNK_SIZE,
+                          parent_chunk_overlap=config.PARENT_CHUNK_OVERLAP,
+                          child_chunk_overlap=config.CHILD_CHUNK_OVERLAP,
+                          *, metadata_mode="manufacturing"):
+    """One authoritative file, reusing the existing loaders and unchanged splitter."""
+    if metadata_mode != "manufacturing":
+        raise ValueError("single-file versioned processing requires manufacturing metadata")
+    file_path = os.path.abspath(os.fspath(source_file))
+    extension = os.path.splitext(file_path)[1].lower()
+    if extension not in document_loaders:
+        raise ValueError("unsupported manufacturing source extension")
+    load_class = document_loaders[extension]
+
+    def load_file(loader_path):
+        loader = load_class(loader_path, encoding="utf-8") if extension == ".txt" else load_class(loader_path)
+        return loader.load()
+
+    documents = load_with_metadata(file_path, load_file)
+    source = os.path.basename(os.path.dirname(file_path)).replace("_data", "")
+    for document in documents:
+        document.metadata.update(source=source, file_path=file_path, timestamp=datetime.now().isoformat())
+    return _split_loaded_documents(documents, parent_chunk_size, child_chunk_size,
+                                   parent_chunk_overlap, child_chunk_overlap, metadata_mode=metadata_mode)
+
+
+def _split_loaded_documents(documents, parent_chunk_size, child_chunk_size,
+                            parent_chunk_overlap, child_chunk_overlap, *, metadata_mode):
+    # Shared Stage 2 splitting/identity implementation; Legacy call path is preserved.
+    child_chunks = []
     parent_splitter = ChineseRecursiveTextSplitter(chunk_size=parent_chunk_size, chunk_overlap=parent_chunk_overlap)
     child_splitter = ChineseRecursiveTextSplitter(chunk_size=child_chunk_size, chunk_overlap=child_chunk_overlap)
     markdown_parent_splitter = MarkdownTextSplitter(chunk_size=parent_chunk_size, chunk_overlap=parent_chunk_overlap)

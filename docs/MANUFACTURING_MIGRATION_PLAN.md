@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1/2 已完成；2026-10-02 授权执行 Stage 3，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–3 已完成；2026-10-02 授权执行 Stage 4，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -29,7 +29,8 @@ Governance Setup: PASS
 Stage 1: PASS
 Stage 2: PASS
 Stage 3: PASS
-Stage 4-13: PENDING
+Stage 4: PASS
+Stage 5-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -98,8 +99,14 @@ Stage 2 仅生成指纹与稳定身份，算法以 [MANUFACTURING_FINGERPRINTS.m
 
 Stage 2 交付时 Stage 3: PENDING、Readiness: YES（限定制造业持久化设计）；当前状态以上方阶段表为准。当时 VectorStore 不完整持久化业务字段/指纹，Schema、PK 和集合未修改。Manifest、跨运行 Skip、增量编排和 Delta Delete 均留 Stage 4。
 
-## Stage 3 交付与 Stage 4 依赖
+## Stage 3 交付与当时的 Stage 4 依赖
 
 存储规则见 [MANUFACTURING_MILVUS_SCHEMA.md](MANUFACTURING_MILVUS_SCHEMA.md)，代码与实测见 [Stage 3 报告](STAGE_REPORTS/STAGE3_REPORT.md)。独立集合、严格 32 字段、稳定 Child PK、业务/指纹 row 映射和现有 Schema/Index 检查已实现；真实服务/BGE 持久化仍需 Live 验证。
 
-Stage 4: PENDING；Readiness: YES（限定版本/增量设计），不是授权。Stable PK enables Stage 4; it does not replace Stage 4。后续需设计 Manifest、业务版本/Metadata 状态、跨运行判断、差异与删除；不能只依赖不含 sidecar 的主文件 Hash。Milvus 新旧集合不自动迁移，Schema mismatch 需明确迁移方案，本阶段没有版本激活/回滚或删除。
+Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计），当前状态以上方阶段表为准。Stable PK enables Stage 4; it does not replace Stage 4。当时后续需设计 Manifest、业务版本/Metadata 状态、跨运行判断、差异与删除；不能只依赖不含 sidecar 的主文件 Hash。Milvus 新旧集合不自动迁移，Schema mismatch 需明确迁移方案，Stage 3 没有版本激活/回滚或删除。
+
+## Stage 4 交付与 Stage 5 依赖
+
+版本摄取控制层、持久 SQLite Manifest、Metadata/Processing 指纹、实际快照 Skip/Diff、先 Upsert 后 Delete、最终验证后提交、幂等显式删除及失败重试已实现。仍限单 worker / 单 writer；版本不做大小排序；目录不自动 prune。Stage 2 算法、Stage 3 Schema 与检索/切分默认值保持。
+
+合约见 [MANUFACTURING_VERSIONED_INGESTION.md](MANUFACTURING_VERSIONED_INGESTION.md)，证据见 [Stage 4 报告](STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5 Readiness: YES（限定已版本化知识快照的查询分析设计）；真实服务/模型端到端未验证，Full Integration Readiness: NO。Stage 5–13 PENDING，不自动推进。

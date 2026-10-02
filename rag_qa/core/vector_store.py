@@ -14,6 +14,8 @@ from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
 # 导入 hashlib 模块，用于生成唯一ID 的哈希值
 import hashlib
+import json
+from rag_qa.core.milvus_schema import HASH_PATTERN
 from rag_qa.core.milvus_schema import (
     select_collection, ensure_manufacturing_collection,
     validate_manufacturing_document, build_manufacturing_row,
@@ -163,6 +165,51 @@ class VectorStore:
             logger.info(f"已存储 {len(data)} 个文档到向量数据库")
         else:
             logger.error("没有数据存储到向量数据库")
+
+    def _require_manufacturing_admin(self):
+        if self.schema_mode != "manufacturing":
+            raise ValueError("ingestion administration is forbidden for Legacy collections")
+
+    def list_document_child_ids(self, document_id):
+        """Full document snapshot; this is ingestion administration, not online filtering."""
+        self._require_manufacturing_admin()
+        if (not isinstance(document_id, str) or not document_id.strip()
+                or len(document_id.encode("utf-8")) > 256):
+            raise ValueError("document_id: nonempty VARCHAR(256) required")
+        iterator = self.client.query_iterator(
+            collection_name=self.collection_name, batch_size=1000, limit=-1,
+            filter="document_id == " + json.dumps(document_id, ensure_ascii=False),
+            output_fields=["id", "child_id", "document_id"], consistency_level="Strong")
+        ids = []
+        try:
+            while True:
+                rows = iterator.next()
+                if not rows:
+                    break
+                for row in rows:
+                    identifier = row.get("id")
+                    if (row.get("document_id") != document_id or row.get("child_id") != identifier
+                            or not isinstance(identifier, str) or not HASH_PATTERN.fullmatch(identifier)):
+                        raise ValueError("invalid manufacturing document snapshot; deletion forbidden")
+                    ids.append(identifier)
+        finally:
+            iterator.close()
+        if len(ids) != len(set(ids)):
+            raise ValueError("duplicate PK in document snapshot")
+        return sorted(ids)
+
+    def delete_child_ids(self, ids):
+        self._require_manufacturing_admin()
+        ids = list(ids)
+        if any(not isinstance(i, str) or not HASH_PATTERN.fullmatch(i) for i in ids):
+            raise ValueError("delete requires stable lowercase SHA256 PKs")
+        ids = sorted(set(ids))
+        for start in range(0, len(ids), 1000):
+            self.client.delete(collection_name=self.collection_name, ids=ids[start:start + 1000])
+
+    def verify_document_snapshot(self, document_id, desired_ids):
+        self._require_manufacturing_admin()
+        return set(self.list_document_child_ids(document_id)) == set(desired_ids)
 
     # 定义方法，处理稀疏向量 选中代码，ctrl+alt+M --> 提取函数
     def get_sparse_dict(self, embeddings, i):
