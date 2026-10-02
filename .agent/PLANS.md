@@ -2,7 +2,7 @@
 
 更新日期：2026-10-02。
 
-Last Completed Stage: Stage 6 — PASS；Active Stage: Stage 7 — IN PROGRESS；Stage 8–13: PENDING。
+Last Completed Stage: Stage 7 — PASS；Active Stage: NONE；Stage 8–13: PENDING。
 
 ## 已确认检查点
 
@@ -20,7 +20,7 @@ Last Completed Stage: Stage 6 — PASS；Active Stage: Stage 7 — IN PROGRESS�
 | Stage 4 | PASS | 版本/增量控制、验证及 Git 发布完成；真实集成限制见报告 |
 | Stage 5 | PASS | QueryAnalysis/信任规则、验证及 Git 发布完成；真实 LLM/在线限制见报告 |
 | Stage 6 | PASS | Filter/Child Hybrid Retrieval、离线验证及 Git 发布完成；真实服务/模型未验证 |
-| Stage 7 | IN PROGRESS | 当前授权：Parent Aggregation + Reranker Refactor |
+| Stage 7 | PASS | Parent 身份/Metadata 聚合、稳定重排、验证与 Git 发布完成；真实模型未执行 |
 | Stage 8–13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
@@ -41,7 +41,7 @@ Last Completed Stage: Stage 6 — PASS；Active Stage: Stage 7 — IN PROGRESS�
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-当前执行 Stage 7；不自行进入 Stage 8。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+Stage 7 已完成，等待后续任务明确范围；不自行进入 Stage 8。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -133,9 +133,9 @@ Stage 5 回归：400 passed / 0 failed / 12 skipped（Stage 5 100/0；Stage 4 56
 Stage 6 实现提交 `320849e59e913de7e1521d669cff81fbdec126cb` 已正常 Push；fetch 后 HEAD == origin/main、Working Tree clean。完成状态采用独立文档提交发布，不重写 Stage 0–6 历史；最终 SHA 在回复中核验提供。
 
 
-## 当前任务：Stage 7 — Parent Aggregation + Reranker Refactor
+## 已完成任务：Stage 7 — Parent Aggregation + Reranker Refactor
 
-状态：IN PROGRESS。开始 HEAD：`c8d20a703dd98a6f8c8ccab05aaf5ffc54596da6`；main；初始 Working Tree clean，fetch 后 HEAD == origin/main。
+状态：PASS。开始 HEAD：`c8d20a703dd98a6f8c8ccab05aaf5ffc54596da6`；main；初始 Working Tree clean，fetch 后 HEAD == origin/main。
 
 - [x] 阅读治理/Stage 6 合约与 Query/VectorStore/Schema/配置，核对基线与范围。
 - [x] 实现 parent_id 分组、Metadata 一致性/最大 score/命中统计与确定预排序。
@@ -144,6 +144,8 @@ Stage 6 实现提交 `320849e59e913de7e1521d669cff81fbdec126cb` 已正常 Push�
 - [x] 79 项 Stage 7 测试与历史回归通过：544 passed / 0 failed / 12 skipped。
 - [x] 增量合约、架构/导航/报告更新；真实模型/服务 NOT RUN，Stage 8未执行。
 - [x] 语法/链接/保护范围与完整 Diff 审阅。
-- [ ] Commit、Push、fetch/远端一致与 Working Tree clean 核验。
+- [x] Commit、Push、fetch/远端一致与 Working Tree clean 核验。
 
 报告：[STAGE7_REPORT.md](../docs/STAGE_REPORTS/STAGE7_REPORT.md)。Full Integration Readiness: NO；Stage 8–13 PENDING。
+
+Stage 7 实现提交 `3427cc372f0accab7ec92b82b92c56fafa7ce660` 已正常 Push，fetch 后 HEAD == origin/main，Working Tree clean；完成状态通过独立文档提交正常发布，最终 SHA 在回复中核验提供，不重写历史。

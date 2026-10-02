@@ -2,7 +2,7 @@
 
 2026-10-02。开始 main / `c8d20a703dd98a6f8c8ccab05aaf5ffc54596da6`；初始 Working Tree clean，fetch 后 HEAD == origin/main。用户仅授权 Stage 7。
 
-Implementation: PASS。Validation: PASS。GitHub Sync: PENDING。Overall Status: IN PROGRESS。Full Integration Readiness: NO。
+Implementation: PASS。Validation: PASS。GitHub Sync: PASS。Overall Status: PASS。Full Integration Readiness: NO。
 
 ## Changes and source scope
 
@@ -26,7 +26,7 @@ VectorStore 全文、Stage 6 filters、Legacy 检索/分类/策略/在线 new_ra
 
 12 skipped 为历史环境限制：Stage 3 live 未启用 1；Stage 1/2 真 Loader/分块各 1；Smoke 缺完整模型/API/应用/数据库依赖 9。真实 `bge-reranker-large`/CrossEncoder: NOT RUN；Live Milvus/BGE-M3、LLM、LangChain真实运行与在线/端到端业务评估: NOT RUN。未访问/修改真实集合；假分数不是质量指标。
 
-`git diff --check`: PASS。6 个 Python 文件 ast.parse(feature_version=(3,10)) 与 compile: PASS（3.10 仅语法，实际运行3.13）。9 个 Markdown 文件相对链接 PASS；25 个 VectorStore/filters/Schema/ingestion/query/配置/历史报告与开始 HEAD 内容完全一致 PASS。Stage 6 retrieve 除默认 k 的 lazy resolution 外，原 body AST 完全一致 PASS。独立进程 package import + explicit-k retrieval 无 SDK/模型/LangChain/config imports PASS。变更范围与 Diff 审阅 PASS；不将 source/mock 当作 Full Integration PASS。
+`git diff --check`: PASS。6 个 Python 文件 ast.parse(feature_version=(3,10)) 与 compile: PASS（3.10 仅语法，实际运行3.13）。9 个 Markdown 文件相对链接 PASS；25 个 VectorStore/filters/Schema/ingestion/query/配置/历史报告与开始 HEAD 内容完全一致 PASS。Stage 6 retrieve 除默认 k 的 lazy resolution 外，原 body AST 完全一致 PASS。独立进程 package import + explicit-k retrieval 无 SDK/模型/LangChain/config imports PASS。`git diff --cached --check`: PASS；限定暂存15个文件，变更范围与 Diff 审阅 PASS；不将 source/mock 当作 Full Integration PASS。
 
 ## Limits and deferred work
 
@@ -36,6 +36,6 @@ VectorStore 全文、Stage 6 filters、Legacy 检索/分类/策略/在线 new_ra
 
 ## Git and handoff
 
-Commit message: `feat: add manufacturing parent reranking`。仅本阶段文件，Commit / Push / Remote Verification / Working Tree 检查待完成；最终 SHA 在回复提供，不预写报告自身哈希。
+实现 Commit: `3427cc372f0accab7ec92b82b92c56fafa7ce660`；message: `feat: add manufacturing parent reranking`。仅本阶段15个文件，Commit / Push / Remote Verification: PASS；`git push origin main` 与 `git fetch origin` 成功，`git rev-parse HEAD` == `git rev-parse origin/main`，`git status` 为 Working Tree clean。完成状态通过独立文档提交正常发布，不 amend/force push；最终 SHA 在回复中提供，不预写当前状态提交自身哈希。Last Completed Stage: Stage 7 — PASS；Active Stage: NONE；Stage 8–13 PENDING。
 
 Stage 8 Readiness: YES（限定已有制造业 Parent Evidence 输出接口供后续设计）；不构成 Stage 8 实施授权。Full Integration Readiness: NO；本阶段发布核验后停止。

@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: IN PROGRESS；Stage 8–13: PENDING；Full Integration Readiness: NO。
+Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8–13: PENDING；Full Integration Readiness: NO。
 
 ## 文档职责
 
