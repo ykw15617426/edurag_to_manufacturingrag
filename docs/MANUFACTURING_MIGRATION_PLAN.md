@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–9 已完成；2026-10-02 已按授权完成 Stage 9，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–9 已完成；2026-10-02 正按授权执行 Stage 10，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -35,7 +35,8 @@ Stage 6: PASS
 Stage 7: PASS
 Stage 8: PASS
 Stage 9: PASS
-Stage 10-13: PENDING
+Stage 10: IN PROGRESS
+Stage 11-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -147,4 +148,11 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 严格DIRECT/REWRITE/SUBQUERY、可注入planner和整体DIRECT降级、原query保留、硬标识符/新增token保护、稳定去重与最多4子查询已实现。公共fast path probe不提前回退；Exact Alarm限定alarm_fault，旧Stage 8接口兼容。多query复用Stage 6原Analysis的Child检索，按child_id/max score稳定融合及冲突拒绝，再Stage 7聚合与原query一次重排，不改配置/权重/Schema/IDs。
 
-合约见 [MANUFACTURING_RETRIEVAL_STRATEGY.md](MANUFACTURING_RETRIEVAL_STRATEGY.md)，证据见 [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md)。Generation/Citation由Stage 10处理，当前未实现/未接入在线。Manufacturing HyDE/Backtracking未实施，Legacy保留；Stage 10–13 PENDING，Full Integration Readiness: NO。readiness不等于实施授权。
+合约见 [MANUFACTURING_RETRIEVAL_STRATEGY.md](MANUFACTURING_RETRIEVAL_STRATEGY.md)，证据见 [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md)。Stage 9交付时Generation/Citation由Stage 10处理，当时未实现/未接入在线。Manufacturing HyDE/Backtracking未实施，Legacy保留；Stage 10–13 PENDING，Full Integration Readiness: NO。readiness不等于实施授权。
+
+
+## Stage 10 交付与 Stage 11 边界
+
+统一Parent/FastPath EvidenceRecord、身份/来源/版本一致性/hard兼容保护、空证据静态不足、静态指令+JSON DATA、可注入严格JSON completion、逐claim有效引用和标识符/数字支持检查及真实来源Renderer已实现。模型/校验系统错误fail closed，不当作证据不足；不声称语义蕴含或实际模型免疫Prompt Injection。
+
+合约见 [MANUFACTURING_GENERATION.md](MANUFACTURING_GENERATION.md)，证据见 [Stage 10报告](STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11才处理FastAPI/SSE/Redis TTL/session与正式在线集成，本阶段未实现；Stage 11–13 PENDING，Full Integration Readiness: NO。现有Stage 2–9业务合约和Legacy代码保持，后续阶段需用户明确授权。

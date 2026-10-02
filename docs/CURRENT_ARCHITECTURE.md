@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–9 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–10 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -269,3 +269,12 @@ Tokenizer保持标识符大小写/-/_/前导零，中文用char/bigram；BM25复
 `ManufacturingFastPath.probe`公开只探测、不触发Stage 7 fallback。Stage 9仅alarm_fault允许Exact Alarm，其他五意图仍可符合现有安全规则的FAQ/BM25；原Stage 8公开入口默认行为保留。`ManufacturingStrategyRetriever`复用Stage 6每变体Child检索，按child_id取最高raw score并检查Metadata/正文冲突；稳定排序后才复用Stage 7聚合及一次原query Parent rerank。融合provenance独立记录，不改变Parent Metadata一致性或config Top-M/k。
 
 83项Stage 9核心验证通过；Stage 0–9回归689 passed / 0 failed / 12 skipped；真实LLM/Milvus/BGE/CrossEncoder及在线端到端NOT RUN。Legacy StrategySelector/HyDE/Backtracking/new_rag_system未修改；Manufacturing HyDE/Backtracking未实施。合约见 [制造业检索策略](MANUFACTURING_RETRIEVAL_STRATEGY.md)，证据见 [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10–13 PENDING，Full Integration Readiness: NO。
+
+
+## 15. Stage 10 增量（2026-10-02）
+
+`rag_qa/generation`消费Stage 9 Parent/FastPath Documents及Stage 8 evidence，按最终顺序稳定E1/E2标识。规范化验证来源/业务属性/Parent身份与正文，同parent事实冲突或同doc多版本fail closed；每条Evidence必须兼容原QueryAnalysis全部hard字段，缺值不作wildcard。空Evidence直接静态insufficient且不调模型，general亦如此。
+
+`StructuredAnswerGenerator(completion).generate(query, analysis, strategy_result)`以静态system约束supplied Evidence，正文/query仅JSON DATA；严格生成status/claims/evidence_ids，逐claim检查有效citation、原query或所引证据中的标识符与数字token。Renderer从结构化claims添加引用，列实际来源Metadata、不伪造页码或score可信度。FastPath同样进入生成，不直接原文当答案；timeout/网络/非法JSON/schema/幻觉均GenerationError，不假装证据不足。
+
+124项Stage 10核心及历史回归813 passed / 0 failed / 12 skipped；token guard不证明语义蕴含、维修操作正确或真实模型免疫Prompt Injection，ASCII新普通词也可能保守拒绝。transport timeout由completion控制；不调模型Context参数、不截断证据/整段Prompt。Stage 2–9实现与Legacy prompts/new_rag_system/在线/config保持，真实LLM/服务/线上端到端NOT RUN。合约见 [制造业生成](MANUFACTURING_GENERATION.md)，证据见 [Stage 10报告](STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11–13 PENDING；Full Integration Readiness: NO。

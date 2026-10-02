@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10–13: PENDING；Full Integration Readiness: NO。
+Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: IN PROGRESS；Stage 11–13: PENDING；Full Integration Readiness: NO。
 
 ## 文档职责
 
@@ -20,6 +20,8 @@ Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification
 | [MANUFACTURING_PARENT_RETRIEVAL.md](MANUFACTURING_PARENT_RETRIEVAL.md) | Stage 7 Parent 身份/Metadata/分数聚合、稳定重排与配置 Top-M |
 | [MANUFACTURING_FAST_PATH.md](MANUFACTURING_FAST_PATH.md) | Stage 8 批准语料、报警/FAQ精确证据、raw BM25与Stage 7 fallback合约 |
 | [MANUFACTURING_RETRIEVAL_STRATEGY.md](MANUFACTURING_RETRIEVAL_STRATEGY.md) | Stage 9 严格决策、标识符保护、意图快路径与Child融合/一次重排 |
+| [MANUFACTURING_GENERATION.md](MANUFACTURING_GENERATION.md) | Stage 10 Evidence完整性/版本/标识符保护、严格生成和逐Claim引用合约 |
+| [Stage 10 报告](STAGE_REPORTS/STAGE10_REPORT.md) | 正常化/Prompt/生成guard验证、真实LLM限制及Git发布证据 |
 | [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md) | 策略治理离线测试、真实集成限制与Git发布证据 |
 | [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md) | 快路径/真实BM25离线测试、扩容记录、限制与Git发布证据 |
 | [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md) | Parent/scorer synthetic 验证、真实模型限制与 Git 发布证据 |
