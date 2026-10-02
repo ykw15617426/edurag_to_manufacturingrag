@@ -2,7 +2,7 @@
 
 更新日期：2026-10-02。
 
-Last Completed Stage: Stage 8 — PASS；Active Stage: NONE；Stage 9–13: PENDING。
+Last Completed Stage: Stage 8 — PASS；Active Stage: Stage 9 — IN PROGRESS；Stage 10–13: PENDING。
 
 ## 已确认检查点
 
@@ -22,7 +22,8 @@ Last Completed Stage: Stage 8 — PASS；Active Stage: NONE；Stage 9–13: PEND
 | Stage 6 | PASS | Filter/Child Hybrid Retrieval、离线验证及 Git 发布完成；真实服务/模型未验证 |
 | Stage 7 | PASS | Parent 身份/Metadata 聚合、稳定重排、验证与 Git 发布完成；真实模型未执行 |
 | Stage 8 | PASS | approved证据快路径、raw BM25、验证及Git发布完成；真实服务/线上未执行 |
-| Stage 9–13 | PENDING | 尚未授权实施 |
+| Stage 9 | IN PROGRESS | 结构化策略、变体保护、Child融合与一次Parent重排；发布待验证 |
+| Stage 10–13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
 
@@ -42,7 +43,7 @@ Last Completed Stage: Stage 8 — PASS；Active Stage: NONE；Stage 9–13: PEND
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-Stage 8已完成，等待后续任务明确范围；不自行进入 Stage 9。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+当前仅执行已授权 Stage 9，完成后停止，不自行进入 Stage 10。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -168,3 +169,18 @@ Stage 7 实现提交 `3427cc372f0accab7ec92b82b92c56fafa7ce660` 已正常 Push�
 仅在ignored验证venv安装requirements已锁定rank-bm25==0.2.2，没有改依赖/配置/Legacy/Stage 6–7实现或连接数据库。报告：[STAGE8_REPORT.md](../docs/STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9–13 PENDING；Full Integration Readiness: NO。
 
 Stage 8实现提交 `0ee768337902fb1100f6afe0d23b18aa4880bc74` 已正常Push；fetch后HEAD == origin/main，Working Tree clean。完成状态通过独立文档提交正常发布，最终SHA在回复中核验提供，不重写历史。
+
+
+## 当前任务：Stage 9 — Query Rewrite + Retrieval Strategy Governance
+
+状态：IN PROGRESS；起始HEAD：`31c21bd01d9482945c8864e4ee2e8d19725153ae`；main；初始工作区clean，fetch后HEAD == origin/main。
+
+- [x] 读取治理、Stage 5–8合约/报告、原检索和Legacy策略，核对基线。
+- [x] 严格策略与可注入planner、整体DIRECT fallback、原query及硬标识符保护。
+- [x] 公开probe/意图eligibility并保持Stage 8兼容；稳定Child融合后原query一次Parent重排。
+- [x] 83项Stage 9核心验证通过；Stage 0–9回归689 passed / 0 failed / 12 skipped。
+- [x] 更新策略合约/报告、架构与状态，记录真实服务/线上NOT RUN。
+- [x] 最终回归、相对链接/语法/Diff/受保护范围检查。
+- [ ] Commit、Push、fetch/equal与clean验证。
+
+不实施Stage 10/制造业HyDE/backtracking，不改在线、配置、数据、IDs、Schema、原聚合规则或BM25阈值。报告：[STAGE9_REPORT.md](../docs/STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10–13 PENDING；Full Integration Readiness: NO。

@@ -1,5 +1,5 @@
 """Approved FAQ/alarm evidence optimization; unsuccessful searches delegate to Stage 7."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 import json
 from types import MappingProxyType
@@ -129,6 +129,17 @@ class FastPathResult:
     parent_result: object | None = None
 
 
+@dataclass(frozen=True)
+class FastPathEligibility:
+    allow_exact_alarm: bool = True
+    allow_exact_faq: bool = True
+    allow_bm25: bool = True
+
+    def __post_init__(self):
+        if any(type(value) is not bool for value in (self.allow_exact_alarm, self.allow_exact_faq, self.allow_bm25)):
+            raise TypeError("eligibility flags must be bool")
+
+
 class ManufacturingFastPath:
     def __init__(self, corpus, parent_retriever, *, acceptance_policy=None):
         if type(corpus) is not FastPathCorpus:
@@ -137,7 +148,7 @@ class ManufacturingFastPath:
             raise TypeError("acceptance_policy must provide accepts(candidate)")
         self.corpus, self.parent_retriever, self.acceptance_policy = corpus, parent_retriever, acceptance_policy
 
-    def _search(self, query, analysis, plan):
+    def _search(self, query, analysis, plan, eligibility):
         if any("ambiguous_" + name in plan.warnings for name in HARD_FIELDS):
             return None, MatchType.FALLBACK, "ambiguous_hard_identifier", ()
         # Guard a corpus-known alarm token that Stage 5 could not safely assign.
@@ -153,14 +164,16 @@ class ManufacturingFastPath:
             if len(alarms) > 1:
                 # Do not let a later exact-FAQ/BM25 decision bypass ambiguous alarm meanings.
                 return None, MatchType.FALLBACK, "ambiguous_alarm_evidence", ()
-            if len(alarms) == 1 and alarms[0].knowledge_type.value == "alarm":
+            if eligibility.allow_exact_alarm and len(alarms) == 1 and alarms[0].knowledge_type.value == "alarm":
                 reason = "unique_alarm_with_hard_identifiers" if "equipment_model" in plan.hard_filters else "unique_alarm_meaning_in_approved_corpus"
                 return alarms[0], MatchType.EXACT_ALARM, reason, ()
-        exact = tuple(e for e in compatible if e.question == normalize_question(query))
+        exact = tuple(e for e in compatible if eligibility.allow_exact_faq and e.question == normalize_question(query))
         if len(exact) > 1:
             return None, MatchType.FALLBACK, "ambiguous_exact_faq", ()
         if len(exact) == 1:
             return exact[0], MatchType.EXACT_FAQ, "unique_normalized_exact_faq", ()
+        if not eligibility.allow_bm25:
+            return None, MatchType.FALLBACK, "bm25_not_eligible", ()
         candidates = self.corpus.bm25.rank(query, plan.hard_filters)
         if not candidates:
             return None, MatchType.FALLBACK, "no_compatible_entries", ()
@@ -173,12 +186,16 @@ class ManufacturingFastPath:
             return candidates[0].entry, MatchType.BM25_FAQ, "bm25_accepted_by_explicit_policy", candidates
         return None, MatchType.FALLBACK, "bm25_rejected_by_policy", candidates
 
-    def retrieve_with_fast_path(self, query, analysis, k=None):
+    def probe(self, query, analysis, k=None, *, eligibility=None):
+        """Probe approved evidence without triggering Parent retrieval on a miss."""
+        eligibility = FastPathEligibility() if eligibility is None else eligibility
+        if type(eligibility) is not FastPathEligibility:
+            raise TypeError("FastPathEligibility required")
         validate_search_input(query, 1 if k is None else k)
         plan = build_filter_plan(analysis)
         warnings, candidates = (), ()
         try:
-            entry, match_type, reason, candidates = self._search(query, analysis, plan)
+            entry, match_type, reason, candidates = self._search(query, analysis, plan, eligibility)
         except Exception:
             entry, match_type, reason = None, MatchType.FALLBACK, "fast_path_error"
             warnings = ("fast_path_error",)
@@ -191,8 +208,14 @@ class ManufacturingFastPath:
             return FastPathResult("ACCEPTED", match_type, (evidence,), entry,
                                   top.raw_score if top else None, top.rank if top else None,
                                   len(self.corpus.entries), reason, candidates)
+        return FastPathResult("FALLBACK", MatchType.FALLBACK, (), None,
+                              top.raw_score if top else None, top.rank if top else None,
+                              len(self.corpus.entries), reason, candidates, warnings)
+
+    def retrieve_with_fast_path(self, query, analysis, k=None):
+        result = self.probe(query, analysis, k=k)
+        if result.status == "ACCEPTED":
+            return result
         # Outside the optimization try/except: Stage 7 errors propagate unchanged.
         parents = self.parent_retriever.retrieve_parents(query, analysis, k=k)
-        return FastPathResult("FALLBACK", MatchType.FALLBACK, parents.documents, None,
-                              top.raw_score if top else None, top.rank if top else None,
-                              len(self.corpus.entries), reason, candidates, warnings, parents)
+        return replace(result, evidence=parents.documents, parent_result=parents)

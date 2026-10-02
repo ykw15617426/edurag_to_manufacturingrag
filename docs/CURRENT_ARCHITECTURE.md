@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–8 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–9 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -259,4 +259,13 @@ Stage 7 79 项 synthetic/scorer/recording 测试与历史回归通过，总计54
 
 Tokenizer保持标识符大小写/-/_/前导零，中文用char/bigram；BM25复用requirements锁定的BM25Okapi，保留raw score/rank/total与scope size，不softmax。接受结果只提供Evidence和provenance；拒绝或search异常记录原因后原query/analysis/k回退Stage 7，Stage 7错误继续抛出。Legacy、在线和Stage 6/7实现未变。
 
-62项Stage 8核心与Stage 0–7回归：606 passed / 0 failed / 12 skipped；真实BM25离线算法已运行，真实服务/模型/端到端NOT RUN。合约见 [制造业快路径](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9–13 PENDING，Full Integration Readiness: NO。
+62项Stage 8核心与Stage 0–7回归：606 passed / 0 failed / 12 skipped；真实BM25离线算法已运行，真实服务/模型/端到端NOT RUN。合约见 [制造业快路径](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 8交付时Stage 9–13 PENDING，Full Integration Readiness: NO。
+
+
+## 14. Stage 9 增量（2026-10-02）
+
+`query/rewrite.py` 严格验证DIRECT/REWRITE/SUBQUERY与reason_code，planner可注入，无planner默认DIRECT。非法JSON/schema/超时/变体整体DIRECT回退。原query始终保留，最多4个子查询；确认硬标识符完整保留，新增ASCII token保守拒绝，重复稳定去重。不得重新分析变体或改变原QueryAnalysis生成的Filter。
+
+`ManufacturingFastPath.probe`公开只探测、不触发Stage 7 fallback。Stage 9仅alarm_fault允许Exact Alarm，其他五意图仍可符合现有安全规则的FAQ/BM25；原Stage 8公开入口默认行为保留。`ManufacturingStrategyRetriever`复用Stage 6每变体Child检索，按child_id取最高raw score并检查Metadata/正文冲突；稳定排序后才复用Stage 7聚合及一次原query Parent rerank。融合provenance独立记录，不改变Parent Metadata一致性或config Top-M/k。
+
+83项Stage 9核心验证通过；Stage 0–9回归689 passed / 0 failed / 12 skipped；真实LLM/Milvus/BGE/CrossEncoder及在线端到端NOT RUN。Legacy StrategySelector/HyDE/Backtracking/new_rag_system未修改；Manufacturing HyDE/Backtracking未实施。合约见 [制造业检索策略](MANUFACTURING_RETRIEVAL_STRATEGY.md)，证据见 [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10–13 PENDING，Full Integration Readiness: NO。

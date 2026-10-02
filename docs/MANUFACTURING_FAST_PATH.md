@@ -61,4 +61,9 @@ evidence = result.evidence  # 证据；没有生成或发出最终 answer
 
 见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。真实 BM25离线排名、canonical快照、合成决策与Stage 7控制联动已验证；不是企业数据/语义质量或生产安全阈值证据。真实MySQL/Redis、BGE/Milvus/CrossEncoder、在线端到端 NOT RUN，Full Integration Readiness: NO。
 
-不实施 Stage 9改写/HyDE/subquery/backtracking/strategy、Stage 10生成/引用、Stage 11缓存治理/TTL/SSE、Stage 12阈值调优。Stage 9–13 PENDING；本阶段发布后停止。
+Stage 8交付边界：不实施 Stage 9改写/HyDE/subquery/backtracking/strategy、Stage 10生成/引用、Stage 11缓存治理/TTL/SSE、Stage 12阈值调优。Stage 9–13 PENDING；本阶段发布后停止。
+
+
+## Stage 9 增量：公开探测与意图 eligibility（2026-10-02）
+
+新增`FastPathEligibility`三个严格bool（allow_exact_alarm/allow_exact_faq/allow_bm25）及公开`probe`，拒绝/错误仅返回结构化FALLBACK、空Evidence、parent_result=None，不立即检索Parent。Stage 9仅alarm_fault开启Exact Alarm，其他意图可安全继续FAQ/BM25。原`retrieve_with_fast_path`默认全开并继续在miss调用Stage 7，向后兼容；原阈值和歧义/硬条件规则保留。完整编排见 [检索策略合约](MANUFACTURING_RETRIEVAL_STRATEGY.md)，历史Stage 8报告不重写。

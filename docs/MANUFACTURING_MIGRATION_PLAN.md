@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–8 已完成；2026-10-02 已按授权完成 Stage 8，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–8 已完成；2026-10-02 正按授权执行 Stage 9，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -34,7 +34,8 @@ Stage 5: PASS
 Stage 6: PASS
 Stage 7: PASS
 Stage 8: PASS
-Stage 9-13: PENDING
+Stage 9: IN PROGRESS
+Stage 10-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -139,4 +140,11 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 批准制造业FAQ/alarm Entry与canonical snapshot、标识符保护tokenizer、Exact Alarm/FAQ与歧义拒绝、raw BM25/hard范围/显式接受policy已实现。默认BM25只给候选，接受只给Evidence；失败/拒绝回退现有Stage 7 Parent检索，不接入在线最终答案，不复用教育BM25业务语义。
 
-合约见 [MANUFACTURING_FAST_PATH.md](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9 Readiness: YES（限定统一Evidence/决策与fallback接口设计）；Stage 9–13 PENDING。Query Rewrite/HyDE/subquery/backtracking/strategy、Generation/Citations、Redis TTL/SSE和阈值tuning均未实施；Full Integration Readiness: NO。
+合约见 [MANUFACTURING_FAST_PATH.md](MANUFACTURING_FAST_PATH.md)，证据见 [Stage 8 报告](STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9 Readiness: YES（限定统一Evidence/决策与fallback接口设计）；Stage 8交付时Stage 9–13 PENDING，当前状态以上方阶段表为准；当时Query Rewrite/HyDE/subquery/backtracking/strategy、Generation/Citations、Redis TTL/SSE和阈值tuning均未实施。Full Integration Readiness: NO。
+
+
+## Stage 9 交付与 Stage 10 边界
+
+严格DIRECT/REWRITE/SUBQUERY、可注入planner和整体DIRECT降级、原query保留、硬标识符/新增token保护、稳定去重与最多4子查询已实现。公共fast path probe不提前回退；Exact Alarm限定alarm_fault，旧Stage 8接口兼容。多query复用Stage 6原Analysis的Child检索，按child_id/max score稳定融合及冲突拒绝，再Stage 7聚合与原query一次重排，不改配置/权重/Schema/IDs。
+
+合约见 [MANUFACTURING_RETRIEVAL_STRATEGY.md](MANUFACTURING_RETRIEVAL_STRATEGY.md)，证据见 [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md)。Generation/Citation由Stage 10处理，当前未实现/未接入在线。Manufacturing HyDE/Backtracking未实施，Legacy保留；Stage 10–13 PENDING，Full Integration Readiness: NO。readiness不等于实施授权。
