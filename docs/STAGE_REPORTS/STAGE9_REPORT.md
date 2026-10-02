@@ -1,6 +1,6 @@
 # Stage 9 — Query Rewrite + Retrieval Strategy Governance
 
-日期：2026-10-02。Repository：ykw15617426/edurag_to_manufacturingrag；branch：main；起始HEAD：`31c21bd01d9482945c8864e4ee2e8d19725153ae`，fetch核对origin/main一致，起始工作区clean。当前实现/核心验证PASS；发布验证PENDING。完成状态须在正常push/fetch后更新，最终SHA在交付回复提供，不预写本提交自身SHA。
+日期：2026-10-02。Repository：ykw15617426/edurag_to_manufacturingrag；branch：main；起始HEAD：`31c21bd01d9482945c8864e4ee2e8d19725153ae`，fetch核对origin/main一致，起始工作区clean。Stage 9: PASS；Implementation/Validation/GitHub Sync: PASS。实现提交正常push/fetch后本地远端一致、工作区clean；完成状态独立提交发布，最终SHA在交付回复提供，不预写本提交自身SHA。
 
 ## 文件与实际源码范围
 
@@ -24,7 +24,7 @@ Metadata/正文冲突及检索/Parent/model错误fail closed，不进行无过�
 | Stage 0–9完整回归（下方命令） | 689 passed / 0 failed / 12 skipped | PASS |
 | Python AST、治理/文档相对链接目标、`git diff --check`、范围与Diff审阅 | 5文件AST与119相对链接目标通过；Diff/范围无异常 | PASS |
 | Real LLM / BGE-M3 / CrossEncoder / Live Milvus / online Generation | 未执行，不当作集成PASS | NOT RUN |
-| Commit / Push / Fetch / equal / clean | 待发布 | PENDING |
+| Commit / Push / Fetch / equal / clean | 实现提交正常Push；fetch后Local HEAD == origin/main，Working Tree clean | PASS |
 
 ```powershell
 .venv/stage1-validation/Scripts/python.exe -m pytest tests/test_manufacturing_query_rewrite.py tests/test_manufacturing_strategy.py tests/test_manufacturing_bm25.py tests/test_manufacturing_fast_path.py tests/test_parent_aggregation.py tests/test_manufacturing_parent_retrieval.py tests/test_manufacturing_metadata_filters.py tests/test_manufacturing_retrieval.py tests/test_manufacturing_query_analysis.py tests/test_manifest_store.py tests/test_versioned_ingestion.py tests/test_manufacturing_milvus_schema.py tests/test_manufacturing_fingerprints.py tests/test_manufacturing_metadata.py tests/test_stage0_smoke.py -q -rs --tb=short
@@ -41,3 +41,7 @@ Stage 2 stable IDs/指纹、Stage 3 32字段Schema、Stage 4 manifest/版本摄�
 Manufacturing HyDE / Backtracking：NOT IMPLEMENTED。假设事实/新标识符与硬约束弱化存在风险，缺真实评估收益，不在本阶段试探实现。LLM计划器仅可注入边界和synthetic tests，不能声称真实LLM质量通过；recording scorer不能声称CrossEncoder质量通过。完整线上服务和真实资料未验收。
 
 Full Integration Readiness: NO。Stage 10–13 PENDING；Stage 9发布完成后停止，不开始Generation/Citation/SSE/cache/tuning。
+
+## 发布证据
+
+实现Commit：`66e3b32e64fbde9e14e011fccbed19c9c1d1dba0`（`feat: add manufacturing retrieval strategy governance`）。已执行`git push`、`git fetch origin`、`git rev-parse HEAD`、`git rev-parse origin/main`、`git status --short`，两SHA一致且status为空：PASS。本完成状态以正常独立文档Commit发布，不amend/force push；最终HEAD及clean在交付回复核验。Last Completed Stage: Stage 9 — PASS；Active Stage: NONE；Stage 10–13 PENDING。
