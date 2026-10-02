@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–5 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–6 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -231,4 +231,12 @@ Stage 2 当时 Milvus Manufacturing Schema: Missing；Version Manifest: Missing�
 
 型号/报警/备件 ID 保留大小写/符号/前导零，日期/量值和无上下文 token 不猜；语义补值须原 query 完整文本证据，不能覆盖规则或改变确定性 token 角色。多值单字段拒绝任选，None + warning/low。不增加 Milvus Schema 字段、不生成 Filter、检索策略或答案；new_rag_system 和旧查询/策略文件原样保留。
 
-synthetic core、独立进程阻断 Legacy/模型/API import 和 Stage 0–4 回归通过；真实 LLM 分类质量、API 超时/JSON 支持和在线集成未验证。合约见 [查询分析文档](MANUFACTURING_QUERY_ANALYSIS.md)，证据见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6 根据 confidence/warnings 设计过滤策略，当前未实施，Full Integration Readiness: NO。
+synthetic core、独立进程阻断 Legacy/模型/API import 和 Stage 0–4 回归通过；真实 LLM 分类质量、API 超时/JSON 支持和在线集成未验证。合约见 [查询分析文档](MANUFACTURING_QUERY_ANALYSIS.md)，证据见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 5 交付时过滤策略未实施；Stage 6 增量见下节。Full Integration Readiness: NO。
+
+## 11. Stage 6 增量（2026-10-02）
+
+`rag_qa/retrieval/filters.py` 从 QueryAnalysis 构建固定字段的 hard/soft plan 与 JSON 编码安全表达式；high 且无严重 warning 才加 soft，其他情况 hard-only/NONE。`ManufacturingRetriever` 调用现有 `VectorStore.hybrid_search_children`；零结果只移除 soft，hard 标识符始终保留；异常不回退。general 仍检索。
+
+新方法仅 manufacturing，Dense IP/nprobe10、Sparse IP、WeightedRanker(0.8,0.3) 不变；请求全部非向量字段，保留 Child/Parent/版本/三个指纹/业务/来源 Metadata 和原始 SDK score。返回 Child，不调用父去重或 CrossEncoder。旧 hybrid_search_with_rerank/分类/策略/在线编排未改，构造函数仍沿用既有模型初始化。
+
+65 项 Stage 6 离线 policy/recording adapter/SDK 请求与 Stage 0–5 回归通过；Live Milvus、真实模型和在线制造业链路 NOT RUN。合约见 [制造业检索](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7–13 PENDING；Full Integration Readiness: NO。

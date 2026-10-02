@@ -240,6 +240,55 @@ class VectorStore:
             sparse_vector[idx] = value  # 稀疏向量的非零元素
         return sparse_vector
 
+    def hybrid_search_children(self, query, *, filter_plan=None, k=config.RETRIEVAL_K):
+        """Manufacturing-only child hits; no parent deduplication or CrossEncoder."""
+        from rag_qa.core.milvus_schema import manufacturing_fields
+        from rag_qa.retrieval.filters import FilterMode, MetadataFilterPlan
+        from rag_qa.retrieval.manufacturing_retriever import validate_search_input
+
+        if self.schema_mode != "manufacturing":
+            raise ValueError("child hybrid search requires manufacturing schema_mode")
+        validate_search_input(query, k)
+        if filter_plan is None:
+            filter_plan = MetadataFilterPlan(FilterMode.NONE)
+        if type(filter_plan) is not MetadataFilterPlan:
+            raise TypeError("MetadataFilterPlan required; arbitrary expressions are forbidden")
+        expression = filter_plan.expression
+        embeddings = self.embedding_function([query])
+        dense = AnnSearchRequest(data=[embeddings["dense"][0]], anns_field="dense_vector",
+                                 param={"metric_type": "IP", "nprobe": 10}, limit=k, expr=expression)
+        sparse = AnnSearchRequest(data=[self.get_sparse_dict(embeddings, 0)], anns_field="sparse_vector",
+                                  param={"metric_type": "IP"}, limit=k, expr=expression)
+        fields = [f.name for f in manufacturing_fields(self.dense_dim)
+                  if f.datatype not in {"FLOAT_VECTOR", "SPARSE_FLOAT_VECTOR"}]
+        results = self.client.hybrid_search(
+            collection_name=self.collection_name, reqs=[dense, sparse],
+            ranker=WeightedRanker(0.8, 0.3), limit=k, output_fields=fields)
+        if not isinstance(results, list) or len(results) != 1:
+            raise ValueError("expected one query result group")
+        return [self._manufacturing_child_from_hit(hit, fields) for hit in results[0]]
+
+    @staticmethod
+    def _manufacturing_child_from_hit(hit, fields):
+        from math import isfinite
+        from numbers import Real
+
+        entity = dict(hit["entity"])
+        if "id" in hit:
+            if "id" in entity and entity["id"] != hit["id"]:
+                raise ValueError("hit PK disagrees with entity id")
+            entity["id"] = hit["id"]
+        if set(fields) - entity.keys():
+            raise ValueError("manufacturing hit is missing requested scalar fields")
+        if (entity["id"] != entity["child_id"] or not isinstance(entity["id"], str)
+                or not HASH_PATTERN.fullmatch(entity["id"])):
+            raise ValueError("manufacturing hit requires stable child PK")
+        score = hit.get("distance", hit.get("score"))
+        if isinstance(score, bool) or not isinstance(score, Real) or not isfinite(score):
+            raise ValueError("manufacturing hit requires a finite retrieval score")
+        return Document(page_content=entity["text"], metadata={
+            **{name: entity[name] for name in fields if name != "text"}, "retrieval_score": score})
+
     # 定义方法，执行混合检索并重排序
     def hybrid_search_with_rerank(self, query, k=config.RETRIEVAL_K, source_filter=None):
         logger.info(f"hybrid_search_with_rerank 执行混合检索并重排序...query:{query}, k:{k}, source_filter:{source_filter}")

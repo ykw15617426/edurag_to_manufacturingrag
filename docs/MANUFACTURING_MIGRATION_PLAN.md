@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–4 已完成；2026-10-02 授权执行 Stage 5，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–5 已完成；2026-10-02 授权执行 Stage 6，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -31,7 +31,8 @@ Stage 2: PASS
 Stage 3: PASS
 Stage 4: PASS
 Stage 5: PASS
-Stage 6-13: PENDING
+Stage 6: IN PROGRESS
+Stage 7-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -116,4 +117,10 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 独立 QueryAnalysis、六意图/定性置信度、保守规则实体、可注入 JSON 语义分类边界、原文证据/规则优先/角色保护与 fallback 已实现。规则 synthetic 验证不是实际企业语义准确率；真实 LLM 尚未验收，旧教育 BERT/StrategySelector/new_rag_system 保留。
 
-合约见 [MANUFACTURING_QUERY_ANALYSIS.md](MANUFACTURING_QUERY_ANALYSIS.md)，实测见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6 Readiness: YES（限定 Filter 设计输入）；应结合 confidence/warnings 决定严格/放宽/无 Metadata Filter。此处为后续设计边界，不执行过滤、Hybrid Retrieval、Query Rewrite 或答案路由；general 不授权绕检索。Stage 6–13 PENDING，Full Integration Readiness: NO。
+合约见 [MANUFACTURING_QUERY_ANALYSIS.md](MANUFACTURING_QUERY_ANALYSIS.md)，实测见 [Stage 5 报告](STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6 Readiness: YES（限定 Filter 设计输入）；应结合 confidence/warnings 决定严格/放宽/无 Metadata Filter。此处记录 Stage 5 交付时的设计边界，当时不执行过滤/Hybrid Retrieval，Stage 6–13 PENDING；当前状态以上方阶段表为准。general 不授权绕检索；Full Integration Readiness: NO。
+
+## Stage 6 交付与 Stage 7 依赖
+
+实现 QueryAnalysis → immutable MetadataFilterPlan → safe expression → 制造业 Dense/Sparse Child 检索；零召回最多一次移除 soft，hard 型号/报警/备件号不移除。现有权重 0.8/0.3 与 nprobe10 保持，完整 Child Metadata/原始 score 已为 Stage 7 保留；不聚合 Parent、不调用 CrossEncoder 重排，不接入 Legacy 在线编排。
+
+合约见 [MANUFACTURING_RETRIEVAL.md](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7 Readiness: YES（限定 Parent 聚合设计输入）；Stage 7–13 PENDING。真实 Milvus/模型/线上未验证，Full Integration Readiness: NO；readiness 不自动授权下一阶段。
