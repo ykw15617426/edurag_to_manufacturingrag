@@ -1,4 +1,4 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–6 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–7 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
 
@@ -150,11 +150,12 @@ Query/改写内容 → BGE-M3([query])
 | BGE Reranker | Implemented | vector_store.py:39,217 | Parent CrossEncoder；分数未输出 |
 | Upsert | Partial | vector_store.py:113 | 按位置 PK upsert；无版本增量和 stale delete |
 | Metadata Filter | Partial | vector_store.py:176 | 只有 source 字符串表达式，无制造业字段过滤 |
-| Parent Aggregation | Partial | vector_store.py:236 | set 正文去重，身份/metadata/score 丢失 |
+| Legacy Parent Aggregation | Partial | vector_store.py:236 | set 正文去重，身份/metadata/score 丢失 |
 | BM25 | Partial | mysql_qa/retrieval/bm25_search.py | FAQ 全库 softmax，冷启动候选 tuple 类型问题 |
 | Redis | Implemented | mysql_qa/cache/redis_client.py | corpus/答案 JSON 缓存；无 TTL/版本 |
 | MySQL | Implemented | mysql_qa/db/mysql_client.py；new_main.py | jpkb + conversations；CSV 导入非幂等 |
 | Query Classification | Partial | query_classifier.py | 教育二分类；缺训练模型时新建分类头，不能视为可靠分类 |
+| Manufacturing Parent Retrieval | Implemented | retrieval/parent_aggregation.py；parent_reranker.py；manufacturing_retriever.py | Stage 7 身份/Metadata/命中统计与父块重排；真实模型/在线未验证 |
 | Manufacturing Query Analysis | Implemented | query/analyzer.py；entities.py；classifier.py；schemas.py | Stage 5 规则/结构化语义边界；真实 LLM/在线未验证 |
 | Strategy Selector | Implemented | strategy_selector.py | 同步 LLM 字符串选择器，不是制造业 Intent Router |
 | HyDE | Implemented | new_rag_system.py:28 | 假设答案作为检索 query |
@@ -239,4 +240,13 @@ synthetic core、独立进程阻断 Legacy/模型/API import 和 Stage 0–4 回
 
 新方法仅 manufacturing，Dense IP/nprobe10、Sparse IP、WeightedRanker(0.8,0.3) 不变；请求全部非向量字段，保留 Child/Parent/版本/三个指纹/业务/来源 Metadata 和原始 SDK score。返回 Child，不调用父去重或 CrossEncoder。旧 hybrid_search_with_rerank/分类/策略/在线编排未改，构造函数仍沿用既有模型初始化。
 
-65 项 Stage 6 离线 policy/recording adapter/SDK 请求与 Stage 0–5 回归通过；Live Milvus、真实模型和在线制造业链路 NOT RUN。合约见 [制造业检索](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7–13 PENDING；Full Integration Readiness: NO。
+65 项 Stage 6 离线 policy/recording adapter/SDK 请求与 Stage 0–5 回归通过；Live Milvus、真实模型和在线制造业链路 NOT RUN。合约见 [制造业检索](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 6 交付时 Stage 7–13 PENDING；Stage 7 增量见下节。Full Integration Readiness: NO。
+
+
+## 12. Stage 7 增量（2026-10-02）
+
+`retrieve_parents` 复用 Stage 6 Child 检索及 filter attempts，按 parent_id 聚合全部公共 Metadata，冲突明确 ParentAggregationError。最大 Child score、命中 IDs/数量、首 rank 与每 Child 指纹/score/rank 保留；同正文不同 Parent 身份不合并。预排序为 best_retrieval_score DESC、first_child_rank ASC、parent_id ASC。
+
+现有 vector_store.reranker 对 [原 query, parent_content] 评分，rerank_score 与 best_retrieval_score 分别保留；稳定 tie 后按 config.CANDIDATE_M 截断为完整 Parent Documents。空不调模型、单 Parent 仍评分；异常/数量错误/NaN/inf/non-scalar fail closed。默认 k 已由独立10改为延迟读取 config.RETRIEVAL_K；fallback5/Top-M fallback2和 ANN 参数不变。
+
+Stage 7 79 项 synthetic/scorer/recording 测试与历史回归通过，总计544 passed / 0 failed / 12 skipped；真实 CrossEncoder/BGE/Milvus和在线未执行。VectorStore/filters/Legacy/在线代码、存储/摄取/查询合约及配置不改。合约见 [Parent 检索](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8–13 PENDING；Full Integration Readiness: NO。

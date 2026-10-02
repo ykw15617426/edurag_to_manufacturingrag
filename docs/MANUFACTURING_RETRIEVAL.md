@@ -1,6 +1,6 @@
 # Manufacturing Metadata Filter + Hybrid Retrieval — Stage 6
 
-2026-10-02。入口为 `rag_qa.retrieval.ManufacturingRetriever.retrieve(query, analysis, k=10)`；复用现有显式 manufacturing `VectorStore`、BGE-M3 和 Milvus。输出 `RetrievalResult.documents`（按 SDK 顺序的 Child Document tuple）、`attempts`（每次 plan/hit_count）及 `final_plan`。不接入在线答案编排，不做 Parent 去重或 CrossEncoder 重排。
+2026-10-02。入口为 `rag_qa.retrieval.ManufacturingRetriever.retrieve(query, analysis, k=None)`；复用现有显式 manufacturing `VectorStore`、BGE-M3 和 Milvus。输出 `RetrievalResult.documents`（按 SDK 顺序的 Child Document tuple）、`attempts`（每次 plan/hit_count）及 `final_plan`。Child 入口不接入在线答案编排，不做 Parent 去重或 CrossEncoder 重排。Stage 7 消除默认 k=10 的漂移：k=None 延迟读取 config.RETRIEVAL_K（fallback5 保持），显式 k 仍覆盖；Parent 高层入口见 [Parent 检索合约](MANUFACTURING_PARENT_RETRIEVAL.md)。
 
 ## Filter contract
 
@@ -66,4 +66,4 @@ attempts = result.attempts
 
 见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。离线测试验证 policy、表达式编码、真实 VectorStore 方法的 recording client 参数/Metadata，以及 PyMilvus 2.5.4 请求对象。Live Milvus、真实 BGE 检索质量、线上答案链路均 NOT RUN；未设置 STAGE6_LIVE_MILVUS=1，未创建或访问任何真实集合。
 
-未来可显式授权 live synthetic 验证，仅限 `stage6_test_<uuid>_v1`；禁止用 `edurag` 或 `manufacturing_rag_v1` 做测试。保守 soft 策略可能扩大召回；hard 错误会得到空结果，业务纠错属于后续设计，不能自动全库回退。Full Integration Readiness: NO；Stage 7–13 PENDING。
+未来可显式授权 live synthetic 验证，仅限 `stage6_test_<uuid>_v1`；禁止用 `edurag` 或 `manufacturing_rag_v1` 做测试。保守 soft 策略可能扩大召回；hard 错误会得到空结果，业务纠错属于后续设计，不能自动全库回退。Full Integration Readiness: NO；Stage 6 交付时 Stage 7–13 PENDING，当前阶段以上方治理状态与最新报告为准。

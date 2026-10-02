@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–6 已完成；2026-10-02 已按授权完成 Stage 6，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–6 已完成；2026-10-02 授权执行 Stage 7，后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -32,7 +32,8 @@ Stage 3: PASS
 Stage 4: PASS
 Stage 5: PASS
 Stage 6: PASS
-Stage 7-13: PENDING
+Stage 7: IN PROGRESS
+Stage 8-13: PENDING
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -123,4 +124,11 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 
 实现 QueryAnalysis → immutable MetadataFilterPlan → safe expression → 制造业 Dense/Sparse Child 检索；零召回最多一次移除 soft，hard 型号/报警/备件号不移除。现有权重 0.8/0.3 与 nprobe10 保持，完整 Child Metadata/原始 score 已为 Stage 7 保留；不聚合 Parent、不调用 CrossEncoder 重排，不接入 Legacy 在线编排。
 
-合约见 [MANUFACTURING_RETRIEVAL.md](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7 Readiness: YES（限定 Parent 聚合设计输入）；Stage 7–13 PENDING。真实 Milvus/模型/线上未验证，Full Integration Readiness: NO；readiness 不自动授权下一阶段。
+合约见 [MANUFACTURING_RETRIEVAL.md](MANUFACTURING_RETRIEVAL.md)，证据见 [Stage 6 报告](STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7 Readiness: YES（限定 Parent 聚合设计输入）；Stage 6 交付时 Stage 7–13 PENDING，当前状态以上方阶段表为准。真实 Milvus/模型/线上未验证，Full Integration Readiness: NO；readiness 不自动授权下一阶段。
+
+
+## Stage 7 交付与 Stage 8 边界
+
+按 parent_id 聚合 Child，保留全部 Parent/业务/来源属性并检查冲突，max 检索分数、命中统计与稳定 rank 不丢失。现有 CrossEncoder 对 Parent 正文评分，分别保留两个分数，稳定排序后按 config.CANDIDATE_M 返回 Parent Evidence；模型错误 fail closed。k默认统一 config.RETRIEVAL_K，不调配置值，Stage 6 hard/soft控制和 Legacy 原样保留。
+
+合约见 [MANUFACTURING_PARENT_RETRIEVAL.md](MANUFACTURING_PARENT_RETRIEVAL.md)，证据见 [Stage 7 报告](STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8 Readiness: YES（限定 Parent Evidence 接口设计输入）；Stage 8–13 PENDING。未实现 BM25/报警 fast path、Rewrite/策略/生成/SSE/tuning；真实模型/服务未验证，Full Integration Readiness: NO。

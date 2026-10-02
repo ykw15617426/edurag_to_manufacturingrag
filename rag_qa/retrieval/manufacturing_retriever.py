@@ -32,7 +32,11 @@ class ManufacturingRetriever:
             raise ValueError("ManufacturingRetriever requires manufacturing schema_mode")
         self.vector_store = vector_store
 
-    def retrieve(self, query, analysis, k=10):
+    def retrieve(self, query, analysis, k=None):
+        if k is None:
+            # Resolve lazily so importing the lightweight package needs no config/runtime.
+            from base.config import config
+            k = config.RETRIEVAL_K
         validate_search_input(query, k)
         plan = build_filter_plan(analysis)
         documents = self.vector_store.hybrid_search_children(query, filter_plan=plan, k=k)
@@ -43,3 +47,16 @@ class ManufacturingRetriever:
                 documents = self.vector_store.hybrid_search_children(query, filter_plan=relaxed, k=k)
                 attempts.append(RetrievalAttempt(relaxed, len(documents)))
         return RetrievalResult(tuple(documents), tuple(attempts))
+
+    def retrieve_parents(self, query, analysis, k=None):
+        """Stage 6 child retrieval followed by identity aggregation and Parent rerank."""
+        from base.config import config
+        from .parent_aggregation import aggregate_parents
+        from .parent_reranker import rerank_parents, validate_top_m
+
+        top_m = config.CANDIDATE_M
+        validate_top_m(top_m)
+        children = self.retrieve(query, analysis, k=k)
+        parents = aggregate_parents(children.documents)
+        documents = rerank_parents(query, parents, self.vector_store.reranker, top_m=top_m) if parents else ()
+        return RetrievalResult(documents, children.attempts)
