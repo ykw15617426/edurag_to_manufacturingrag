@@ -1,5 +1,7 @@
 # Manufacturing Answer Cache Governance（Stage 11 + Stage 12 指纹增量）
 
+2026-10-06 Stage 13 当前运行事实：真实 Docker Python 3.10.20/full requirements、Milvus 2.5.4、BGE-M3/CrossEncoder、文件摄取/Manifest 与真实 qwen-plus HTTP JSON/SSE 已验证；Full Integration Readiness YES 仅限本地 synthetic 集成。后文 NOT RUN 属于原阶段当时证据，不重写历史。参见 [Stage 13 报告](STAGE_REPORTS/STAGE13_REPORT.md) 与 [项目 README](../README.md)。
+
 `rag_qa/api/cache.py:ManufacturingAnswerCache`使用独立namespace，不复用旧RedisClient或answer:{query}。Redis只优化经过Stage 10 guard的answered GroundedAnswerResult；raw LLM JSON/token、错误、insufficient不缓存，无Negative Cache。服务也重新验证注入runtime结果的结构/claim-citation links与确切渲染后才返回，不能假装fake generator输出都是validated。
 
 ## Key 与 TTL

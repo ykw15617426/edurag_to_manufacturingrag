@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "date": "2026-10-06",
+  "baseline_commit": "461a452610664b79cbfcfc012cb1ca8ba94a2d59",
+  "deployment_commit": "a3e8d764ac9e9407c9d416436601ace9e643a43e",
+  "scope": "controlled local synthetic Integration only",
+  "docker": {
+    "engine_client": "29.8.0",
+    "engine_server": "29.8.0",
+    "compose": "v5.5.1",
+    "project": "stage13-acceptance",
+    "api_url": "http://127.0.0.1:18080"
+  },
+  "image": {
+    "status": "PASS",
+    "method": "Scan actual /app copied from unmounted built-image container and actual image config against local secret bytes; values never emitted",
+    "files_scanned": 129,
+    "files_with_secret": 0,
+    "image_config_has_secret": false,
+    "image_id": "sha256:ad4993c95d4dc0b190d1c56df110b01a14b642e48fad2037dff0dc93a45bf3ca",
+    "size_bytes": 2948264154,
+    "user": "app",
+    "cmd": [
+      "sh",
+      "-c",
+      "exec python -m uvicorn manufacturing_app:app --host ${HOST:-0.0.0.0} --port ${PORT:-8080}"
+    ]
+  },
+  "image_file_checks": {
+    "status": "PASS",
+    "uid": 10001,
+    "models_baked": false,
+    "env_config_baked": false,
+    "sqlite_baked": false,
+    "git_baked": false,
+    "runtime_logs_writable": true
+  },
+  "mounts": {
+    "/app/logs": {
+      "type": "bind",
+      "read_only": false
+    },
+    "/app/runtime": {
+      "type": "bind",
+      "read_only": false
+    },
+    "/app/rag_qa/models": {
+      "type": "bind",
+      "read_only": true
+    }
+  },
+  "components": {
+    "python": "3.10.20",
+    "torch": "2.10.0+cpu",
+    "cuda_available": false,
+    "milvus_model": "0.2.5",
+    "sentence_transformers": "3.0.1",
+    "pymilvus": "2.5.4",
+    "milvus_server": "pkg/v2.5.4",
+    "redis": "7.2.7",
+    "etcd": "v3.5.16",
+    "minio": "RELEASE.2023-03-20T20-16-18Z",
+    "embedding": "bge-m3",
+    "reranker": "bge-reranker-large",
+    "device": "CPU"
+  },
+  "llm": {
+    "status": "PASS",
+    "model": "qwen-plus",
+    "endpoint_category": "OpenAI-compatible / DashScope",
+    "endpoint_host": "dashscope.aliyuncs.com",
+    "secret_recorded": false,
+    "json_contract": true,
+    "finish_reason": "stop"
+  },
+  "original_llm_preflight": {
+    "model": "qwen3.8-max",
+    "status": "FAIL",
+    "http_status": 403,
+    "exception_type": "PermissionDeniedError",
+    "resolution": "Environment-only selection of authorized JSON-compatible qwen-plus; original local config preserved"
+  },
+  "timeout_safety": {
+    "status": "PASS",
+    "fault": "real SDK transport timeout 0.001 seconds in isolated API environment",
+    "http_status": 500,
+    "response": {
+      "code": "GENERATION_ERROR",
+      "request_id": "87faa698-048d-4228-a3bd-ba92222ad4a2"
+    },
+    "raw_exception_exposed": false
+  },
+  "milvus_outage_probe": {
+    "status": "FAIL",
+    "exception_type": "TimeoutError",
+    "http_timeout_seconds": 150,
+    "service_restored": true,
+    "limitation": "No bounded public retrieval error observed before HTTP timeout; SDK operation can outlive HTTP client. Production dependency outage deadline not validated."
+  },
+  "restored_settings": {
+    "llm_model": "qwen-plus",
+    "llm_timeout_seconds": 30.0
+  },
+  "regression": {
+    "command": ".venv/stage1-validation/Scripts/python.exe -m pytest tests -q -rs --tb=short",
+    "passed": 1026,
+    "failed": 0,
+    "skipped": 13,
+    "skip_reasons": "11 lightweight environment missing dependencies; Stage 3/12 explicit Live gates disabled",
+    "stage13_control_tests": 14
+  },
+  "contract": {
+    "parent_size": 512,
+    "parent_overlap": 120,
+    "child_size": 128,
+    "child_overlap": 30,
+    "k": 5,
+    "M": 2,
+    "dense_weight": 0.8,
+    "sparse_weight": 0.3,
+    "nprobe": 10,
+    "bm25_acceptance": "disabled"
+  },
+  "full_integration_readiness": "YES (controlled local Integration only)",
+  "production_quality_certification": "NO",
+  "production_scale_validation": "NO",
+  "ragas": "NOT RUN",
+  "final_checks": {
+    "status": "PASS",
+    "relative_links": 231,
+    "python_ast_files": 6,
+    "protected_source_and_stage12_results_unchanged": true,
+    "task_files_secret_scan": "PASS",
+    "diff_check": "PASS",
+    "final_ready_http": 200,
+    "post_fault_restore_query_status": "answered",
+    "files_changed": [
+      ".agent/PLANS.md",
+      ".agent/README.md",
+      ".dockerignore",
+      ".env.example",
+      "AGENTS.md",
+      "Dockerfile",
+      "README.md",
+      "docker-compose.acceptance.yml",
+      "docker-compose.yml",
+      "docs/CURRENT_ARCHITECTURE.md",
+      "docs/MANUFACTURING_API.md",
+      "docs/MANUFACTURING_CACHE.md",
+      "docs/MANUFACTURING_MIGRATION_PLAN.md",
+      "docs/MANUFACTURING_VERSIONED_INGESTION.md",
+      "docs/README.md",
+      "docs/STAGE_REPORTS/STAGE13_REPORT.md",
+      "docs/stage13_acceptance_results.json",
+      "docs/stage13_integration_verification.json",
+      "examples/manufacturing_demo/NOTICE",
+      "examples/manufacturing_demo/maintenance.txt",
+      "examples/manufacturing_demo/maintenance.txt.yaml",
+      "examples/manufacturing_demo/parameter.txt",
+      "examples/manufacturing_demo/parameter.txt.yaml",
+      "scripts/__init__.py",
+      "scripts/bootstrap_manufacturing_demo.py",
+      "scripts/check_image.py",
+      "scripts/stage13_acceptance.py",
+      "scripts/stage13_snapshot.py",
+      "tests/test_stage13_acceptance_contract.py"
+    ]
+  }
+}

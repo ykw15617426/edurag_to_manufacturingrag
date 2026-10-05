@@ -6,7 +6,7 @@
 
 Stage 0 已提交并推送：`b6db2e8d70f6c701975e24cefd10a04514139d2e`。历史审计与测试限制见 [Stage 0 报告](docs/STAGE_REPORTS/STAGE0_REPORT.md)。Git 发布完成不等于完整集成验证通过。
 
-Stage 0–12: PASS。Last Completed Stage: Stage 12 — PASS；Active Stage: NONE。Stage 12 Completion V2已在隔离Milvus 2.5.4完成真实BGE-M3/CrossEncoder、42 Child与25-query Direct/Strategy受控评估；synthetic结果不代表生产质量。Stage 13为PENDING，readiness: YES；Full Integration Readiness: NO。迁移计划中的 readiness 或 TODO 不构成实施授权。每次工作以用户当次要求的阶段和范围为准，不自动推进后续 Stage。
+Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。 Stage 13 已完成真实文件摄取、Docker 五服务、BGE-M3/CrossEncoder、真实 LLM、HTTP JSON/SSE、Redis 和持久化重启验收；数据为 synthetic。任何后续工作仍以用户当次明确范围为准，不创建 Stage 14 或自动扩展任务。
 
 ## 开始工作
 

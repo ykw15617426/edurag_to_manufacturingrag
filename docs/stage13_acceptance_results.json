@@ -1,0 +1,267 @@
+{
+  "status": "PASS",
+  "scope": "controlled local synthetic full integration",
+  "steps": {
+    "health_ready": {
+      "status": "ready",
+      "core": true,
+      "cache": "ready",
+      "reason": null
+    },
+    "health_live": {
+      "http_status": 200
+    },
+    "snapshot": {
+      "status": "PASS",
+      "collection": "manufacturing_rag_acceptance_v1",
+      "server_version": "pkg/v2.5.4",
+      "client_version": "2.5.4",
+      "manifest": "/app/runtime/acceptance_manifest.sqlite3",
+      "manifest_fingerprint": "85b2964b451b2f8a47dad53c5c3a3ba9a00dd98e9337e168d7ed38de56f6063c",
+      "knowledge_revision": "372de4b69ecb35655f268bc29ee12228451d721d6f3974c4de0d56e445602ed4",
+      "documents": [
+        {
+          "document_id": "SYN-DEMO-MAINTENANCE-001",
+          "active_document_version": "1.0",
+          "revision": 1,
+          "child_ids": "[\"482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3\"]",
+          "source_file": "/app/examples/manufacturing_demo/maintenance.txt"
+        },
+        {
+          "document_id": "SYN-DEMO-PARAMETER-001",
+          "active_document_version": "1.0",
+          "revision": 1,
+          "child_ids": "[\"aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6\"]",
+          "source_file": "/app/examples/manufacturing_demo/parameter.txt"
+        }
+      ],
+      "child_count": 2,
+      "children": [
+        {
+          "id": "482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3",
+          "child_id": "482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3",
+          "parent_id": "b8b555364bde6bfbd9c590c8e9a6102bbf7c0d219b6577f5496a0af3c984025b",
+          "document_id": "SYN-DEMO-MAINTENANCE-001",
+          "document_version": "1.0",
+          "source_file": "/app/examples/manufacturing_demo/maintenance.txt",
+          "equipment_model": "SYN-DEMO-100"
+        },
+        {
+          "id": "aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6",
+          "child_id": "aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6",
+          "parent_id": "fbfe0f8fc556b1a503dd617e6d23cfda482745b627e71d4d5c108363078994f0",
+          "document_id": "SYN-DEMO-PARAMETER-001",
+          "document_version": "1.0",
+          "source_file": "/app/examples/manufacturing_demo/parameter.txt",
+          "equipment_model": "SYN-DEMO-100"
+        }
+      ],
+      "model_weights_mounted": {
+        "bge-m3": true,
+        "bge-reranker-large": true
+      }
+    },
+    "versioned_ingestion": {
+      "first": {
+        "status": "PASS",
+        "dataset_type": "controlled_synthetic",
+        "collection": "manufacturing_rag_acceptance_v1",
+        "manifest": "/app/runtime/acceptance_manifest.sqlite3",
+        "server_version": "pkg/v2.5.4",
+        "results": [
+          {
+            "document_id": "SYN-DEMO-MAINTENANCE-001",
+            "status": "INGEST",
+            "revision": 1,
+            "added": [
+              "482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3"
+            ],
+            "retained": [],
+            "removed": []
+          },
+          {
+            "document_id": "SYN-DEMO-PARAMETER-001",
+            "status": "INGEST",
+            "revision": 1,
+            "added": [
+              "aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6"
+            ],
+            "retained": [],
+            "removed": []
+          }
+        ],
+        "snapshot_fingerprint": "85b2964b451b2f8a47dad53c5c3a3ba9a00dd98e9337e168d7ed38de56f6063c",
+        "documents": [
+          {
+            "document_id": "SYN-DEMO-MAINTENANCE-001",
+            "document_version": "1.0",
+            "revision": 1,
+            "child_ids": [
+              "482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3"
+            ],
+            "source_file": "/app/examples/manufacturing_demo/maintenance.txt"
+          },
+          {
+            "document_id": "SYN-DEMO-PARAMETER-001",
+            "document_version": "1.0",
+            "revision": 1,
+            "child_ids": [
+              "aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6"
+            ],
+            "source_file": "/app/examples/manufacturing_demo/parameter.txt"
+          }
+        ]
+      },
+      "second": {
+        "status": "PASS",
+        "dataset_type": "controlled_synthetic",
+        "collection": "manufacturing_rag_acceptance_v1",
+        "manifest": "/app/runtime/acceptance_manifest.sqlite3",
+        "server_version": "pkg/v2.5.4",
+        "results": [
+          {
+            "document_id": "SYN-DEMO-MAINTENANCE-001",
+            "status": "SKIP_UNCHANGED",
+            "revision": 1,
+            "added": [],
+            "retained": [],
+            "removed": []
+          },
+          {
+            "document_id": "SYN-DEMO-PARAMETER-001",
+            "status": "SKIP_UNCHANGED",
+            "revision": 1,
+            "added": [],
+            "retained": [],
+            "removed": []
+          }
+        ],
+        "snapshot_fingerprint": "85b2964b451b2f8a47dad53c5c3a3ba9a00dd98e9337e168d7ed38de56f6063c",
+        "documents": [
+          {
+            "document_id": "SYN-DEMO-MAINTENANCE-001",
+            "document_version": "1.0",
+            "revision": 1,
+            "child_ids": [
+              "482a63f88bdcefa4b35ad726c39bef37095c785d73ca29ba950e3b5bcf44d1e3"
+            ],
+            "source_file": "/app/examples/manufacturing_demo/maintenance.txt"
+          },
+          {
+            "document_id": "SYN-DEMO-PARAMETER-001",
+            "document_version": "1.0",
+            "revision": 1,
+            "child_ids": [
+              "aa58ae86768b5d1ca0ab197309626d44dead263a60f551d800a27d4f8c81adb6"
+            ],
+            "source_file": "/app/examples/manufacturing_demo/parameter.txt"
+          }
+        ]
+      },
+      "ids_stable": true,
+      "revision_stable": true
+    },
+    "json_first": {
+      "status": "answered",
+      "answer_text": "设备型号 SYN-DEMO-100 的主轴额定转速为 1200 rpm。[E1]\n\n来源：\n[E1] {\"title\": \"SYN-DEMO-100 合成参数演示\", \"document_id\": \"SYN-DEMO-PARAMETER-001\", \"document_version\": \"1.0\", \"source_file\": \"/app/examples/manufacturing_demo/parameter.txt\"}",
+      "claims": [
+        {
+          "text": "设备型号 SYN-DEMO-100 的主轴额定转速为 1200 rpm。",
+          "evidence_ids": [
+            "E1"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "evidence_id": "E1",
+          "title": "SYN-DEMO-100 合成参数演示",
+          "document_id": "SYN-DEMO-PARAMETER-001",
+          "document_version": "1.0",
+          "parent_id": "fbfe0f8fc556b1a503dd617e6d23cfda482745b627e71d4d5c108363078994f0",
+          "knowledge_type": "parameter",
+          "source_file": "/app/examples/manufacturing_demo/parameter.txt"
+        }
+      ],
+      "used_evidence_ids": [
+        "E1"
+      ],
+      "warnings": [],
+      "request_id": "6a84f000-cabc-4deb-be40-f653cf5a75ff",
+      "session_id": null,
+      "cache_hit": false
+    },
+    "json_cached": {
+      "cache_hit": true,
+      "answer_identical": true,
+      "citations_identical": true
+    },
+    "redis_cache": {
+      "status": "PASS",
+      "redis_version": "7.2.7",
+      "keys": [
+        {
+          "key": "manufacturing:answer:v1:5e56d7ddf6117b1b2b6199983e2f920855d6f871025f1254bc4c91fc7350745a",
+          "ttl": 299
+        }
+      ]
+    },
+    "sse": {
+      "events": [
+        "start",
+        "analysis",
+        "retrieval",
+        "generation",
+        "answer",
+        "citations",
+        "done"
+      ],
+      "status": "answered",
+      "cache_hit": false,
+      "citations": [
+        {
+          "evidence_id": "E1",
+          "title": "SYN-DEMO-100 合成维护演示",
+          "document_id": "SYN-DEMO-MAINTENANCE-001",
+          "document_version": "1.0",
+          "parent_id": "b8b555364bde6bfbd9c590c8e9a6102bbf7c0d219b6577f5496a0af3c984025b",
+          "knowledge_type": "maintenance",
+          "source_file": "/app/examples/manufacturing_demo/maintenance.txt"
+        }
+      ],
+      "used_evidence_ids": [
+        "E1"
+      ],
+      "done_count": 1,
+      "error_count": 0
+    },
+    "safe_error": {
+      "http_status": 422,
+      "response": {
+        "code": "INVALID_REQUEST"
+      }
+    },
+    "redis_degradation": {
+      "status": "answered",
+      "cache_hit": false,
+      "cache_state": "degraded"
+    },
+    "api_restart": {
+      "status": "ready",
+      "core": true,
+      "cache": "ready",
+      "reason": null
+    },
+    "stack_restart": {
+      "status": "ready",
+      "core": true,
+      "cache": "ready",
+      "reason": null
+    },
+    "restart_query": {
+      "http_status": 200,
+      "status": "answered",
+      "knowledge_revision_stable": true
+    }
+  }
+}

@@ -1,82 +1,188 @@
-# EduRAG → 制造业设备智能运维 RAG
+# 制造业设备智能运维 RAG 知识问答系统
 
-本仓库正在从教育问答迁移到制造业内部设备运维知识问答。Stage 0 基线与治理已完成；Stage 1 已实现制造业 Metadata 校验与显式处理模式，已完成发布验证。现有在线运行链路仍使用教育领域数据、分类和提示词；Stage 3 已实现显式制造业 Milvus Schema 与写入映射，在Stage 12隔离Milvus 2.5.4完成严格Schema/Index验证。Stage 4 已实现版本 Manifest、跨运行 Skip、增量摄取与显式/差集删除控制；真实服务验证尚未完成。Stage 5 已提供独立制造业 QueryAnalysis、规则实体与可注入 JSON 语义分类边界；真实 LLM 和在线接入未验证。Stage 6 已实现安全 Metadata Filter、保留硬标识符的软条件放宽和制造业 Child Hybrid Retrieval；真实Milvus/模型受控检索在Stage 12验证通过；在线接入未验证。Stage 7 已实现按 parent_id 保留 Metadata/命中统计、父块 CrossEncoder 重排与配置 Top-M；真实CrossEncoder Parent重排在Stage 12受控检索评估通过。Stage 8 已提供已批准制造业语料的Exact Alarm/FAQ与raw BM25证据快路径，默认BM25不短路，拒绝/错误回退Stage 7；FastPath受控评估在Stage 12通过，线上接入未验证。Stage 9 已实现严格DIRECT/REWRITE/SUBQUERY、意图限定快路径、标识符保护、多查询Child融合与原query一次Parent重排；未接入在线生成。Stage 10 已提供统一Evidence完整性/版本/hard保护、证据限定结构化生成、逐Claim引用/标识符/数字验证与实际来源渲染；真实LLM及在线接入未验证。Stage 11 已新增制造业FastAPI JSON/SSE独立入口、lifespan/线程边界、安全错误/断连及Manifest+FastPath修订TTL缓存；SSE只发送完整验证后的答案，原Legacy入口保持。真实服务启动及生产在线端到端未验证。Stage 12 已实现独立 ID-based 评估框架、25 条明确 synthetic 标签集、配置快照与缓存检索指纹；Completion V2在隔离Milvus 2.5.4、本地CPU BGE-M3/CrossEncoder下完成42 Child、25/25 Direct与25/25 scripted Strategy评估，Stage 12 PASS；仅controlled synthetic范围，生产参数不调。RAGAS/真实LLM Planner NOT RUN，Full Integration Readiness NO；Stage 13 PENDING/readiness YES，不自动实施。前次2.4.10 nullable失败保留为历史，详见[Stage 12报告](docs/STAGE_REPORTS/STAGE12_REPORT.md)。
+面向设备运维、维修和技术人员，将设备资料转换为可按型号、报警码和知识类型检索的证据，再生成带逐条引用的回答。项目复用原 EduRAG 的 Loader、Parent-Child、BGE-M3、Milvus 和 CrossEncoder，正式入口为 `manufacturing_app.py`。
 
-## 审计文档
+**Stage 0–13: PASS；Migration: COMPLETE；Full Integration Readiness: YES（受控本地集成）。** 2026-10-06 已实际跑通 Docker、文件摄取、真实模型/LLM、JSON/SSE、Redis 缓存及持久化重启。验收语料为 synthetic，未验证真实企业知识库、生产容量、生产 SLA 或安全认证。证据见 [Stage 13 报告](docs/STAGE_REPORTS/STAGE13_REPORT.md)，完整文档见 [索引](docs/README.md)。
 
-- [当前真实架构](docs/CURRENT_ARCHITECTURE.md)
-- [制造业迁移阶段计划与术语基线](docs/MANUFACTURING_MIGRATION_PLAN.md)
-- [Stage 0 检查、问题和测试结果](docs/STAGE_REPORTS/STAGE0_REPORT.md)
-- [教育遗留逐文件、逐行清单](docs/EDURAG_LEGACY_INVENTORY.md)
+## 业务场景与核心能力
 
-## 项目治理与文档入口
+- 手册、参数、报警、故障、维保、备件和历史案例的单文档 Metadata 合约。
+- YAML Sidecar 校验、SHA256 稳定 Parent/Child 身份、版本 Manifest、增量 Upsert 与 Delta Delete。
+- 查询意图/实体分析、硬标识符 Metadata Filter、Dense/Sparse 混合检索、Parent 聚合和重排。
+- 已批准语料的报警/FAQ 证据快路径；严格 DIRECT/REWRITE/SUBQUERY 策略。默认 BM25 接受关闭。
+- 严格 JSON、本地 Schema 校验、逐 Claim 引用、数字/标识符保护；缺证据返回不足，校验失败返回安全错误。
+- FastAPI JSON/SSE、已验证答案流、知识修订感知 Redis TTL 缓存与故障降级。
 
-- [仓库维护约定](AGENTS.md)
-- [项目工作区说明](.agent/README.md)与[维护计划](.agent/PLANS.md)
-- [正式文档索引](docs/README.md)与[治理设置报告](docs/STAGE_REPORTS/REPOSITORY_GOVERNANCE_SETUP_REPORT.md)
+## 系统架构与端到端调用链
 
-Stage 0 提交 `b6db2e8d70f6c701975e24cefd10a04514139d2e` 已推送并核对远端；历史技术验证仍为 PARTIAL。Stage 1: PASS；[Metadata 合约与调用方式](docs/MANUFACTURING_METADATA_SCHEMA.md)，[Stage 1 报告](docs/STAGE_REPORTS/STAGE1_REPORT.md)。Stage 2: PASS；[指纹与稳定身份](docs/MANUFACTURING_FINGERPRINTS.md)、[Stage 2 报告](docs/STAGE_REPORTS/STAGE2_REPORT.md)。Stage 3: PASS；[制造业存储合约](docs/MANUFACTURING_MILVUS_SCHEMA.md)、[Stage 3 报告](docs/STAGE_REPORTS/STAGE3_REPORT.md)。Stage 4: PASS；[版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)、[Stage 4 报告](docs/STAGE_REPORTS/STAGE4_REPORT.md)。Stage 5: PASS；[查询分析合约](docs/MANUFACTURING_QUERY_ANALYSIS.md)、[Stage 5 报告](docs/STAGE_REPORTS/STAGE5_REPORT.md)。Stage 6: PASS；[制造业检索合约](docs/MANUFACTURING_RETRIEVAL.md)、[Stage 6 报告](docs/STAGE_REPORTS/STAGE6_REPORT.md)。Stage 7: PASS；[Parent 检索合约](docs/MANUFACTURING_PARENT_RETRIEVAL.md)、[Stage 7 报告](docs/STAGE_REPORTS/STAGE7_REPORT.md)。Stage 8: PASS；[快路径合约](docs/MANUFACTURING_FAST_PATH.md)、[Stage 8 报告](docs/STAGE_REPORTS/STAGE8_REPORT.md)。Stage 9: PASS；[检索策略合约](docs/MANUFACTURING_RETRIEVAL_STRATEGY.md)、[Stage 9 报告](docs/STAGE_REPORTS/STAGE9_REPORT.md)。Stage 10: PASS；[生成合约](docs/MANUFACTURING_GENERATION.md)、[Stage 10 报告](docs/STAGE_REPORTS/STAGE10_REPORT.md)。Stage 11: PASS；[API合约](docs/MANUFACTURING_API.md)、[Cache合约](docs/MANUFACTURING_CACHE.md)、[Stage 11报告](docs/STAGE_REPORTS/STAGE11_REPORT.md)。Stage 12: PARTIAL；[评估合约](docs/MANUFACTURING_EVALUATION.md)、[Stage 12报告](docs/STAGE_REPORTS/STAGE12_REPORT.md)、[实际预检结果](docs/evaluation_results.json)。Stage 13 保持 PENDING（readiness NO），Full Integration Readiness: NO。
-
-## 运行前提
-
-从仓库根目录执行命令。现有 `requirements.txt` 是原项目完整依赖列表，本次未重新锁定依赖或验证全量安装。Dockerfile 使用 Python 3.10.20；Stage 0 检查环境为 Python 3.13.9，二者不能视为同一验证环境。
-
-```powershell
-python -m pip install -r requirements.txt
-Copy-Item config.example.ini config.ini
+```mermaid
+flowchart TD
+    F[源文件 + YAML Sidecar] --> L[既有 Loader / Metadata 校验]
+    L --> P[Parent-Child / SHA256]
+    P --> I[VersionedIngestion]
+    I --> B[BGE-M3 / CPU]
+    B --> V[Milvus 2.5.4 Dense + Sparse]
+    I --> M[SQLite Manifest / runtime]
+    Q[HTTP Query] --> A[意图 / 实体分析]
+    A --> C[修订感知 Redis Cache]
+    M --> C
+    C --> R[Metadata Filter / 快路径 / 检索策略]
+    V --> R
+    R --> E[Parent 聚合 / CrossEncoder]
+    E --> G[真实 LLM / 严格 JSON / Evidence Guard]
+    G --> O[逐 Claim 引用 / JSON 或 SSE]
+    G --> C
 ```
 
-编辑本地 `config.ini` 的数据库、服务地址、模型与密钥；也可设置同名环境变量。优先级为 **进程环境变量 > config.ini > 代码 fallback**。`base/config.py` 不会自动加载 `.env`；Docker Compose 会用 `.env` 做变量替换，和直接运行 Python 有区别。复制示例只是配置起点，不会准备依赖服务。
+Formal Compose 提供 API、Redis、Etcd、MinIO、Milvus，不需要 MySQL。模型只读挂载，Manifest/日志外置，基础服务使用持久卷。runtime 在 FastAPI lifespan 中初始化；必须先摄取建立 Manifest，再启动 ready API。
 
-需要自行准备：
+## 制造业 Metadata 与入库
 
-- MySQL 数据库和 `jpkb` 教育问答表。`MySQLClient.create_table/insert_data` 是手工初始化方法，CSV 入库不是幂等操作。
-- Redis 和 Milvus；Milvus 数据库需预先存在，VectorStore 才会创建/加载集合。
-- 本地 `rag_qa/models/` 下的 `bge-m3`、`bge-reranker-large`、`bert-base-chinese` 和经过训练的 `bert_query_classifier`。本机存在这些目录，但 Stage 0 未验证权重完整性/推理。
-- 可用的 DashScope 配置。示例中密钥为空，须自行填写；模型名沿用原项目，未验证在线可用性。
+每个资料文件配一个同名 Sidecar，例如 `parameter.txt.yaml`：
 
-```powershell
-python app.py
+```yaml
+document_id: SYN-DEMO-PARAMETER-001
+document_version: "1.0"
+title: SYN-DEMO-100 合成参数演示
+knowledge_type: parameter
+equipment_type: 合成演示设备
+equipment_model: SYN-DEMO-100
+manufacturer: Synthetic Demo
+language: zh-CN
 ```
 
-服务入口固定为 `http://localhost:8080`，浏览器访问根路径。按 `Ctrl+C` 停止。模块导入会立即初始化模型和客户端并尝试创建会话表，不是无副作用的 import。`/health` 仅返回固定 healthy，不代表依赖就绪。
+这是合成示例。条件必填字段及约束见 [Metadata 合约](docs/MANUFACTURING_METADATA_SCHEMA.md)。一份 Sidecar 对应一个型号/知识类型；多型号资料需先明确拆分语义。
 
-纯 RAG 入库入口（会写 Milvus，Stage 0 未实际执行）：
+摄取走真实 `VectorStore(schema_mode="manufacturing") → SQLiteManifestStore → VersionedIngestion.ingest_directory()`，复用 Loader/Splitter。首次 `INGEST`；相同文件、Metadata 和处理合约重跑 `SKIP_UNCHANGED`。更新先写新 Child、清理差集，成功后提交 Manifest。单 worker/单 writer，不提供跨 Milvus/SQLite 分布式事务。详见 [版本摄取合约](docs/MANUFACTURING_VERSIONED_INGESTION.md)。
+
+## 检索、Generation / Evidence Guard
+
+正式切分 Parent `512/120`、Child `128/30`（size/overlap）。检索保持 `k=5 / M=2 / Dense=0.8 / Sparse=0.3 / nprobe=10 / BM25 disabled`。原问题分析建立 Filter，改写须保留型号/报警等硬实体，多查询按 Child ID 融合，再做一次原问题 Parent 重排。
+
+生成使用 `response_format=json_object`，再执行本地 Pydantic、证据身份/版本、逐 Claim 引用及数字/标识符 Guard。JSON mode 不能替代本地校验；Guard 不证明语义蕴含或维修操作安全。SSE answer 来自完整验证结果，不是 raw LLM token。
+
+## FastAPI / SSE 与 Redis Cache
+
+| 接口 | 行为 |
+| --- | --- |
+| `GET /health/live` | 应用存活 |
+| `GET /health/ready` | runtime 初始化及 cache 状态；不是实时探测全部依赖 |
+| `POST /api/manufacturing/query` | JSON 答案、claims、citations、used_evidence_ids、cache_hit |
+| `POST /api/manufacturing/stream` | 未缓存成功路径 start → analysis → retrieval → generation → answer → citations → done |
+
+`session_id` 仅关联请求，不提供 conversation memory。Redis 只缓存 validated answered，Key 为 `manufacturing:answer:v1:<sha256>`，绑定问题/分析、LLM、检索配置和 Manifest/FastPath 修订，有限 TTL 默认 300 秒。Redis 故障仍可走核心问答。详见 [API](docs/MANUFACTURING_API.md)、[Cache](docs/MANUFACTURING_CACHE.md)、[Generation](docs/MANUFACTURING_GENERATION.md)。
+
+## Evaluation Results
+
+Stage 12 **Controlled Synthetic Benchmark / Local CPU / 25 samples / Not Production Quality Claim**：真实 BGE-M3、Milvus 2.5.4、CrossEncoder，42 Child / 21 active document snapshots，同一知识修订的 Direct 与 scripted Strategy。
+
+| 指标 | Direct | Strategy |
+| --- | ---: | ---: |
+| Parent Hit@2 | 1.0 | 1.0 |
+| Parent MRR@2 | 1.0 | 1.0 |
+| Document Hit@2 | 1.0 | 1.0 |
+| 检索总耗时均值（ms） | 606.205 | 125.811 |
+
+Strategy 是 FastPath-heavy workload（21 次快路径），Child 层只评 4 个样本，Direct 分母 25；不能将差值称作质量提升。时延不含初始化、摄取、HTTP/LLM，不是生产 SLA。真实 LLM Planner 基准准确率和 answer-quality RAGAS **NOT RUN**。完整指标见 [评估说明](docs/MANUFACTURING_EVALUATION.md)、[Paired 结果](docs/evaluation_results.json)、[Stage 12 报告](docs/STAGE_REPORTS/STAGE12_REPORT.md)。Stage 13 两份文件仅用于端到端验收，没有新增质量指标。
+
+## Docker Quick Start（合成演示）
+
+前提：可用 Docker Engine/Compose（overlay 使用 `!reset`；本次实测 Compose v5.5.1）、首次安装固定依赖所需网络、有效 OpenAI-compatible JSON 模型权限、本地已准备的 `rag_qa/models/bge-m3` 和 `bge-reranker-large` 权重。镜像不下载/包含模型权重。没有容量认证，应为模型进程准备足够内存。
+
+从仓库根目录执行；保护已有 `.env`，不存在才复制：
 
 ```powershell
-python -m rag_qa.rag_main --data-processing --data-dir ./rag_qa/data
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+New-Item -ItemType Directory -Force runtime/stage13/acceptance, runtime/stage13/logs | Out-Null
 ```
 
-参数须指向包含 `ai_data/java_data/...` 的上级目录。历史默认 `./data/ai_data` 与内部拼接逻辑不匹配，暂留审计 TODO，故使用显式路径。旧命令行问答入口为 `python old_main.py`、`python -m mysql_qa.sql_main`；在线应用使用 `new_main.py`。
-
-`docker-compose.yml` 只定义应用容器。它不会启动 MySQL、Redis、Milvus、etcd、MinIO，也没有随 Git 发布模型权重。不要把 `docker compose up --build` 理解为完整可运行的部署方案。
-
-## Stage 0 Smoke Tests
+在本地 `.env` 填写自己的 `DASHSCOPE_API_KEY`、`LLM_MODEL`、`DASHSCOPE_BASE_URL`、`REDIS_PASSWORD`、`MINIO_ROOT_USER`、`MINIO_ROOT_PASSWORD`，设置 `APP_PORT=18080`。本次模型 `qwen-plus`，端点为 DashScope OpenAI-compatible；账户需具备相应权限。密码必须自行设置，无 secret fallback。`.env`/`config.ini` 不提交。Linux bind mount 需允许 UID 10001 写 runtime/logs 并读取模型。
 
 ```powershell
-python -m pip install -r requirements-dev.txt
+$stage13Compose = @('compose', '--env-file', '.env', '-p', 'stage13-acceptance', '-f', 'docker-compose.yml', '-f', 'docker-compose.acceptance.yml')
+& docker @stage13Compose config --quiet
+& docker @stage13Compose build manufacturing-api
+& docker @stage13Compose up -d --wait --wait-timeout 180 etcd minio milvus redis
+# 先串行摄取，避免 bootstrap 与 API 同时加载两套模型。
+& docker @stage13Compose up --no-deps manufacturing-bootstrap
+# 首次 INGEST 证据仅保存一次；已有 first 文件时保留。
+if (-not (Test-Path runtime/stage13/acceptance/bootstrap_first.json)) {
+    Copy-Item runtime/stage13/acceptance/bootstrap.json runtime/stage13/acceptance/bootstrap_first.json
+}
+& docker @stage13Compose run --no-deps manufacturing-bootstrap python -m scripts.bootstrap_manufacturing_demo --output /app/runtime/bootstrap_second.json
+& docker @stage13Compose up -d --no-deps --wait --wait-timeout 240 manufacturing-api
+Invoke-RestMethod http://127.0.0.1:18080/health/ready
+```
+
+检查每条命令成功再执行下一条。验收使用专用 `manufacturing_rag_acceptance_v1` 和 `runtime/stage13/acceptance/acceptance_manifest.sqlite3`；演示明确 **SYNTHETIC / NOT PRODUCTION FACTS**。正式 Compose 不自动灌演示语料。已有环境复跑会 SKIP；不删除数据或伪造首次 INGEST。不要并行用两个 project 共享此 acceptance runtime。
+
+停止/重启保留卷和 Manifest：
+
+```powershell
+& docker @stage13Compose stop
+& docker @stage13Compose start
+```
+
+禁止 `down -v`。仅 API 绑定本机端口，基础服务没有 host port；生产暴露、TLS、认证及容量需另行设计验证。
+
+## Real Data Ingestion（明确批准的资料）
+
+准备不含演示语料的 `approved_sources/`，每个文件配合法 Sidecar，在 `.env` 选择正式集合和 Manifest。不要将 synthetic 事实当真实设备数据。先基础设施，再真实摄取，成功后启动 API：
+
+```powershell
+docker compose --env-file .env config --quiet
+docker compose --env-file .env build manufacturing-api
+docker compose --env-file .env up -d --wait etcd minio milvus redis
+docker compose --env-file .env run --no-deps -v ./approved_sources:/app/approved_sources:ro manufacturing-api python -m scripts.bootstrap_manufacturing_demo --real-data --source-dir /app/approved_sources --output /app/runtime/ingestion.json
+docker compose --env-file .env up -d --wait manufacturing-api
+```
+
+`--real-data` 表示操作者提供资料，不证明真实性/授权。脚本拒绝将 bundled demo 标记 real-data，默认 demo 拒绝写正式集合。仅串行摄取；管理线上读写一致性边界，Manifest 不是分布式锁。正式项目独立卷，不能复用 acceptance Manifest。
+
+## API Examples
+
+下面 curl 示例在 PowerShell 使用 `curl.exe`：
+
+```bash
+curl -H 'Content-Type: application/json' -d '{"query":"设备型号 SYN-DEMO-100 的主轴额定转速是多少？"}' http://127.0.0.1:18080/api/manufacturing/query
+curl -N -H 'Content-Type: application/json' -d '{"query":"设备型号 SYN-DEMO-100 的模拟维护周期是多少？"}' http://127.0.0.1:18080/api/manufacturing/stream
+```
+
+本次 JSON 合成转速 `1200 rpm` 引用 `SYN-DEMO-PARAMETER-001 / 1.0`；SSE 合成周期 `250 小时` 引用 `SYN-DEMO-MAINTENANCE-001 / 1.0`。引用包含实际 document/version/parent/source。缓存命中 SSE 会省略检索/生成阶段，详见 API 合约。
+
+## Testing
+
+普通测试不自动启动 Docker 或请求 LLM；测试依赖 `requirements-dev.txt`，完整运行依赖 `requirements.txt`：
+
+```powershell
+python -m pytest tests -q -rs --tb=short
 python -m pytest tests/test_stage0_smoke.py -q -rs
 ```
 
-缺失依赖会逐项显示 SKIPPED；不使用假模型/假数据库冒充集成通过。Document Processor 是函数模块，初始化检查覆盖真实 splitter、TXT loader 和分块流程。FastAPI app 的真实导入会访问外部资源，完整环境准备后才执行：
+本次轻量 validation 环境：**1026 passed / 0 failed / 13 skipped**。Skip 涉及缺完整 Legacy/ML 依赖及未启用 Stage 3/12 Live，不是集成通过。真实 Stage 13 另在 Docker Python 3.10.20/full requirements 环境执行。
+
+完成首次/二次 bootstrap 并启动 API 后，本机 Python 执行独立 stdlib 验收：
 
 ```powershell
-$env:STAGE0_LIVE_SMOKE = '1'
-python -m pytest tests/test_stage0_smoke.py -q -rs
-Remove-Item Env:STAGE0_LIVE_SMOKE
+$env:STAGE13_LIVE = '1'
+python -m scripts.stage13_acceptance --env-file .env --lifecycle
+Remove-Item Env:STAGE13_LIVE
 ```
 
-即使设置该开关，缺依赖仍会 SKIPPED；已具备依赖时的运行错误会 FAIL。测试不调用付费生成 API，不跑教育分类训练，不刷新生产知识库。现有数据、demo 和 RAGAS 结果均保留为历史基线。
+`--lifecycle` 明确测试隔离项目 Redis 停机恢复、API 重启、整栈 stop/start，不删除卷。测试前不要先向同一 API 发送两个验收问题，以免干扰 miss→hit；复跑保留首次摄取记录并等待 TTL 过期。结果写 ignored runtime。公开证据见 [在线验收](docs/stage13_acceptance_results.json) 和 [镜像/环境核验](docs/stage13_integration_verification.json)。
 
+## Known Limitations
 
-## 制造业独立API（Stage 11）
+- 数据集与 Demo 均 synthetic；真实企业效果需 approved dataset，Production Quality Certification / Production Scale Validation 均 NO。
+- 单 writer；无 distributed ingestion transaction、multi-worker ingestion 或线上原子读写快照。
+- session_id 不是 conversation memory；没有制造业前端、生产认证、租户隔离或 TLS 认证交付。
+- 数字/标识符 Guard 不证明语义蕴含、操作安全或 Prompt Injection 免疫；缓存信任合法 writer 与受保护 Redis。
+- readiness 主要表示 runtime 初始化；后续依赖故障可能在请求中返回固定错误码。 Milvus 停机抽测超过 150 秒 HTTP 等待，未验证其生产故障响应 deadline。
+- RAGAS judge NOT RUN；模型权限、网络和 timeout 影响运行，不用 fake LLM 替代失败。
+- Milvus 2.4.10 nullable 不兼容历史保留；正式锁定 2.5.4。默认检索配置保持，没有生产调参。
 
-完整依赖、本地模型、制造业Milvus与已初始化Stage 4 Manifest/LLM配置准备后，从仓库根目录运行：
+## Project History / Legacy Boundary
 
-```powershell
-python -m uvicorn manufacturing_app:app --host 127.0.0.1 --port 8080
-```
+`app.py` / `new_main.py` 是 Legacy EduRAG 历史入口，涉及教育分类、MySQL/旧 Redis、WebSocket 和教育前端；源码/资料保留，不作为制造业默认 Docker CMD。制造业本机入口 `python -m uvicorn manufacturing_app:app --host 127.0.0.1 --port 8080`，需同样的依赖、模型、环境和已初始化 Manifest，Ctrl+C 停止。
 
-Ctrl+C停止；避免与旧app共用同一端口。POST `/api/manufacturing/query`返回完整validated JSON；POST `/api/manufacturing/stream`发送validated answer chunks，不是raw model tokens。GET `/health/live`只说明应用活着；`/health/ready`分别显示core/cache状态。session_id只有correlation，不提供多轮历史memory。环境/INI配置与curl请求体见[API合约](docs/MANUFACTURING_API.md)；缓存知识更新失效见[Cache合约](docs/MANUFACTURING_CACHE.md)。
-
-本次真实生产runtime启动/模型/API/数据库端到端NOT RUN；FastAPI TestClient和注入runtime测试通过不能当作真实Startup PASS。config.example.ini只给保护默认值；不提交实际密钥/config.ini。Stage 12–13 PENDING，Full Integration Readiness: NO。
+直接 Python 不自动读取 `.env`：进程环境 > `config.ini` > fallback；Compose 显式注入环境，两者有区别。[当前架构](docs/CURRENT_ARCHITECTURE.md)、[历史清单](docs/EDURAG_LEGACY_INVENTORY.md)、[阶段计划](docs/MANUFACTURING_MIGRATION_PLAN.md) 和 Stage 报告保留逐阶段事实及当时限制。[AGENTS.md](AGENTS.md) 约束维护及自动 Commit/Push/远端核验；本次完成后停止，不创建 Stage 14。

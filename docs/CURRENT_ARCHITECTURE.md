@@ -1,8 +1,31 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–12 增量）
+# 当前真实架构（Manufacturing Stage 0–13）
 
-审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
+历史 Stage 0 审计日期：2026-10-01，源码基线 `ff95920` / main；Stage 13 增量核验日期：2026-10-06。历史 Implemented 只说明当时代码路径存在；当前已运行范围见下节和最终报告。
 
-当前检查点（2026-10-05）：Stage 0–11 PASS；Stage 12 PARTIAL（框架/指标单测完成，真实检索/RAGAS NOT RUN）；Stage 13 PENDING，Full Integration Readiness: NO。以下历史章节保留其交付时状态。
+当前检查点（2026-10-06）：Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。 以下 Stage 0–12 历史章节保留其交付时状态；最新运行事实以本节及 Stage 13 报告为准。
+
+## 当前 Manufacturing 主链（Stage 13 实测）
+
+正式入口 `manufacturing_app.py → rag_qa/api/app.py → lifespan build_runtime()`；默认 Docker 使用 Python 3.10.20/non-root UID 10001 启动 uvicorn，Legacy `app.py/new_main.py` 仍保留。正式 `docker-compose.yml` 提供 API、Redis 7.2.7、Etcd 3.5.16、MinIO RELEASE.2023-03-20T20-16-18Z、Milvus 2.5.4，不依赖 MySQL/教育 FAQ。
+
+```text
+Source File + Stage 1 YAML → 既有 Loader → Stage 2 Parent/Child SHA256
+→ Stage 4 VersionedIngestion → CPU BGE-M3 → Milvus Dense/Sparse → SQLite Manifest
+HTTP → Stage 5 QueryAnalysis → Manifest/FastPath 修订缓存
+→ Stage 6–9 Filter/策略/Child 检索/Parent 聚合/真实 CrossEncoder
+→ Stage 10 真实 OpenAI-compatible JSON → 本地 Schema/引用/数字/标识符 Guard
+→ validated JSON / SSE → answered-only Redis TTL
+```
+
+Stage 13 的两份合成 TXT/Sidecar 真实首次 INGEST、二次 SKIP，各 revision 1；Milvus 2 Child 与 Manifest 一致。参数 1200 rpm 的 JSON 引用参数文档，250 小时 SSE 引用维护文档；真实 qwen-plus 完成 Stage 10 contract。缓存 miss→hit、hashed key/TTL 299 秒，Redis 停机降级、LLM timeout 固定安全码、API/整栈重启后知识修订与 Child IDs 保持。模型只读挂载，Manifest/runtime 外置，不包含在已核验 image 中。
+
+基线 Parent 512/120、Child 128/30；k5/M2/weights0.8,0.3/nprobe10/BM25 disabled。Stage 12 25-query synthetic 质量指标与 Stage 13 两文件集成是不同验收范围，未重新生成 Stage 12 Dataset/结果。证据：[Stage 13](STAGE_REPORTS/STAGE13_REPORT.md)、[在线结果](stage13_acceptance_results.json)、[环境核验](stage13_integration_verification.json)。
+
+Full Integration YES 只指受控本地验收；无生产质量/容量/安全认证，无分布式摄取事务/multi-worker，session_id 不提供 conversation memory，RAGAS NOT RUN。ready 是初始化状态；后续 Milvus outage 抽测超过 150 秒 HTTP 等待，未验证其生产故障 deadline。历史生成控制限制及缓存信任边界仍有效。
+
+## 历史 EduRAG 基线与逐 Stage 增量
+
+以下第 1–19 节记录原审计和各阶段当时事实，Legacy 主链不能当作当前 Manufacturing 入口。
 
 ## 1. 入口与模块职责
 
@@ -21,7 +44,7 @@
 | `static/index.html` | 当前 `/` 页，同源 HTTP + WebSocket，Markdown 渲染 |
 | `static/old_index.html` / `static/src/App.jsx` | 旧页面/未接入 React 原型；React 期待 8000 `/query` SSE，与当前 API 不符 |
 | `demo/` | LangChain、Milvus、Redis、BM25、日志等教学脚本，不属于生产调用链；部分有顶层副作用 |
-| `rag_qa/evaluation/` | Stage 12 独立制造业标签/ID指标/真实组件观察适配与可选RAGAS，当前真实评估NOT RUN |
+| `rag_qa/evaluation/` | Stage 12 独立制造业标签/ID指标/真实组件观察适配；Completion V2 真实受控评估 PASS，RAGAS NOT RUN |
 | `rag_qa/rag_assessment/` | 教育数据的独立 RAGAS 脚本和历史输出，未接在线真实召回 |
 
 ## 2. 离线入库链路

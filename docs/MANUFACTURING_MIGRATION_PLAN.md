@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–12 已完成；2026-10-05 Stage 12 Completion V2在隔离Milvus 2.5.4完成真实受控评估，Stage 12 PASS；Stage 13 PENDING/readiness YES，Full Integration Readiness NO；后续阶段不自动推进。前次2.4.10 Schema阻塞保留为历史证据。
+用户已明确并完成以下 Stage 0–13 正式路线。2026-10-06 Stage 13 真实文件摄取及 Docker/在线 LLM/HTTP/SSE/Redis/持久化验收 PASS，Full Integration Readiness YES 仅指受控本地环境，Migration COMPLETE；Production Quality Certification/Scale Validation NO。前次 2.4.10 阻塞和各阶段当时状态保留为历史证据；本次完成后停止，不创建 Stage 14。
 
 ```text
 Stage 0: PASS
@@ -38,7 +38,13 @@ Stage 9: PASS
 Stage 10: PASS
 Stage 11: PASS
 Stage 12: PASS
-Stage 13: PENDING (readiness YES)
+Stage 13: PASS
+Last Completed Stage: Stage 13 — PASS
+Active Stage: NONE
+Full Integration Readiness: YES (controlled local Integration only)
+Migration: COMPLETE
+Production Quality Certification: NO
+Production Scale Validation: NO
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -58,7 +64,7 @@ Stage 13: PENDING (readiness YES)
 | 12 | Retrieval Evaluation + Hit@K + MRR + RAGAS | 独立 retrieval evaluator | 带期望 Document/Child/Parent ID 的标注集；隔离型号/报警；留原始召回与配置快照 |
 | 13 | Docker + Integration Tests + README + Final Acceptance | Docker / Compose / README / 现有测试 | 完整依赖约定、集成测试、启动/停止与最终验收 |
 
-Dense/Sparse 权重保持 `0.8 / 0.3`；制造业 Dense param 的 nprobe 集中默认值保持 10，Legacy 字面量不变。Parent/Child 本地示例与 Docker 当前有配置漂移。不选择“最佳值”；Stage 12 先测量，只有批准的代表性数据及配对证据才允许决定生产调参，本次保持全部默认值。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
+Dense/Sparse 权重保持 `0.8 / 0.3`；制造业 Dense param 的 nprobe 集中默认值保持 10，Legacy 字面量不变。Stage 0 曾记录 Parent/Child 与 Docker 参数漂移；Stage 13 正式 Compose 已统一 Parent 512/120、Child 128/30。不选择“最佳值”；Stage 12 先测量，只有批准的代表性数据及配对证据才允许决定生产调参，本次保持全部默认值。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
 
 ## 制造业术语与 Metadata 候选合约
 
@@ -181,3 +187,10 @@ Implementation/Metric Unit Validation PASS，Overall Stage 12 PARTIAL。独立�
 ### Stage 12 Completion V2最终检查点（2026-10-05）
 
 隔离server pkg/v2.5.4 / client2.5.4、nullable=None probe、严格Schema/Index、42 Child与21 Manifest快照/标签、25/25 Direct及25/25 scripted Strategy均PASS；错误/leak/incorrect FastPath acceptance为0，知识修订稳定。必要correctness fix仅规范化SDK索引描述顶层/嵌套参数读取，并继续拒绝错误/缺失/冲突值；字段合约和生产参数不变。全量1012 passed / 13 skipped。Stage 12 PASS，Stage 13 PENDING/readiness YES；Full Integration Readiness NO、Production tuning NO、RAGAS NOT RUN。指标范围仅local CPU controlled synthetic，见[报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+
+
+## Stage 13 最终验收（2026-10-06）
+
+Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。
+
+制造业默认 Docker CMD、非 root 与外置模型/Manifest、Milvus 2.5.4 五服务、真实 Stage 1–4 文件摄取/二次 SKIP、BGE-M3/Parent/CrossEncoder、真实 qwen-plus 严格生成/逐 Claim 引用、JSON/SSE、Redis miss→hit/降级、API/整栈持久化重启均通过。回归 1026 passed / 0 failed / 13 skipped；历史报告不重写。详见[Stage 13 报告](STAGE_REPORTS/STAGE13_REPORT.md)。单 writer、无分布式摄取事务、session 无记忆、RAGAS NOT RUN、synthetic 数据与 Milvus 故障等待限制保持，不作生产承诺。

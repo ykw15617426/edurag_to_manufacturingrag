@@ -2,6 +2,8 @@
 
 `.agent/` 保存维护过程与当前计划，`docs/` 保存可交付的架构、迁移设计和阶段证据。这里不放运行代码、凭据或模型。
 
+当前最终检查点（2026-10-06）：Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。 验收报告见 [Stage 13](../docs/STAGE_REPORTS/STAGE13_REPORT.md)。历史限制仍按各报告保留。
+
 | 文件 | 用途 |
 | --- | --- |
 | [AGENTS.md](../AGENTS.md) | 仓库维护约定与阶段边界 |

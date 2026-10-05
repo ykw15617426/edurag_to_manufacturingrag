@@ -1,5 +1,7 @@
 # 制造业 FastAPI / SSE 合约（Stage 11）
 
+2026-10-06 Stage 13 当前运行事实：真实 Docker Python 3.10.20/full requirements、Milvus 2.5.4、BGE-M3/CrossEncoder、文件摄取/Manifest 与真实 qwen-plus HTTP JSON/SSE 已验证；Full Integration Readiness YES 仅限本地 synthetic 集成。后文 NOT RUN 属于原阶段当时证据，不重写历史。参见 [Stage 13 报告](STAGE_REPORTS/STAGE13_REPORT.md) 与 [项目 README](../README.md)。
+
 ## 入口与运行前提
 
 轻量入口 `manufacturing_app.py` → `rag_qa/api/app.py:create_manufacturing_app(runtime_factory=None)`。import只构造FastAPI/路由并解析本地配置，**不会连接服务、加载模型、构造OpenAI/Redis/Milvus客户端**；真实runtime在lifespan线程中构建，可注入fake runtime测试。Legacy app.py/new_main/WebSocket/教育生成完全保留，制造业不使用IntegratedQASystem或MySQL对话表。

@@ -1,8 +1,8 @@
 # 项目维护计划
 
-更新日期：2026-10-05。
+更新日期：2026-10-06。
 
-Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 0–12: PASS；Stage 13: PENDING（readiness YES）；Full Integration Readiness: NO。
+Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。
 
 ## 已确认检查点
 
@@ -26,7 +26,7 @@ Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 0–12: PAS
 | Stage 10 | PASS | Evidence/结构化生成/claim引用guard、813 passed / 12 skipped及Git发布完成 |
 | Stage 11 | PASS | API/SSE/TTL知识修订缓存、907 passed / 12 skipped及Git发布完成 |
 | Stage 12 | PASS | Completion V2真实42 Child/25-query Direct+Strategy、安全/快照PASS；1012 passed / 13 skipped；仅受控synthetic范围 |
-| Stage 13 | PENDING | 尚未授权实施 |
+| Stage 13 | PASS | 真实文件/模型/LLM/HTTP/SSE/缓存/重启；1026 passed / 13 skipped；[最终报告](../docs/STAGE_REPORTS/STAGE13_REPORT.md) |
 
 ## 已完成任务：Repository Governance & Documentation Setup
 
@@ -46,7 +46,7 @@ Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 0–12: PAS
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-Stage 12 Completion V2已完成隔离环境真实受控评估，当前停止，不进入Stage 13。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在历史报告，不把单测或 synthetic 结果当生产质量。
+Stage 13 已完成本次用户授权的最终集成与交付，当前停止，不创建 Stage 14。历史阶段证据保持，后续任务须重新明确范围。synthetic 评估不等于真实企业效果、生产容量或安全认证。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -273,3 +273,19 @@ Stage 12 PARTIAL；Last Completed仍11 PASS；Active NONE；Stage 13 readiness N
 - [x] 修复 `91d980ac33138ac51b44c36fc560afe577ef54bb` 与证据 `8ad0f8affcda20f7ea6be4b4c95f6742584d650a` 已Push；fetch后Local HEAD == origin/main且clean。发布记录独立文档提交同步，最终HEAD在回复核验；当前停止。
 
 Stage 12 PASS；Stage 13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS/真实LLM Planner NOT RUN；生产调参NO，BM25 disabled。临时基础设施和现场停止/重启命令见[报告](../docs/STAGE_REPORTS/STAGE12_REPORT.md)，不提交Compose/volumes/Manifest/logs。
+
+## Stage 13 — Docker + Integration Tests + README + Final Acceptance
+
+起始main `461a452610664b79cbfcfc012cb1ca8ba94a2d59`，fetch后远端一致且clean；真实LLM配置存在，只验证可用性，不输出秘密。
+
+- [x] 阅读用户要求、治理、已有Docker/配置/依赖和Stage 1–12真实调用链及历史边界。
+- [x] 非root Manufacturing image、dockerignore、正式五服务Compose与隔离acceptance overlay。
+- [x] Synthetic文件/Sidecar Demo，真实VersionedIngestion首次INGEST、二次SKIP与IDs/revision保持。
+- [x] Docker Build/实际镜像不含模型、配置、秘密和runtime；真实服务版本与健康。
+- [x] 真实LLM、HTTP JSON/citation/cache、SSE单terminal与维护来源验证。
+- [x] Redis降级、安全响应、API/整栈持久重启与查询。
+- [x] 离线测试和完整回归；最终README/当前架构/报告及真实限制。
+- [x] Diff/链接/秘密/保护范围检查，限定Commit/Push/fetch/equal/clean并停止，不创建Stage14。
+
+
+Stage 13 技术验收 PASS；首次/二次摄取各2 docs/2 Child，revision 1；真实 qwen-plus JSON 生成/引用与缓存/SSE/Redis降级/持久化重启 PASS。LLM timeout 固定 GENERATION_ERROR PASS；Milvus outage 的 HTTP 超时限制保留。部署提交 `a3e8d764ac9e9407c9d416436601ace9e643a43e` 已 Push/fetch，HEAD 与 origin/main 一致；最终文档提交及 clean 在交付回复核验。详见[报告](../docs/STAGE_REPORTS/STAGE13_REPORT.md)。当前停止；Production Quality/Scale NO，RAGAS NOT RUN。

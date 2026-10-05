@@ -1,10 +1,12 @@
 # Manufacturing Versioned Ingestion — Stage 4
 
+2026-10-06 Stage 13 当前运行事实：真实 Docker Python 3.10.20/full requirements、Milvus 2.5.4、BGE-M3/CrossEncoder、文件摄取/Manifest 与真实 qwen-plus HTTP JSON/SSE 已验证；Full Integration Readiness YES 仅限本地 synthetic 集成。后文 NOT RUN 属于原阶段当时证据，不重写历史。参见 [Stage 13 报告](STAGE_REPORTS/STAGE13_REPORT.md) 与 [项目 README](../README.md)。
+
 2026-10-02。正式入口为 `rag_qa/ingestion/versioned_ingestion.py` 的 `VersionedIngestion`，控制面为 `manifest_store.py` 的 `SQLiteManifestStore`。复用 Stage 1 Metadata Resolver、Stage 2 原文件 Hash/身份/切分和 Stage 3 VectorStore/Schema；不自动切换在线入口。单 worker / 单 writer，调用方必须串行执行所有摄取与删除；不支持 distributed multi-worker。
 
 ## Manifest and configuration
 
-`MANUFACTURING_MANIFEST_DB_PATH` 优先于 INI `[ingestion] manufacturing_manifest_db_path`，fallback 为项目根下 `runtime/manufacturing_manifest.sqlite3`。示例 INI 的相对路径按工作目录解析，建议从仓库根执行或配置绝对路径。`runtime/` 已 Git 忽略；不提交 DB、WAL、journal 或本地路径配置。容器需自行配置持久化目录/挂载，当前任务没有启动或验证容器。
+`MANUFACTURING_MANIFEST_DB_PATH` 优先于 INI `[ingestion] manufacturing_manifest_db_path`，fallback 为项目根下 `runtime/manufacturing_manifest.sqlite3`。示例 INI 的相对路径按工作目录解析，建议从仓库根执行或配置绝对路径。`runtime/` 已 Git 忽略；不提交 DB、WAL、journal 或本地路径配置。Stage 4 当时未启动容器；Stage 13 已提供持久 runtime 挂载并验证重启保持，详见上方当前事实。
 
 SQLite `active_documents` 以 document_id 为唯一 PK，每个文档只有一条 active record。Manifest DB 应固定对应同一 Milvus endpoint/database/collection；不是全局跨集合版本目录。表字段如下：
 

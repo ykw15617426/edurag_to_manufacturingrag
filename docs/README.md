@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: PASS；Stage 11: PASS；Stage 12: PASS（Completion V2真实受控检索、安全与快照通过）；Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 13: PENDING（readiness YES）；Full Integration Readiness: NO。
+Stage 0–13: PASS；Last Completed Stage: Stage 13 — PASS；Active Stage: NONE；Full Integration Readiness: YES（仅受控本地 Integration）；Migration: COMPLETE。Production Quality Certification: NO；Production Scale Validation: NO。 真实 LLM/JSON/SSE/Redis/文件摄取与重启证据见 Stage 13；Stage 12 25-sample 检索指标及 Stage 13 Demo 均为 synthetic。Stage 0 技术验证 PARTIAL（7 passed / 9 skipped）及各阶段当时未运行项继续保留于历史报告。
 
 ## 文档职责
 
@@ -24,6 +24,9 @@ Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification
 | [MANUFACTURING_API.md](MANUFACTURING_API.md) | Stage 11 独立API/SSE、运行时、线程/断连、错误与readiness合约 |
 | [MANUFACTURING_CACHE.md](MANUFACTURING_CACHE.md) | Stage 11 validated answer TTL、hashed key与Manifest/FastPath修订 |
 | [MANUFACTURING_EVALUATION.md](MANUFACTURING_EVALUATION.md) | Stage 12 严格标签/确定指标/逐样本观测/实验配置/Live保护/RAGAS边界 |
+| [Stage 13报告](STAGE_REPORTS/STAGE13_REPORT.md) | Docker/真实文件入库/在线 LLM/缓存/SSE/重启与最终交付边界 |
+| [Stage 13在线证据](stage13_acceptance_results.json) | 真实 HTTP/SSE、来源、INGEST/SKIP、稳定 revision 与持久快照 |
+| [Stage 13环境核验](stage13_integration_verification.json) | 镜像/秘密扫描、组件版本、真实 LLM 超时安全响应与回归 |
 | [Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md) | Completion V2受控Live PASS；1012 passed / 13 skipped；保留前次失败历史 |
 | [evaluation_results.json](evaluation_results.json) | 实际同快照Paired：25 Direct+25 scripted Strategy，三层指标/安全/CPU时延 |
 | [前次Completion Preflight](stage12_completion_preflight.json) | Python3.10固定依赖/真实模型/连接、nullable差异和v1/v2空资源证据 |
