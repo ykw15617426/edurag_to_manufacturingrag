@@ -1,6 +1,6 @@
 # Manufacturing Retrieval Evaluation（Stage 12）
 
-2026-10-05：Implementation / Metric Unit Validation: PASS；Real Retrieval Evaluation / RAGAS: NOT RUN；Stage 12: PARTIAL。Full Integration Readiness 与 Stage 13 readiness: NO。当前环境可运行评估单测，不能从 fake adapter 得出真实检索质量。
+2026-10-05：Implementation / Metric Unit Validation: PASS；Real Retrieval Evaluation / RAGAS: NOT RUN；Stage 12: PARTIAL。Full Integration Readiness 与 Stage 13 readiness: NO。最新Completion在已有Python3.10固定依赖环境通过真实BGE-M3/CrossEncoder推理与Milvus连接，但server v2.4.10返回的nullable字段与Stage 3合约不符，真实25-query评估被阻断；不能从模型单次预检或fake adapter推导检索质量。
 
 ## 数据与来源
 
@@ -67,3 +67,10 @@ RAGAS 辅助评估只接受 query、retrieved_contexts、generated_answer、refe
 `retrieval/settings.py` 集中制造业默认权重/nprobe 与 manufacturing_retrieval_v1。在线工厂把 VectorStore 的 effective settings 传给 Service；Cache Key 增加 contract version + retrieval_config_fingerprint，覆盖 k/M/weights/nprobe/BM25 mode/threshold。值相同指纹相同，各字段变化导致旧缓存 miss；旧 key 依原 TTL 过期，无 FLUSHDB。Legacy hybrid 的权重/字面量与算法不改，Stage 2–10 业务语义/生成 guard 保持。
 
 本阶段实际结果：[evaluation_results.json](evaluation_results.json)；命令证据与限制：[Stage 12 报告](STAGE_REPORTS/STAGE12_REPORT.md)。Real Retrieval、FastPath quality、Strategy quality、真实时延和 answer-quality RAGAS 均 NOT RUN；production tuning: NOT AUTHORIZED BY DATA。
+
+
+## 最新Completion运行条件与现场
+
+可用Python：D:\Soft\ANACONDA\Anaconda\envs\EduRAG\python.exe（3.10.18）。无需重建venv或安装模型栈，现有固定依赖已实际导入且本地模型推理通过。此前3.13 validation缺依赖的记录为历史；本次真实阻塞是server v2.4.10在新集合中返回nullable=false，strict Schema校验正确拒绝。
+
+Direct v1真实失败见[evaluation_results_direct.json](evaluation_results_direct.json)；新v2单次恢复重试也同样失败，两集合0 rows，两个Manifest不存在且资源未删除。[stage12_completion_preflight.json](stage12_completion_preflight.json)记录实际模型/服务/字段/回归证据。原evaluation_results.json保留最初NOT RUN来源；尚无新的真实paired结果。兼容Milvus环境准备好后须用新隔离资源复跑，不强行修v1/v2或对它们再次--provision。服务启动/停止与精确命令见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。

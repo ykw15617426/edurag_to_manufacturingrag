@@ -302,3 +302,10 @@ Manifest只读fingerprint派生active事实/revision，排除updated_at；在线
 retrieval/settings.py 集中制造业权重0.8/0.3、nprobe10与retrieval contract；VectorStore实例可带EvaluationProfile派生settings，生产默认不变。API cache/runtime/service增量传递真实settings fingerprint，覆盖k/M/weights/nprobe/BM25 mode及threshold，所有语义变化导致新key；不调整TTL/生产BM25 policy/Stage 2–10算法和Legacy。
 
 999 passed / 0 failed / 13 skipped；Stage 12核心92项单测，真实BGE/Milvus/CrossEncoder/LLM Planner/RAGAS judge/真实性能均NOT RUN。当前验证venv缺milvus_model/sentence_transformers/torch/langchain_core，weights目录和文件存在不代表实际推理通过。Stage 12整体PARTIAL，Last Completed Stage仍11 PASS；Active NONE，Stage 13 PENDING/readiness NO，Full Integration Readiness NO。证据：[评估合约](MANUFACTURING_EVALUATION.md)、[机器预检](evaluation_results.json)、[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+
+
+## 18. Stage 12 Completion实际环境尝试（2026-10-05）
+
+仓库源码/固定Dataset未改。现有EduRAG Python3.10.18及六项核心锁定依赖可用，离线本地BGE-M3真实encode返回1024维Dense和非空Sparse，CrossEncoder单对predict有限；这些是模型可运行证据，不是检索质量指标。启动本机已有Docker Desktop及Milvus/etcd/MinIO服务后，localhost:19530 / itcast07连接通过，server v2.4.10。
+
+Direct --provision创建的隔离evaluation v1/v2都返回nullable=false，现有strict manufacturing_v1 validator在equipment_type.nullable拒绝expected True / actual False。两集合均空、Manifest未建立；没有42-child upsert或25-query/paired评估，不修改Stage 3 Schema/IDs/默认检索参数或正式数据。Stage 12仍PARTIAL，Stage 13 readiness NO，Full Integration Readiness NO。当前阻塞已从缺模型运行依赖定位为现有服务器的Schema兼容问题。现场、命令和安全边界见[Completion机器预检](stage12_completion_preflight.json)、[Direct失败结果](evaluation_results_direct.json)、[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。

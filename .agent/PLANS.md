@@ -2,7 +2,7 @@
 
 更新日期：2026-10-05。
 
-Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL；Stage 13: PENDING（readiness NO）。
+Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL（Completion被既有Milvus nullable合约阻断）；Stage 13: PENDING（readiness NO）。
 
 ## 已确认检查点
 
@@ -25,7 +25,7 @@ Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL
 | Stage 9 | PASS | 严格策略/保护/融合、689 passed / 12 skipped及Git发布完成 |
 | Stage 10 | PASS | Evidence/结构化生成/claim引用guard、813 passed / 12 skipped及Git发布完成 |
 | Stage 11 | PASS | API/SSE/TTL知识修订缓存、907 passed / 12 skipped及Git发布完成 |
-| Stage 12 | PARTIAL | 评估框架/配置缓存指纹已实现；999 passed / 13 skipped；真实检索和 RAGAS NOT RUN |
+| Stage 12 | PARTIAL | 999 passed / 13 skipped；Completion真实BGE/CrossEncoder预检与Milvus连接PASS，但nullable Schema mismatch阻断检索评估 |
 | Stage 13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
@@ -241,3 +241,20 @@ Stage 11实现提交 `c6fe27c6e3665445d202d4a3cd16e614455d4972` 已正常Push；
 交付：[Stage 12报告](../docs/STAGE_REPORTS/STAGE12_REPORT.md)。真实评估是剩余限制，当前停止，Stage 13 readiness NO；不把模型文件存在、fake控制单测或Git发布视作完整集成PASS。
 
 Stage 12实现提交正常Push/fetch/equal/clean后，在干净的实现HEAD复跑离线预检并记录该Git SHA；最终发布记录通过独立文档提交同步，最终HEAD在回复提供。Overall Stage 12仍PARTIAL，不开始Stage 13。
+
+
+## Stage 12 Completion（2026-10-05）：真实环境尝试
+
+状态：PARTIAL；从main 2c168dc972e75dc7de34265c5df9ba83fc8ff959开始，初始clean且远端一致。实现代码和25条固定标签不变。
+
+- [x] 找到现有EduRAG Python3.10.18，六个核心分发依赖与requirements一致，真实imports通过。
+- [x] Offline本地BGE-M3 encode与CrossEncoder predict通过，无替代模型下载。
+- [x] 启动已存在Docker Desktop与milvus_standalone/etcd/minio；真实localhost:19530 / itcast07连接通过，server v2.4.10。
+- [x] Direct Provision真实运行失败：equipment_type.nullable expected True / actual False。仅评估集合创建，无42-child upsert或Manifest。
+- [x] 按恢复规则以v2新名称重试仍Schema mismatch；v1/v2均0 rows、无Manifest，保留资源，无drop/clear/delete。
+- [x] 原validation环境完整回归999 passed / 0 failed / 13 skipped；Dataset SHA和源码/生产参数保持。
+- [x] 更新Completion预检/Direct失败机器证据、Stage 12报告及当前事实导航；不虚构paired结果或Stage 12 PASS。
+- [x] 最终197个相对链接、Dataset SHA、保护范围和git diff --check通过；仅本任务文档/证据变化。
+- [ ] Commit/Push/fetch/equal/clean。
+
+Stage 12 PARTIAL；Last Completed仍11 PASS；Active NONE；Stage 13 readiness NO，PENDING；Full Integration Readiness NO。下一次需要支持当前nullable合约的Milvus环境及新隔离资源，本任务不升级服务或实施Stage 13。

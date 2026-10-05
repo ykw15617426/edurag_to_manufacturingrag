@@ -1,0 +1,138 @@
+{
+  "status": "PARTIAL",
+  "baseline_git_sha": "2c168dc972e75dc7de34265c5df9ba83fc8ff959",
+  "source_snapshot": {
+    "source_tree_dirty": true,
+    "evaluated_code_sha256": "cc8fc0ac56daa61742bdc3feb2fc4b1c8efecd5a79c0af3f093b69f5d088eb72"
+  },
+  "dataset_type": "controlled_synthetic",
+  "sample_count": 25,
+  "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
+  "python": "3.10.18",
+  "dependencies": {
+    "torch": "2.10.0",
+    "pymilvus": "2.5.4",
+    "milvus-model": "0.2.5",
+    "sentence-transformers": "3.0.1",
+    "langchain-core": "1.2.16",
+    "FlagEmbedding": "1.3.5",
+    "transformers": "4.45.0",
+    "peft": "0.18.1"
+  },
+  "model_preflight": {
+    "python": "3.10.18",
+    "torch_runtime": "2.10.0+cpu",
+    "torch_num_threads": 14,
+    "offline": true,
+    "components": {
+      "BGE-M3": {
+        "status": "PASS",
+        "seconds": 3.4330532000003586,
+        "dense_shape": [
+          1,
+          1024
+        ],
+        "sparse_nnz": 16,
+        "model": "local/bge-m3"
+      },
+      "CrossEncoder": {
+        "status": "PASS",
+        "seconds": 1.9545305999999982,
+        "score": 0.02599869854748249,
+        "model": "local/bge-reranker-large"
+      }
+    }
+  },
+  "milvus": {
+    "connection": "PASS",
+    "host": "localhost",
+    "port": 19530,
+    "database": "itcast07",
+    "server_version": "v2.4.10",
+    "evaluation_collection": "manufacturing_rag_eval_v1",
+    "eval_collection_exists": true,
+    "eval_manifest_exists": false,
+    "nullable_fields": {
+      "id": false,
+      "text": false,
+      "dense_vector": false,
+      "sparse_vector": false,
+      "schema_version": false,
+      "child_id": false,
+      "parent_id": false,
+      "parent_content": false,
+      "document_id": false,
+      "document_version": false,
+      "document_sha256": false,
+      "parent_content_sha256": false,
+      "child_content_sha256": false,
+      "title": false,
+      "knowledge_type": false,
+      "equipment_type": false,
+      "equipment_model": false,
+      "manufacturer": false,
+      "alarm_code": false,
+      "fault_type": false,
+      "fault_symptom": false,
+      "maintenance_type": false,
+      "maintenance_cycle_value": false,
+      "maintenance_cycle_unit": false,
+      "maintenance_cycle_trigger": false,
+      "part_number": false,
+      "effective_date": false,
+      "language": false,
+      "source_file": false,
+      "metadata_source": false,
+      "source": false,
+      "timestamp": false
+    }
+  },
+  "blocker": {
+    "dependency": "existing Milvus server manufacturing schema compatibility",
+    "command": "python -m rag_qa.evaluation.runner --live --provision --mode direct --collection manufacturing_rag_eval_v1 --manifest runtime/evaluation/manufacturing_rag_eval_v1.sqlite3 --output docs/evaluation_results_direct.json",
+    "exception": "ManufacturingSchemaMismatchError",
+    "sanitized_reason": "collection=manufacturing_rag_eval_v1; field=equipment_type.nullable; expected=True; actual=False; migration required; collection was not repaired or dropped"
+  },
+  "real_controlled_evaluation": "NOT RUN",
+  "paired_evaluation": "NOT RUN",
+  "production_tuning": "NO",
+  "production_quality_claim": false,
+  "production_collections_touched": false,
+  "resources_deleted": false,
+  "ragas": "NOT RUN",
+  "real_planner_llm": "NOT RUN",
+  "evaluation_resources": [
+    {
+      "collection": "manufacturing_rag_eval_v1",
+      "row_count": 0,
+      "manifest_exists": false,
+      "schema_validation": {
+        "exception": "ManufacturingSchemaMismatchError",
+        "sanitized_reason": "collection=manufacturing_rag_eval_v1; field=equipment_type.nullable; expected=True; actual=False; migration required; collection was not repaired or dropped"
+      }
+    },
+    {
+      "collection": "manufacturing_rag_eval_v2",
+      "row_count": 0,
+      "manifest_exists": false,
+      "schema_validation": {
+        "exception": "ManufacturingSchemaMismatchError",
+        "sanitized_reason": "collection=manufacturing_rag_eval_v2; field=equipment_type.nullable; expected=True; actual=False; migration required; collection was not repaired or dropped"
+      }
+    }
+  ],
+  "recovery_retry": {
+    "collection": "manufacturing_rag_eval_v2",
+    "manifest": "runtime/evaluation/manufacturing_rag_eval_v2.sqlite3",
+    "status": "PARTIAL",
+    "reason": "same_nullable_schema_mismatch_on_new_isolated_name"
+  },
+  "regression": {
+    "command": ".venv/stage1-validation/Scripts/python.exe -m pytest tests -q -rs --tb=short",
+    "passed": 999,
+    "failed": 0,
+    "skipped": 13,
+    "python": "3.13.9",
+    "scope": "Stage0_to_12_unit_and_smoke_regression_not_live_quality"
+  }
+}

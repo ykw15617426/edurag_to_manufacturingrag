@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–11 已完成；2026-10-05 已按授权实现 Stage 12 评估框架，真实检索未运行，Stage 12 保持 PARTIAL；后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–11 已完成；2026-10-05 已按授权实现 Stage 12 评估框架并尝试真实Completion；模型与连接预检通过，Schema不兼容阻断完整评估，Stage 12 保持 PARTIAL；后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -172,3 +172,8 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 Implementation/Metric Unit Validation PASS，Overall Stage 12 PARTIAL。独立评估/25条synthetic标签/三层ID指标/观察/小规模profile/显式RAGAS及缓存配置指纹已实现；真实检索评估 NOT RUN，不能据此声明生产质量或调参。生产k5/M2/weights0.8,0.3/nprobe10/BM25 disabled保持；Legacy教育评估和Stage 2–10业务语义不变。
 
 详见[评估合约](MANUFACTURING_EVALUATION.md)和[阶段证据](STAGE_REPORTS/STAGE12_REPORT.md)。Stage 13 readiness NO，PENDING，未获实施授权。
+
+
+### Stage 12 Completion环境检查点（2026-10-05）
+
+真实本地模型推理及现有Milvus连接PASS；Milvus v2.4.10不能保持manufacturing_v1 nullable合约，Direct Provision在严格Schema验证处FAIL，25-query/paired评估NOT RUN。因此Stage 12仍PARTIAL，Stage 13 readiness NO；不放宽Schema、不调生产参数、不升级/创建新基础设施来冒充完成。精确证据见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)的Completion节。
