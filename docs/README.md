@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: PASS；Stage 11: PASS；Stage 12: PARTIAL（模型/连接预检PASS，nullable Schema mismatch阻断真实评估）；Stage 13: PENDING（readiness NO）；Full Integration Readiness: NO。
+Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: PASS；Stage 11: PASS；Stage 12: PASS（Completion V2真实受控检索、安全与快照通过）；Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 13: PENDING（readiness YES）；Full Integration Readiness: NO。
 
 ## 文档职责
 
@@ -24,10 +24,12 @@ Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification
 | [MANUFACTURING_API.md](MANUFACTURING_API.md) | Stage 11 独立API/SSE、运行时、线程/断连、错误与readiness合约 |
 | [MANUFACTURING_CACHE.md](MANUFACTURING_CACHE.md) | Stage 11 validated answer TTL、hashed key与Manifest/FastPath修订 |
 | [MANUFACTURING_EVALUATION.md](MANUFACTURING_EVALUATION.md) | Stage 12 严格标签/确定指标/逐样本观测/实验配置/Live保护/RAGAS边界 |
-| [Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md) | 999 passed / 13 skipped；Completion模型/连接PASS、Schema FAIL；Overall PARTIAL |
-| [evaluation_results.json](evaluation_results.json) | 原始NOT RUN预检；真实paired尚未运行，保留历史来源 |
-| [Completion Preflight](stage12_completion_preflight.json) | Python3.10固定依赖/真实模型/连接、nullable差异和v1/v2空资源证据 |
-| [Direct Live失败记录](evaluation_results_direct.json) | 实际Direct Provision的PARTIAL与Schema mismatch；无质量分数 |
+| [Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md) | Completion V2受控Live PASS；1012 passed / 13 skipped；保留前次失败历史 |
+| [evaluation_results.json](evaluation_results.json) | 实际同快照Paired：25 Direct+25 scripted Strategy，三层指标/安全/CPU时延 |
+| [前次Completion Preflight](stage12_completion_preflight.json) | Python3.10固定依赖/真实模型/连接、nullable差异和v1/v2空资源证据 |
+| [Direct Live记录](evaluation_results_direct.json) | v4实际Provision+25-query Direct PASS，真实三层指标/CPU时延 |
+| [前次Direct失败](stage12_completion_v1_direct_failure.json) | 原2.4.10 nullable mismatch真实结果原样归档 |
+| [Completion V2核验](stage12_completion_v2_verification.json) | 实际2.5.4版本/nullable probe/42 Child/Manifest/标签/稳定修订与安全证据 |
 | [Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md) | TestClient/recording/SQLite验证、真实运行限制及Git发布证据 |
 | [Stage 10 报告](STAGE_REPORTS/STAGE10_REPORT.md) | 正常化/Prompt/生成guard验证、真实LLM限制及Git发布证据 |
 | [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md) | 策略治理离线测试、真实集成限制与Git发布证据 |

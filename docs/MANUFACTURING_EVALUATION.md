@@ -1,6 +1,6 @@
 # Manufacturing Retrieval Evaluation（Stage 12）
 
-2026-10-05：Implementation / Metric Unit Validation: PASS；Real Retrieval Evaluation / RAGAS: NOT RUN；Stage 12: PARTIAL。Full Integration Readiness 与 Stage 13 readiness: NO。最新Completion在已有Python3.10固定依赖环境通过真实BGE-M3/CrossEncoder推理与Milvus连接，但server v2.4.10返回的nullable字段与Stage 3合约不符，真实25-query评估被阻断；不能从模型单次预检或fake adapter推导检索质量。
+2026-10-05 Completion V2：Stage 12 Retrieval PASS；实际Milvus server pkg/v2.5.4 / client2.5.4与本地CPU BGE-M3/CrossEncoder完成受控评估。25/25 Direct和25/25 scripted Strategy，错误/leak/incorrect FastPath acceptance为0，知识修订稳定；1012 passed / 13 skipped。RAGAS/真实LLM Planner NOT RUN。Stage 13 readiness YES，PENDING；Full Integration Readiness NO。前次2.4.10 nullable阻塞保留为历史；controlled synthetic指标不代表生产质量。
 
 ## 数据与来源
 
@@ -24,7 +24,7 @@ Child 用 k=5；Parent 和 Document 分别用 M=2，三层独立统计。Documen
 
 Leak 检查所有返回 Child 和 Parent 的 Metadata 对期望 equipment_model/alarm_code/part_number，缺字段也算不兼容。sample leak count/rate 以成功且有 hard 标签的样本为 denominator，失败计数另列；leaked item count 包含 Child 和 Parent 两种输出项，不代表去重后的文档数量。值实测，不硬编码 0。
 
-Exact Alarm、Exact FAQ、BM25 分开：eligible 由明确 fast_path_labels 给出；接受统计包括无 eligibility 标签的接受并另列此计数，coverage 只用 eligible accepted / eligible。precision 要求 Parent 与 Document label 命中且无 hard leak。BM25 阈值 sweep 用有限 raw score + matched tokens，输出 accepted/precision/coverage/relevant recall/false accepts；只做诊断，不启用生产。当前没有真实 sweep 或 precision/coverage 分数。
+Exact Alarm、Exact FAQ、BM25 分开：eligible 由明确 fast_path_labels 给出；接受统计包括无 eligibility 标签的接受并另列此计数，coverage 只用 eligible accepted / eligible。precision 要求 Parent 与 Document label 命中且无 hard leak。BM25 阈值 sweep 用有限 raw score + matched tokens，输出 accepted/precision/coverage/relevant recall/false accepts；只做诊断，不启用生产。没有真实BM25阈值sweep；最新Exact precision/coverage与默认disabled BM25的结果见Completion V2报告。
 
 ## 实际组件与实验
 
@@ -46,7 +46,7 @@ python -m rag_qa.evaluation.runner --prepare --dataset .venv/stage12-evaluation/
 python -m pytest tests/test_manufacturing_evaluation_metrics.py tests/test_manufacturing_evaluation_dataset.py tests/test_manufacturing_evaluation_runner.py tests/test_manufacturing_retrieval_contract.py -q -rs
 ```
 
-真实依赖/服务准备后才能执行以下示例，本阶段 **NOT RUN**：
+以下是原实现阶段的命令示例；Completion V2实际资源及命令见本文末尾：
 
 ```powershell
 $env:STAGE12_LIVE = '1'
@@ -66,11 +66,18 @@ RAGAS 辅助评估只接受 query、retrieved_contexts、generated_answer、refe
 
 `retrieval/settings.py` 集中制造业默认权重/nprobe 与 manufacturing_retrieval_v1。在线工厂把 VectorStore 的 effective settings 传给 Service；Cache Key 增加 contract version + retrieval_config_fingerprint，覆盖 k/M/weights/nprobe/BM25 mode/threshold。值相同指纹相同，各字段变化导致旧缓存 miss；旧 key 依原 TTL 过期，无 FLUSHDB。Legacy hybrid 的权重/字面量与算法不改，Stage 2–10 业务语义/生成 guard 保持。
 
-本阶段实际结果：[evaluation_results.json](evaluation_results.json)；命令证据与限制：[Stage 12 报告](STAGE_REPORTS/STAGE12_REPORT.md)。Real Retrieval、FastPath quality、Strategy quality、真实时延和 answer-quality RAGAS 均 NOT RUN；production tuning: NOT AUTHORIZED BY DATA。
+当前实际Paired结果：[evaluation_results.json](evaluation_results.json)，独立Provision Direct：[evaluation_results_direct.json](evaluation_results_direct.json)；命令、安全阈值和限制见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。真实受控Retrieval/FastPath/scripted Strategy及CPU时延已执行；answer-quality RAGAS NOT RUN，production tuning NO。
 
 
-## 最新Completion运行条件与现场
+## 前次Completion运行条件与现场（历史）
 
 可用Python：D:\Soft\ANACONDA\Anaconda\envs\EduRAG\python.exe（3.10.18）。无需重建venv或安装模型栈，现有固定依赖已实际导入且本地模型推理通过。此前3.13 validation缺依赖的记录为历史；本次真实阻塞是server v2.4.10在新集合中返回nullable=false，strict Schema校验正确拒绝。
 
-Direct v1真实失败见[evaluation_results_direct.json](evaluation_results_direct.json)；新v2单次恢复重试也同样失败，两集合0 rows，两个Manifest不存在且资源未删除。[stage12_completion_preflight.json](stage12_completion_preflight.json)记录实际模型/服务/字段/回归证据。原evaluation_results.json保留最初NOT RUN来源；尚无新的真实paired结果。兼容Milvus环境准备好后须用新隔离资源复跑，不强行修v1/v2或对它们再次--provision。服务启动/停止与精确命令见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+Direct v1真实失败见[原样归档](stage12_completion_v1_direct_failure.json)；当时新v2单次恢复重试也同样失败，两集合0 rows，两个Manifest不存在且资源未删除。[stage12_completion_preflight.json](stage12_completion_preflight.json)记录当时实际模型/服务/字段/回归证据。最初NOT RUN结果保留于Git历史；当前evaluation_results.json已更新为Completion V2真实paired结果。不强行修v1/v2或对它们再次--provision。服务启动/停止与精确命令见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+
+
+## Completion V2当前现场
+
+使用同一EduRAG Python3.10.18和锁定依赖，通过进程环境MILVUS_HOST=localhost / MILVUS_PORT=19531 / MILVUS_DATABASE_NAME=stage12_eval_v2连接隔离server pkg/v2.5.4。Nullable=None probe实际读回PASS；顶层/嵌套索引参数读取修复仍严格拒绝缺失/错误/冲突值，Stage 3字段合约不变。
+
+旧2.4.10及v1/v2失败记录保留，v3空集合与无Manifest现场保留；当前成功资源为manufacturing_rag_eval_v4 / runtime/evaluation/manufacturing_rag_eval_v4.sqlite3。42 Child、21 active document snapshots、Ground Truth ID核验通过，Direct与Paired知识修订一致。复跑去掉--provision，不改Dataset或生产参数。Strategy Child分母为4，21次FastPath接受未伪造Child；不能把该层差值解释成同分母的质量改进。三层完整指标、安全、CPU时延和停止/重启命令见[报告](STAGE_REPORTS/STAGE12_REPORT.md)；机器核验见[Completion V2](stage12_completion_v2_verification.json)。

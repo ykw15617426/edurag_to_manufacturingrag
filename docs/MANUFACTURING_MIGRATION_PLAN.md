@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–11 已完成；2026-10-05 已按授权实现 Stage 12 评估框架并尝试真实Completion；模型与连接预检通过，Schema不兼容阻断完整评估，Stage 12 保持 PARTIAL；后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–12 已完成；2026-10-05 Stage 12 Completion V2在隔离Milvus 2.5.4完成真实受控评估，Stage 12 PASS；Stage 13 PENDING/readiness YES，Full Integration Readiness NO；后续阶段不自动推进。前次2.4.10 Schema阻塞保留为历史证据。
 
 ```text
 Stage 0: PASS
@@ -37,8 +37,8 @@ Stage 8: PASS
 Stage 9: PASS
 Stage 10: PASS
 Stage 11: PASS
-Stage 12: PARTIAL
-Stage 13: PENDING (readiness NO)
+Stage 12: PASS
+Stage 13: PENDING (readiness YES)
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -177,3 +177,7 @@ Implementation/Metric Unit Validation PASS，Overall Stage 12 PARTIAL。独立�
 ### Stage 12 Completion环境检查点（2026-10-05）
 
 真实本地模型推理及现有Milvus连接PASS；Milvus v2.4.10不能保持manufacturing_v1 nullable合约，Direct Provision在严格Schema验证处FAIL，25-query/paired评估NOT RUN。因此Stage 12仍PARTIAL，Stage 13 readiness NO；不放宽Schema、不调生产参数、不升级/创建新基础设施来冒充完成。精确证据见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)的Completion节。
+
+### Stage 12 Completion V2最终检查点（2026-10-05）
+
+隔离server pkg/v2.5.4 / client2.5.4、nullable=None probe、严格Schema/Index、42 Child与21 Manifest快照/标签、25/25 Direct及25/25 scripted Strategy均PASS；错误/leak/incorrect FastPath acceptance为0，知识修订稳定。必要correctness fix仅规范化SDK索引描述顶层/嵌套参数读取，并继续拒绝错误/缺失/冲突值；字段合约和生产参数不变。全量1012 passed / 13 skipped。Stage 12 PASS，Stage 13 PENDING/readiness YES；Full Integration Readiness NO、Production tuning NO、RAGAS NOT RUN。指标范围仅local CPU controlled synthetic，见[报告](STAGE_REPORTS/STAGE12_REPORT.md)。

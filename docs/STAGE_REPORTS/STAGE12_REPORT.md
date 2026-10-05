@@ -1,8 +1,12 @@
 # Stage 12 — Retrieval Evaluation + Hit@K + MRR + RAGAS
 
+最新结论（2026-10-05 Completion V2）：**Stage 12: PASS**，真实受控Retrieval Evaluation PASS；Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS/真实LLM Planner NOT RUN，Production tuning NO。具体版本、指标与边界见末尾Completion V2。
+
+## 原实现及前次Completion记录（历史）
+
 日期：2026-10-05；分支 main；起始 HEAD `d4ea1fd58544e88a789d94b96f4a8f4436ddb0bf`，fetch 后 origin/main 相同且 Working Tree clean。Implementation: PASS；Metric Unit Validation: PASS；Real Retrieval Evaluation: NOT RUN；**Overall Stage 12: PARTIAL**。Last Completed Stage 保持 11 — PASS；Active Stage: NONE；Stage 13: PENDING / readiness NO；Full Integration Readiness: NO。
 
-最新 Completion（2026-10-05，开始 HEAD `2c168dc972e75dc7de34265c5df9ba83fc8ff959`）：真实本地 BGE-M3 embedding / CrossEncoder predict 与 Milvus 连接 PASS；Direct Provision 被现有服务的 nullable 合约不兼容阻断，Overall 仍 PARTIAL。下面原实现阶段的结果/环境为历史记录，最新命令、资源现场和限制见末尾 Completion 节。
+前次 Completion（历史，2026-10-05，开始 HEAD `2c168dc972e75dc7de34265c5df9ba83fc8ff959`）：真实本地 BGE-M3 embedding / CrossEncoder predict 与 Milvus 连接 PASS；Direct Provision 被现有服务的 nullable 合约不兼容阻断，Overall 仍 PARTIAL。下面原实现阶段的结果/环境为历史记录，最新命令、资源现场和限制见末尾 Completion 节。
 
 GitHub Sync: PASS。实现提交 `7d9e7a38c56e77153d7879c5e56df38323702d3d` 已正常 Push；随后 fetch、两个 rev-parse 返回相同 SHA，git status 为 clean。在该干净实现提交上复跑离线预检，机器报告记录该 Git SHA 和 source_tree_dirty=false；最终发布记录用独立文档提交同步，最终 HEAD 在回复核验提供，不预写自身哈希。Git发布不改变Stage 12 PARTIAL或真实检索NOT RUN结论。
 
@@ -64,7 +68,7 @@ Live Runner 明确 opt-in，只能新建/读取隔离 eval Collection 和独立 
 
 ## Stage 12 Completion：真实环境尝试（2026-10-05）
 
-从用户指定 main `2c168dc972e75dc7de34265c5df9ba83fc8ff959` 开始，git fetch origin 后两个 HEAD 相同且初始 clean。未改任何 repository Python 源码、固定 Dataset、Ground Truth、配置、requirements、Compose 或生产数据。最新机器证据：[Completion Preflight](../stage12_completion_preflight.json)、[Direct失败结果](../evaluation_results_direct.json)。原 [evaluation_results.json](../evaluation_results.json) 保留最初 NOT RUN 预检来源；新的 Paired 尚未执行，不能替换成假 paired 分数。
+从用户指定 main `2c168dc972e75dc7de34265c5df9ba83fc8ff959` 开始，git fetch origin 后两个 HEAD 相同且初始 clean。未改任何 repository Python 源码、固定 Dataset、Ground Truth、配置、requirements、Compose 或生产数据。当时机器证据：[Completion Preflight](../stage12_completion_preflight.json)、[归档Direct失败结果](../stage12_completion_v1_direct_failure.json)。当时Paired未执行、最初NOT RUN报告保留在Git历史；本次Completion V2真实成功后evaluation_results.json已更新为Paired，evaluation_results_direct.json已更新为真实v4 Direct。
 
 使用现有 `D:\Soft\ANACONDA\Anaconda\envs\EduRAG\python.exe`，Python 3.10.18。分发 Metadata 的 torch2.10.0 / pymilvus2.5.4 / milvus-model0.2.5 / sentence-transformers3.0.1 / langchain-core1.2.16 / FlagEmbedding1.3.5 均匹配 requirements；torch runtime 为2.10.0+cpu。未安装/升级依赖或下载模型。HF_HUB_OFFLINE / TRANSFORMERS_OFFLINE / HF_DATASETS_OFFLINE 均为1，模型路径仍原本地 bge-m3 / bge-reranker-large。单独预检文件位于 ignored .venv，结果位于 ignored runtime；日志、缓存、模型和 venv 不发布。
 
@@ -100,3 +104,114 @@ Dataset仍CONTROLLED SYNTHETIC / 25 / SHA256 `93764ff2054c900a5a4991b4bc2296edc3
 运行现场保留：Docker Desktop及原milvus_standalone/etcd/minio处于运行状态；若需停止本次启动的服务，可执行 `docker stop milvus_standalone milvus-etcd milvus-minio`，只停止服务，不删除数据。再次运行不得对v1/v2使用--provision或清空它们，须先核验，兼容环境上使用新的隔离名称。
 
 Completion GitHub Sync: PASS。证据提交 `8e936846589746cb32a6d6dd6a7281510243a81a` 已正常Push；`git fetch origin`、`git rev-parse HEAD`、`git rev-parse origin/main`返回同一SHA，`git status`为clean。最终检查197个相对链接、Dataset SHA及保护范围均PASS，`git diff --check` PASS；只有本任务文档/证据变化。发布记录用独立文档提交同步，最终HEAD在回复核验提供，不预写自身哈希。Git发布成功不改变Stage 12 PARTIAL结论；当前任务停止，不开始Stage 13。
+
+
+## Completion V2 — Compatible Milvus Live Evaluation（2026-10-05）
+
+起始main `ac57fca5763c3b38405ad0b9d4057038f60c7cd3`，fetch后远端一致、Working Tree clean。**Stage 12 Retrieval PASS**；独立correctness fix `91d980ac33138ac51b44c36fc560afe577ef54bb`。评估源提交即该修复提交，报告source_tree_dirty=true来自计划/结果文档变化；没有未提交业务实现。
+
+### 实际环境、资源与修复
+
+继续现有EduRAG Python3.10.18及固定模型依赖，没有修改requirements、下载替代模型或改config.ini。真实BGE-M3 / Milvus / CrossEncoder为REAL；仅当前进程环境覆盖localhost:19531 / stage12_eval_v2，HF_HUB_OFFLINE / TRANSFORMERS_OFFLINE / HF_DATASETS_OFFLINE为1。
+
+临时Compose位于ignored `runtime/stage12-milvus-v2/docker-compose.yml`，依据[Milvus v2.5.4官方部署配置](https://github.com/milvus-io/milvus/blob/v2.5.4/deployments/docker/standalone/docker-compose.yml)调整隔离名称并显式指定目标镜像。实际get_server_version返回**pkg/v2.5.4**，PyMilvus **2.5.4**；不从image tag推断版本。独立stage12-v2-milvus/etcd/minio、stage12-v2-eval-network及三套stage12-v2-eval-*-data卷；仅Milvus绑定127.0.0.1:19531与管理端口19091，etcd/MinIO不对宿主发布。正式docker-compose.yml/旧milvus_standalone/etcd/minio未修改、升级、停止或删除；旧19530没有端口冲突。
+
+Nullable probe：新Collection manufacturing_rag_eval_nullable_probe_v3，equipment_type nullable=True实际describe通过；插入id=1/equipment_type=None，Strong读回同样为null，row_count=1。临时检查脚本先纠正实际版本字符串pkg/v前缀；随后因SDK insert返回ids为RepeatedScalarContainer导致证据JSON序列化失败，仅修正ignored脚本并只读核验已有探针，无重复创建/插入或删除；不是nullable功能失败。
+
+第一轮v3 Direct仍FAIL：ManufacturingSchemaMismatchError / dense_index.nlist expected128 / actualNone，服务器实际顶层nlist="128"、drop_ratio_build="0.2"；字段nullable校验已通过。实际SDK [2.5.4 describe_index源码](https://github.com/milvus-io/pymilvus/blob/v2.5.4/pymilvus/client/grpc_handler.py)可返回顶层参数，仓库校验只读params误判。修复仅读取两种真实表示，有两种时同时验证；继续拒绝缺失/错误/非有限/冲突值，字段/索引规格、None、IDs及检索设置保持。13项新增离线测试证明兼容读取与拒绝行为；Schema专项116 passed / 1 skipped。v3空集合及无Manifest现场保留，修复后只读Schema/Index PASS；不用它再次--provision，换新v4。
+
+成功Collection **manufacturing_rag_eval_v4**；Manifest **runtime/evaluation/manufacturing_rag_eval_v4.sqlite3**；实际42 Child、21 active Document快照。Schema/Index、实际Child ID集合、Ground Truth Parent/Document/Child标签核验PASS。
+
+Knowledge revision：`bb0502be277fc6ccb09ce49c4101020e67ae130fcdf19c604553df4678b176c7`；Provision Direct、Paired Direct、Strategy及结束只读核验相同。Dataset仍25 samples / controlled_synthetic / SHA256 `93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b`，固定标签和业务数据未改。
+
+### Command / Result
+
+| Command / action | Result | Status |
+| --- | --- | --- |
+| `docker compose -f runtime/stage12-milvus-v2/docker-compose.yml up -d --wait --wait-timeout 180` | 独立三容器/网络/卷，全部healthy | PASS |
+| `nullable_probe.py` 与只读 `--verify-existing` | actual pkg/v2.5.4 / client2.5.4；nullable=True、None写读 | PASS（临时脚本序列化修正后） |
+| v3 Direct --live --provision | 顶层Index参数被误判；无Child/Manifest | FAIL（修复前历史） |
+| v4 Direct命令（下文） | Schema→42 Child真实BGE→upsert→Manifest→snapshot→25 retrieval→CrossEncoder→metrics；exit0 | PASS |
+| v4 Paired命令（下文，不含--provision） | 25/25 Direct+25/25 scripted Strategy，revision稳定；exit0 | PASS |
+| `runtime/stage12-milvus-v2/verify_evaluation.py` | 真实资源只读复核及所有安全阈值/来源/分母核验 | PASS |
+| `.venv/stage1-validation/Scripts/python.exe -m pytest tests -q -rs --tb=short`（Live后） | 1012 passed / 0 failed / 13 skipped | PASS |
+| `runtime/stage12-milvus-v2/final_checks.py` / `git diff --check` | 211相对链接、2 Python AST、15文件合法任务范围、固定Dataset/Schema合约/参数及失败归档内容保持 | PASS |
+
+13 skipped是原轻量validation环境缺完整应用依赖及未启用Stage3/12 Live测试；真实模型/检索已另用3.10环境CLI执行，不将skip当集成通过。此前全回归和专项也通过；未安装新pytest到真实模型环境。
+
+```powershell
+$env:MILVUS_HOST = "localhost"
+$env:MILVUS_PORT = "19531"
+$env:MILVUS_DATABASE_NAME = "stage12_eval_v2"
+$env:STAGE12_LIVE = "1"
+$env:HF_HUB_OFFLINE = "1"
+$env:TRANSFORMERS_OFFLINE = "1"
+$env:HF_DATASETS_OFFLINE = "1"
+$env:PYTHONPATH = "D:\AiProject\edu_rag"
+$stage12Python = "D:\Soft\ANACONDA\Anaconda\envs\EduRAG\python.exe"
+# 首次实际Provision；现有v4禁止重复此命令
+& $stage12Python -m rag_qa.evaluation.runner --live --provision --mode direct --collection manufacturing_rag_eval_v4 --manifest runtime/evaluation/manufacturing_rag_eval_v4.sqlite3 --output docs/evaluation_results_direct.json
+# 同资源复跑只用此Paired命令，无--provision
+& $stage12Python -m rag_qa.evaluation.runner --live --mode paired --planner scripted --collection manufacturing_rag_eval_v4 --manifest runtime/evaluation/manufacturing_rag_eval_v4.sqlite3 --output docs/evaluation_results.json
+```
+
+### 三层ID指标（Paired同快照）
+
+| Metric | Direct | Strategy | Strategy − Direct |
+| --- | ---: | ---: | ---: |
+| Child Hit@5 | 1.000000 | 1.000000 | +0.000000 |
+| Child Recall@5 | 0.870000 | 0.875000 | +0.005000 |
+| Child MRR@5 | 0.933333 | 1.000000 | +0.066667 |
+| Parent Hit@2 | 1.000000 | 1.000000 | +0.000000 |
+| Parent Recall@2 | 1.000000 | 1.000000 | +0.000000 |
+| Parent MRR@2 | 1.000000 | 1.000000 | +0.000000 |
+| Document Hit@2 | 1.000000 | 1.000000 | +0.000000 |
+| Document Recall@2 | 1.000000 | 1.000000 | +0.000000 |
+| Document MRR@2 | 1.000000 | 1.000000 | +0.000000 |
+
+Direct三层分母25；Strategy Parent/Document分母25，Child分母仅4：21次FastPath接受没有Child检索。Child层差值只是不同分母的诊断，不构成检索质量提升结论。独立Provision Direct的三层质量数值与Paired Direct相同，时延不同。所有原始未取整指标和逐样本记录保存于JSON。
+
+### Safety / Strategy
+
+Direct/Strategy的error_count=0、hard_identifier_leak_count=0、identifier_analysis_mismatch_count=0、zero_result_count=0；各25/25执行。规则intent mismatch各3，完整保留，没有通过改标签隐藏。Paired是controlled scripted strategy test：24 direct / 1 subquery / 0 rewrite，fallback0；不代表真实LLM Planner准确率，也没有验证本轮未触发的rewrite效果。
+
+| FastPath | Eligible | Accepted | Incorrect accepted | Precision | Coverage |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| exact_alarm | 3 | 3 | 0 | 1.0 | 1.0 |
+| exact_faq | 18 | 18 | 0 | 1.0 | 1.0 |
+| bm25_faq | 3 | 0 | 0 | null / N/A | 0.0 |
+
+BM25仍disabled，0接受的precision为null；incorrect accepted=0不证明开启BM25安全。Exact Alarm/FAQ接受均属于固定synthetic样本，不代表生产准确率。
+
+### Latency（local CPU controlled synthetic benchmark）
+
+| Run | Stage | Samples | mean_ms | p95_ms |
+| --- | --- | ---: | ---: | ---: |
+| Provision Direct | child_retrieval | 25 | 149.642 | 158.547 |
+| Provision Direct | rerank | 25 | 536.945 | 614.604 |
+| Provision Direct | total_retrieval | 25 | 687.315 | 772.233 |
+| Paired Direct | child_retrieval | 25 | 153.224 | 172.075 |
+| Paired Direct | rerank | 25 | 452.325 | 610.940 |
+| Paired Direct | total_retrieval | 25 | 606.205 | 757.007 |
+| Strategy | child_retrieval | 25 | 35.894 | 157.283 |
+| Strategy | rerank | 25 | 89.136 | 508.237 |
+| Strategy | total_retrieval | 25 | 125.811 | 658.478 |
+
+时延只覆盖检索调用，不含模型加载、摄取或API/网络生成，未受控分析主机负载/冷启动。Strategy mean包含21次无Child/CE推理的FastPath，不能把这个均值当单次BGE或CrossEncoder耗时，不是生产SLA。
+
+### 文件、保护范围与停止边界
+
+源码修改仅rag_qa/core/milvus_schema.py参数描述规范化，测试仅tests/test_manufacturing_milvus_schema.py。文档/机器结果：AGENTS.md、.agent/PLANS.md、README.md、docs/README.md、CURRENT_ARCHITECTURE、MANUFACTURING_MIGRATION_PLAN、MANUFACTURING_EVALUATION、MANUFACTURING_MILVUS_SCHEMA的相关说明、本报告、evaluation_results.json、evaluation_results_direct.json、新stage12_completion_v2_verification.json及原样stage12_completion_v1_direct_failure.json归档。旧stage12_completion_preflight.json原样保留；v1/v2/2.4.10失败历史未抹去。
+
+生产配置仍k5/M2/dense0.8/sparse0.3/nprobe10/BM25 disabled，production_quality_claim=false、Production tuning NO。requirements/真实config.ini/正式Compose/固定Dataset/Legacy/模型/生成/线上入口未改；临时Compose、volumes、Manifest、probe脚本和logs均ignored不提交。
+
+运行现场：旧三服务及新stage12-v2三服务均保留运行；没有drop/clear/delete或删除容器/卷。需停止新评估服务时，在仓库根目录执行以下命令；不会删除持久数据，重启后仅复用资源，无--provision：
+
+```powershell
+docker compose -f runtime/stage12-milvus-v2/docker-compose.yml stop
+docker compose -f runtime/stage12-milvus-v2/docker-compose.yml up -d --wait
+```
+
+交付：[Paired](../evaluation_results.json)、[Direct](../evaluation_results_direct.json)、[V2机器核验](../stage12_completion_v2_verification.json)、[前次失败归档](../stage12_completion_v1_direct_failure.json)。Stage 0–12 PASS；Last Completed Stage12 PASS；Active NONE；Stage13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS及真实LLM Planner NOT RUN。本任务结束后不开始Stage13。
+
+Completion V2 Git发布记录待最终验证后补充；最终HEAD在回复核验，不预写自身哈希。

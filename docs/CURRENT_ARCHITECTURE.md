@@ -309,3 +309,10 @@ retrieval/settings.py 集中制造业权重0.8/0.3、nprobe10与retrieval contra
 仓库源码/固定Dataset未改。现有EduRAG Python3.10.18及六项核心锁定依赖可用，离线本地BGE-M3真实encode返回1024维Dense和非空Sparse，CrossEncoder单对predict有限；这些是模型可运行证据，不是检索质量指标。启动本机已有Docker Desktop及Milvus/etcd/MinIO服务后，localhost:19530 / itcast07连接通过，server v2.4.10。
 
 Direct --provision创建的隔离evaluation v1/v2都返回nullable=false，现有strict manufacturing_v1 validator在equipment_type.nullable拒绝expected True / actual False。两集合均空、Manifest未建立；没有42-child upsert或25-query/paired评估，不修改Stage 3 Schema/IDs/默认检索参数或正式数据。Stage 12仍PARTIAL，Stage 13 readiness NO，Full Integration Readiness NO。当前阻塞已从缺模型运行依赖定位为现有服务器的Schema兼容问题。现场、命令和安全边界见[Completion机器预检](stage12_completion_preflight.json)、[Direct失败结果](evaluation_results_direct.json)、[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+
+
+## 19. Stage 12 Completion V2真实受控评估（2026-10-05）
+
+用户本次授权新建ignored临时隔离Milvus 2.5.4环境，旧2.4.10服务/数据保持。实际SDK server pkg/v2.5.4 / client2.5.4，localhost:19531 / stage12_eval_v2；nullable字段及None写读PASS。必要correctness fix只兼容describe_index顶层/嵌套参数读取，缺失/错误/冲突均拒绝，不修改字段/索引规格或Stage 2身份。
+
+真实本地CPU BGE-M3→Milvus Dense/Sparse+Filter→Parent聚合→CrossEncoder链路在v4完成42 Child与21 Manifest快照，以及25 Direct+25 scripted Strategy同知识修订评估。错误/leak/incorrect FastPath acceptance均0；规则intent mismatch仍3条，不据此宣称语义分类或LLM Planner准确率。1012 passed / 13 skipped；Stage 12 PASS限定controlled synthetic，生产调参NO、RAGAS/真实LLM Planner NOT RUN；Stage 13 PENDING/readiness YES、Full Integration Readiness NO。前节阻塞为历史；当前[机器核验](stage12_completion_v2_verification.json)、[Paired结果](evaluation_results.json)及[报告](STAGE_REPORTS/STAGE12_REPORT.md)保留真实指标与资源边界。

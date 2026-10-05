@@ -2,6 +2,8 @@
 
 2026-10-02。正式代码合约为 `rag_qa/core/milvus_schema.py`，通过现有 VectorStore 的显式 `schema_mode="manufacturing"` 接入。Schema/Row Mapper/隔离控制已实现并测试；真实 Milvus 服务尚未验证，不能将 SDK 离线测试视为成功创建生产集合。
 
+2026-10-05 Completion V2补充：上述为Stage 3交付时的历史验证边界。隔离Milvus server pkg/v2.5.4 / client2.5.4已通过nullable=None写读探针、完整Schema/Index核验与42 Child实际upsert；仅受控synthetic评估，不代表生产集合已部署，详见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。
+
 ## Collection and versions
 
 Legacy 默认 `MILVUS_COLLECTION_NAME=edurag`，原 Schema、动态字段及 MD5 PK 保留。Manufacturing 默认独立 `MILVUS_MANUFACTURING_COLLECTION_NAME=manufacturing_rag_v1`；INI 键为 `[milvus] manufacturing_collection_name`。优先级仍为进程环境变量 → config.ini → fallback；示例与 Compose 已同步，未更改本地 config.ini。
@@ -68,6 +70,8 @@ Dense 维度由 `embedding_function.dim["dense"]` 传入，不写死 1024；row 
 - WeightedRanker(0.8, 0.3)、nprobe=10 和切分参数不变；不做质量调参。
 
 已存在 Manufacturing collection 必须 describe 后核对完整字段集合、类型、唯一 PK/auto_id、动态字段、nullable/default、VARCHAR 容量和 Dense dim，以及预期 Dense/Sparse 索引的字段、类型、metric 和参数。额外字段或长度漂移也不符合本 v1 合约；额外非基线索引不会被删除。SDK 描述省略的 false 属性按该 SDK 的默认 false 比较，集合 auto_id/dynamic 标志必须明确存在。
+
+Completion V2修正SDK索引描述格式读取：nlist/drop_ratio_build可位于顶层或params映射，两处同时出现则必须都符合原规格。缺失、错误、非有限或冲突值仍拒绝，不改变字段/索引合约或跳过任何校验。
 
 不匹配报 ManufacturingSchemaMismatchError，包含 collection、expected、actual；不继续 load/upsert，不 drop/rebuild/修复旧集合。若不存在，创建明确的新 Schema 和 indexes，再检查返回的 Schema/Index 后使用。SDK 2.5.4 的 create_collection 在带索引时可能自行 load 新建集合，现有集合的检查始终先于应用显式 load。服务端能力不足或 RPC 错误向上抛出，不回退动态字段或占位字符串。
 

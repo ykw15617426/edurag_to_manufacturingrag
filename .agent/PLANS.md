@@ -2,7 +2,7 @@
 
 更新日期：2026-10-05。
 
-Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL（Completion被既有Milvus nullable合约阻断）；Stage 13: PENDING（readiness NO）。
+Last Completed Stage: Stage 12 — PASS；Active Stage: NONE；Stage 0–12: PASS；Stage 13: PENDING（readiness YES）；Full Integration Readiness: NO。
 
 ## 已确认检查点
 
@@ -25,7 +25,7 @@ Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL
 | Stage 9 | PASS | 严格策略/保护/融合、689 passed / 12 skipped及Git发布完成 |
 | Stage 10 | PASS | Evidence/结构化生成/claim引用guard、813 passed / 12 skipped及Git发布完成 |
 | Stage 11 | PASS | API/SSE/TTL知识修订缓存、907 passed / 12 skipped及Git发布完成 |
-| Stage 12 | PARTIAL | 999 passed / 13 skipped；Completion真实BGE/CrossEncoder预检与Milvus连接PASS，但nullable Schema mismatch阻断检索评估 |
+| Stage 12 | PASS | Completion V2真实42 Child/25-query Direct+Strategy、安全/快照PASS；1012 passed / 13 skipped；仅受控synthetic范围 |
 | Stage 13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
@@ -46,7 +46,7 @@ Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-Stage 12已完成可用环境内的实现与验证，真实评估受依赖限制保持PARTIAL，当前停止，不进入Stage 13。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在历史报告，不把单测或 synthetic 结果当生产质量。
+Stage 12 Completion V2已完成隔离环境真实受控评估，当前停止，不进入Stage 13。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在历史报告，不把单测或 synthetic 结果当生产质量。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -226,7 +226,7 @@ Stage 10实现提交 `699b730bb5ff9502395318020d4cc9cd5bc22c2a` 已正常Push；
 Stage 11实现提交 `c6fe27c6e3665445d202d4a3cd16e614455d4972` 已正常Push；fetch后Local HEAD == origin/main，Working Tree clean。完成状态以独立文档提交正常发布，最终SHA在回复核验提供，不重写历史。
 
 
-## 当前交付：Stage 12 — Retrieval Evaluation + Hit@K + MRR + RAGAS
+## Stage 12 原实现交付（历史）— Retrieval Evaluation + Hit@K + MRR + RAGAS
 
 状态：PARTIAL；Implementation/Metric Unit Validation PASS，Real Retrieval/RAGAS NOT RUN。起始main HEAD d4ea1fd58544e88a789d94b96f4a8f4436ddb0bf，初始clean且fetch后远端一致。
 
@@ -258,3 +258,18 @@ Stage 12实现提交正常Push/fetch/equal/clean后，在干净的实现HEAD复�
 - [x] Completion证据提交 `8e936846589746cb32a6d6dd6a7281510243a81a` 已Push；fetch后Local HEAD == origin/main，Working Tree clean。发布记录通过独立文档提交同步，最终HEAD在回复核验提供。
 
 Stage 12 PARTIAL；Last Completed仍11 PASS；Active NONE；Stage 13 readiness NO，PENDING；Full Integration Readiness NO。下一次需要支持当前nullable合约的Milvus环境及新隔离资源，本任务不升级服务或实施Stage 13。
+
+## Stage 12 Completion V2（2026-10-05）
+
+起始main `ac57fca5763c3b38405ad0b9d4057038f60c7cd3`，fetch后远端一致且clean。授权仅临时隔离Milvus 2.5.4及既有真实检索评估，不开始Stage 13。
+
+- [x] 阅读用户要求、治理、历史报告与真实runner/config/Schema调用链；不重做已确认模型预检。
+- [x] ignored临时Compose：独立容器/network/volumes，localhost:19531；保留旧服务与数据。
+- [x] 实际server pkg/v2.5.4 / client2.5.4及nullable=None写入/读回probe PASS。
+- [x] v3发现SDK索引参数顶层格式误判，独立correctness fix提交；保留空v3，换新v4/Manifest；固定SHA、42 Child、21 snapshots、25-query Direct PASS。
+- [x] 同v4资源/知识修订Paired scripted：25 Direct+25 Strategy，错误/leak/incorrect acceptance均0，真实CPU时延已记录。
+- [x] Live后回归1012 passed / 0 failed / 13 skipped；旧2.4.10失败归档，当前指标/事实已同步。
+- [x] 最终211个相对链接、2 Python AST、15文件任务范围、固定SHA/Schema合约/生产参数、失败归档内容与git diff --check均PASS。
+- [ ] Commit/Push/fetch/HEAD一致/clean核验并停止。
+
+Stage 12 PASS；Stage 13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS/真实LLM Planner NOT RUN；生产调参NO，BM25 disabled。临时基础设施和现场停止/重启命令见[报告](../docs/STAGE_REPORTS/STAGE12_REPORT.md)，不提交Compose/volumes/Manifest/logs。

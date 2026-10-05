@@ -1,0 +1,893 @@
+{
+  "metadata": {
+    "dataset_type": "controlled_synthetic",
+    "provenance_note": "SYNTHETIC / NOT PRODUCTION FACTS; authored equipment, values and repair examples, not approved production data.",
+    "sample_count": 25,
+    "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
+    "knowledge_revision": null,
+    "git_sha": "2c168dc972e75dc7de34265c5df9ba83fc8ff959",
+    "collection": "manufacturing_rag_eval_v1",
+    "schema_version": "manufacturing_v1",
+    "execution_mode": "not_run",
+    "components": {
+      "BGE-M3": "NOT RUN",
+      "Milvus": "NOT RUN",
+      "CrossEncoder": "NOT RUN"
+    },
+    "environment": {
+      "python": "3.10.18",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "packages": {
+        "pymilvus": "2.5.4",
+        "milvus-model": "0.2.5",
+        "sentence-transformers": "3.0.1",
+        "FlagEmbedding": "1.3.5",
+        "torch": "2.10.0",
+        "ragas": "0.2.6"
+      }
+    },
+    "source_snapshot": {
+      "source_tree_dirty": true,
+      "evaluated_code_sha256": "cc8fc0ac56daa61742bdc3feb2fc4b1c8efecd5a79c0af3f093b69f5d088eb72"
+    },
+    "model_snapshot": {
+      "embedding": "local/bge-m3",
+      "reranker": "local/bge-reranker-large",
+      "device": "cpu",
+      "use_fp16": false
+    },
+    "production_quality_claim": false,
+    "production_tuning": "NOT AUTHORIZED BY DATA"
+  },
+  "config_snapshot": {
+    "retrieval_contract_version": "manufacturing_retrieval_v1",
+    "retrieval_k": 5,
+    "candidate_m": 2,
+    "dense_weight": 0.8,
+    "sparse_weight": 0.3,
+    "nprobe": 10,
+    "bm25_acceptance_mode": "disabled",
+    "bm25_threshold": null,
+    "profile_name": "baseline"
+  },
+  "retrieval_config_fingerprint": "26ed3f2f1b78ee5c123f008059bab108fdbe4525c850ef3ed0d7f04d6b2cf344",
+  "status": "PARTIAL",
+  "preflight": {
+    "ready": true,
+    "missing_dependencies": [],
+    "model_weights_present": {
+      "bge-m3": true,
+      "bge-reranker-large": true
+    },
+    "service_connectivity": "NOT RUN"
+  },
+  "aggregate_metrics": null,
+  "metrics_by_intent": {},
+  "metrics_by_tag": {},
+  "fast_path_metrics": null,
+  "strategy_metrics": null,
+  "latency_metrics": null,
+  "ragas": {
+    "status": "NOT RUN",
+    "reason": "ragas_and_explicit_judges_unavailable"
+  },
+  "per_sample_results": [
+    {
+      "sample_id": "SYN-CNC-100-alarm",
+      "query": "设备型号 SYN-CNC-100 报警码 E102 的原因是什么？",
+      "expected_parent_ids": [
+        "0e93659deb7e79d515d8998baa0305a1d9129be2a641e05940244828a32dc3d1"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-alarm"
+      ],
+      "expected_child_ids": [
+        "670716a90bc212b8ba5c8484bbf52e35d5dbb0419b2009a6f5cd1d18eb248aa8",
+        "94a72af27d549685229043b3bff031d874a0652737d0d39976e52c218137f711"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": "E102",
+      "expected_part_number": null,
+      "reference_answer": "E102 在本合成型号表示模拟润滑压力报警，示例原因编号 1。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "alarm",
+        "same_alarm_different_model"
+      ],
+      "fast_path_labels": [
+        "exact_alarm"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-case",
+      "query": "设备型号 SYN-CNC-100 主轴振动故障维修案例是什么？",
+      "expected_parent_ids": [
+        "099e3e4faaeee7d4c6fbb7c5b6f011d0586872734e2e496fc2fc17022ae27b9f"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-case"
+      ],
+      "expected_child_ids": [
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "b44debdb754d7991ab93b59ec0e63e21833177e4133e10cfa624fd250f56860e"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成维修案例中的主轴振动源是模拟支座 1，仅作评估示例。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "case",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-fault",
+      "query": "设备型号 SYN-CNC-100 主轴振动故障如何排查？",
+      "expected_parent_ids": [
+        "860189a6655aca8c74c62eea29b41d919ebad7aaaf2d7e95a48aac46fa7298cf"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-fault"
+      ],
+      "expected_child_ids": [
+        "217eee72b9978e26e86a768505425411afe9bebae2134884740b653f18796ac0",
+        "9d34c5365dda83922d396976a7c23d19d45fe582c4a73b341ccf1fea274d688d"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的振动排查示例是检查模拟支座 1。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "fault",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-maintenance",
+      "query": "设备型号 SYN-CNC-100 维护保养周期是什么？",
+      "expected_parent_ids": [
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-maintenance"
+      ],
+      "expected_child_ids": [
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 100 小时。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-maintenance-paraphrase",
+      "query": "设备型号 SYN-CNC-100 需要多久进行维护保养？",
+      "expected_parent_ids": [
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-maintenance"
+      ],
+      "expected_child_ids": [
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 100 小时。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "bm25_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-manual",
+      "query": "设备型号 SYN-CNC-100 操作手册中的启动顺序是什么？",
+      "expected_parent_ids": [
+        "a66e1fc147e31ded33e7dee9664f1cc343d54a67737dc8c2c73f7809ffeaeee1"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-manual"
+      ],
+      "expected_child_ids": [
+        "3bc88c7ee30d3631e38b62e236f7e3a37cf0ed287ee1db7f77f1775ce78839b6",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c"
+      ],
+      "expected_intent": "knowledge",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟启动顺序为检查、确认、启动，步骤编号 1。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "manual"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-parameter",
+      "query": "设备型号 SYN-CNC-100 主轴转速参数是多少？",
+      "expected_parent_ids": [
+        "fce84a28f1671365fe0e69f8242f1bdd50bc75377bd4f3c9fb5b9546fad7354f"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-parameter"
+      ],
+      "expected_child_ids": [
+        "100142e1aaaec3ef7d80246075949ae74d88dc1eeafdeac7985543a722aaf65b",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0"
+      ],
+      "expected_intent": "parameter",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号 V2 的模拟主轴转速为 1000 rpm，V1 历史值不适用。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "active_V2_not_historical_V1",
+        "parameter"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-100-parts",
+      "query": "设备型号 SYN-CNC-100 备件号 PN-001 的规格是什么？",
+      "expected_parent_ids": [
+        "a5a3223f5f8eb7170640bf7bd675b80226ddbc28823d88d5eb63c25b5e58c692"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-parts"
+      ],
+      "expected_child_ids": [
+        "3e59d35305d68de7a41edfcbae984a06f0d7035736be87561b61345c65ec093b",
+        "d26ab0813c10b6c7f0258d259ff4a7d04d21fd60988d740a1836efab303bbd9c"
+      ],
+      "expected_intent": "parts",
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": "PN-001",
+      "reference_answer": "本合成型号的模拟备件 PN-001 标记为规格 1。",
+      "tags": [
+        "SYN-CNC-100",
+        "SYNTHETIC",
+        "parts",
+        "similar_part_number"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-alarm",
+      "query": "设备型号 SYN-CNC-200 报警码 E102 的原因是什么？",
+      "expected_parent_ids": [
+        "6d5f2c5e31d5ba2b6a8433fbbf7947a7d475f7b80d2e511b790036c6a1b6b819"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-alarm"
+      ],
+      "expected_child_ids": [
+        "8e15e8aac84775b3449f434f9c4ae3dffc1d672d248324980367047fc9c5d03c",
+        "e8e28461baac0a4ea72de61f7bd72aba6ab61b346b6d3e95e751accb19aff4f9"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": "E102",
+      "expected_part_number": null,
+      "reference_answer": "E102 在本合成型号表示模拟润滑压力报警，示例原因编号 2。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "alarm",
+        "same_alarm_different_model"
+      ],
+      "fast_path_labels": [
+        "exact_alarm"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-case",
+      "query": "设备型号 SYN-CNC-200 主轴振动故障维修案例是什么？",
+      "expected_parent_ids": [
+        "b6adc8b83ea26f3ab9fdca6794ebff7c0089e4826097d1919ef35cb637ca7e31"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-case"
+      ],
+      "expected_child_ids": [
+        "83a8c30c158652169b7808809c6ac58bb522ea8d576db8f14166882f9f0d96b2",
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成维修案例中的主轴振动源是模拟支座 2，仅作评估示例。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "case",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-fault",
+      "query": "设备型号 SYN-CNC-200 主轴振动故障如何排查？",
+      "expected_parent_ids": [
+        "2890d91eb1e5f41baf2b984a840156eb2c2f4e646aaf8c054dc2482dde585f45"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-fault"
+      ],
+      "expected_child_ids": [
+        "d3aace9ee06d09afd1e5f83ccbedd078c07a12223cedc7d515235c234540b2fa",
+        "d5e2a537ceb3596384d7a4879139472e349cd9aa14ced96792c3943579c9a11b"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的振动排查示例是检查模拟支座 2。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "fault",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-maintenance",
+      "query": "设备型号 SYN-CNC-200 维护保养周期是什么？",
+      "expected_parent_ids": [
+        "52b9a0d4f31a67461d56a68559f7ae1180ee0c01a8327ffeec427ecee9cf0c5d"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-maintenance"
+      ],
+      "expected_child_ids": [
+        "c6e126755af911391250be05885e54a54b67f7f52138b565f28a5144b4f78ea1",
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 200 小时。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-maintenance-paraphrase",
+      "query": "设备型号 SYN-CNC-200 需要多久进行维护保养？",
+      "expected_parent_ids": [
+        "52b9a0d4f31a67461d56a68559f7ae1180ee0c01a8327ffeec427ecee9cf0c5d"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-maintenance"
+      ],
+      "expected_child_ids": [
+        "c6e126755af911391250be05885e54a54b67f7f52138b565f28a5144b4f78ea1",
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 200 小时。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "bm25_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-manual",
+      "query": "设备型号 SYN-CNC-200 操作手册中的启动顺序是什么？",
+      "expected_parent_ids": [
+        "6651855df3638d08a098b636c9d93a49990c700599f68a14e871a49f6614fa5f"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-manual"
+      ],
+      "expected_child_ids": [
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "8e28c611de405cc8e81bc0c5ad4d40f77a25381efe7ec4106c4044edb6938297"
+      ],
+      "expected_intent": "knowledge",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟启动顺序为检查、确认、启动，步骤编号 2。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "manual"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-parameter",
+      "query": "设备型号 SYN-CNC-200 主轴转速参数是多少？",
+      "expected_parent_ids": [
+        "cde52aa035b2a6b09dfa71258c1b047d5c07ddc94d03dab4faa6a0d941133c61"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-parameter"
+      ],
+      "expected_child_ids": [
+        "ae99d92f094fb1d31ad574f30f7a6cc4f4c9ea9417fb8afc18bb227d86a44fe9",
+        "fc72dfff56cb84a7227068439a1b602b0bf61cd91db7494cd1e0050d8da817d0"
+      ],
+      "expected_intent": "parameter",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号 V2 的模拟主轴转速为 2000 rpm，V1 历史值不适用。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "active_V2_not_historical_V1",
+        "parameter"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-200-parts",
+      "query": "设备型号 SYN-CNC-200 备件号 PN-001A 的规格是什么？",
+      "expected_parent_ids": [
+        "e6f7851bb23c8762f44b3f356b0e9672eb00c0534b7ce35628e5fc161d3760e4"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-parts"
+      ],
+      "expected_child_ids": [
+        "36f9fbae118c19d43cd24eac90266344ef907334b8b373f08734a1919626c71e",
+        "54ebe2b042f5984e9778d32308cbb4731dcfcf3b462ffe76cbb93d1c1b515326"
+      ],
+      "expected_intent": "parts",
+      "expected_equipment_model": "SYN-CNC-200",
+      "expected_alarm_code": null,
+      "expected_part_number": "PN-001A",
+      "reference_answer": "本合成型号的模拟备件 PN-001A 标记为规格 2。",
+      "tags": [
+        "SYN-CNC-200",
+        "SYNTHETIC",
+        "parts",
+        "similar_part_number"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-alarm",
+      "query": "设备型号 SYN-CNC-300 报警码 E102 的原因是什么？",
+      "expected_parent_ids": [
+        "0e03401e470f37b9c9262d0aa61b7a2784b14a23268765a88b00c7b81ca39b52"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-alarm"
+      ],
+      "expected_child_ids": [
+        "5e735f3f1175411df20ca5980435384feb49651ad860aa0cd497d12cc8706bdf",
+        "d1863040d87a7efd38585858610a676a085c84522efa31e0e7dbd807ef8401d1"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": "E102",
+      "expected_part_number": null,
+      "reference_answer": "E102 在本合成型号表示模拟润滑压力报警，示例原因编号 3。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "alarm",
+        "same_alarm_different_model"
+      ],
+      "fast_path_labels": [
+        "exact_alarm"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-case",
+      "query": "设备型号 SYN-CNC-300 主轴振动故障维修案例是什么？",
+      "expected_parent_ids": [
+        "b4340bfe1c8eb9b62d17b7d6fa16018ac8302f02be16af5f04cbcb134b6e963b"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-case"
+      ],
+      "expected_child_ids": [
+        "4f38f9fa00310e75782c3272e46057eb5fd3c33da6b648f39e90cd00e3ec1acf",
+        "6857b0e4fb784d7b671ba2e89fe9ac13c65907caf34be7b8ff55636368d810af"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成维修案例中的主轴振动源是模拟支座 3，仅作评估示例。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "case",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-fault",
+      "query": "设备型号 SYN-CNC-300 主轴振动故障如何排查？",
+      "expected_parent_ids": [
+        "a48eb4d3d58f2ea4f04d3ce774b5a33cfa320e2ad668922c109dc9ebe1824a75"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-fault"
+      ],
+      "expected_child_ids": [
+        "0f1e408627e41fd7820cbdfae945a24cd1742a52898b1c51ce0ef80d69836e25",
+        "b54c54fae0155d891f8eead43f0fae4889fadae520e0bbcf517b4a401f05eab8"
+      ],
+      "expected_intent": "alarm_fault",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的振动排查示例是检查模拟支座 3。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "fault",
+        "similar_fault"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-maintenance",
+      "query": "设备型号 SYN-CNC-300 维护保养周期是什么？",
+      "expected_parent_ids": [
+        "9b03c268e9011b3855aad3881e0e3ee96d31aa5cb3bd88ca82884e7559673459"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-maintenance"
+      ],
+      "expected_child_ids": [
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "f88d2c2ccaa2d33a3b49e3b5b8dbeb83f9c6dcf4b290c15163ea464398259751"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 300 小时。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-maintenance-paraphrase",
+      "query": "设备型号 SYN-CNC-300 需要多久进行维护保养？",
+      "expected_parent_ids": [
+        "9b03c268e9011b3855aad3881e0e3ee96d31aa5cb3bd88ca82884e7559673459"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-maintenance"
+      ],
+      "expected_child_ids": [
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "f88d2c2ccaa2d33a3b49e3b5b8dbeb83f9c6dcf4b290c15163ea464398259751"
+      ],
+      "expected_intent": "maintenance",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟保养周期为 300 小时。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "maintenance"
+      ],
+      "fast_path_labels": [
+        "bm25_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-manual",
+      "query": "设备型号 SYN-CNC-300 操作手册中的启动顺序是什么？",
+      "expected_parent_ids": [
+        "aa3897b5db683374f2327af479c0d364ff709bfe581444c6cfa4b6fd2bfe3b02"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-manual"
+      ],
+      "expected_child_ids": [
+        "0244047e4d70601626b2d2c20e88d6c121cdbcf3cb3466a41d6f070c5eed571d",
+        "f774499000304b9c9736dda5d716c290c56a3324ecac623444229f446d7cb19f"
+      ],
+      "expected_intent": "knowledge",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号的模拟启动顺序为检查、确认、启动，步骤编号 3。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "manual"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-parameter",
+      "query": "设备型号 SYN-CNC-300 主轴转速参数是多少？",
+      "expected_parent_ids": [
+        "f9265c6bbf1ce7fe28b998d22051a3588f9d35c784ec41c086f6ee76bd851948"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-parameter"
+      ],
+      "expected_child_ids": [
+        "ad34f77f448647f3f023e841651c36e41a72e58b8dded7a4842373095e8b61b5",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc"
+      ],
+      "expected_intent": "parameter",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": "本合成型号 V2 的模拟主轴转速为 3000 rpm，V1 历史值不适用。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "active_V2_not_historical_V1",
+        "parameter"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "SYN-CNC-300-parts",
+      "query": "设备型号 SYN-CNC-300 备件号 PN-010 的规格是什么？",
+      "expected_parent_ids": [
+        "3223f4293fc76eab21f3bc24573f8d4e47a2d1a9a69725c80b1676053c09c690"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-parts"
+      ],
+      "expected_child_ids": [
+        "0b96258d6d002f1484b8b0ec0544ceb2f903952ac13bce5338bd2e4272b56e46",
+        "4e8ea19a537804a9f1385f814575c8bffa0c839dad27cfa1eda7b247ea096e61"
+      ],
+      "expected_intent": "parts",
+      "expected_equipment_model": "SYN-CNC-300",
+      "expected_alarm_code": null,
+      "expected_part_number": "PN-010",
+      "reference_answer": "本合成型号的模拟备件 PN-010 标记为规格 3。",
+      "tags": [
+        "SYN-CNC-300",
+        "SYNTHETIC",
+        "parts",
+        "similar_part_number"
+      ],
+      "fast_path_labels": [
+        "exact_faq"
+      ],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    },
+    {
+      "sample_id": "multi-relevant",
+      "query": "设备型号 SYN-CNC-100 维护保养周期和主轴转速参数分别是什么？",
+      "expected_parent_ids": [
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409",
+        "fce84a28f1671365fe0e69f8242f1bdd50bc75377bd4f3c9fb5b9546fad7354f"
+      ],
+      "expected_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-maintenance",
+        "SYNTHETIC-SYN-CNC-100-parameter"
+      ],
+      "expected_child_ids": [
+        "100142e1aaaec3ef7d80246075949ae74d88dc1eeafdeac7985543a722aaf65b",
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0"
+      ],
+      "expected_intent": null,
+      "expected_equipment_model": "SYN-CNC-100",
+      "expected_alarm_code": null,
+      "expected_part_number": null,
+      "reference_answer": null,
+      "tags": [
+        "SYNTHETIC",
+        "multiple_relevant"
+      ],
+      "fast_path_labels": [],
+      "status": "NOT RUN",
+      "metrics": null,
+      "returned_child_ids": null,
+      "returned_parent_ids": null,
+      "returned_document_ids": null
+    }
+  ],
+  "live_failure": "ManufacturingSchemaMismatchError"
+}

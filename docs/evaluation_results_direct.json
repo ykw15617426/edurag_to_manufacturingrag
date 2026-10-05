@@ -1,19 +1,14 @@
 {
   "metadata": {
-    "dataset_type": "controlled_synthetic",
-    "provenance_note": "SYNTHETIC / NOT PRODUCTION FACTS; authored equipment, values and repair examples, not approved production data.",
-    "sample_count": 25,
-    "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
-    "knowledge_revision": null,
-    "git_sha": "2c168dc972e75dc7de34265c5df9ba83fc8ff959",
-    "collection": "manufacturing_rag_eval_v1",
-    "schema_version": "manufacturing_v1",
-    "execution_mode": "not_run",
-    "components": {
-      "BGE-M3": "NOT RUN",
-      "Milvus": "NOT RUN",
-      "CrossEncoder": "NOT RUN"
+    "execution_mode": "real_components",
+    "git_sha": "91d980ac33138ac51b44c36fc560afe577ef54bb",
+    "source_snapshot": {
+      "source_tree_dirty": true,
+      "evaluated_code_sha256": "cc8fc0ac56daa61742bdc3feb2fc4b1c8efecd5a79c0af3f093b69f5d088eb72"
     },
+    "knowledge_revision": "bb0502be277fc6ccb09ce49c4101020e67ae130fcdf19c604553df4678b176c7",
+    "collection": "manufacturing_rag_eval_v4",
+    "schema_version": "manufacturing_v1",
     "environment": {
       "python": "3.10.18",
       "platform": "Windows-10-10.0.26300-SP0",
@@ -26,9 +21,10 @@
         "ragas": "0.2.6"
       }
     },
-    "source_snapshot": {
-      "source_tree_dirty": true,
-      "evaluated_code_sha256": "cc8fc0ac56daa61742bdc3feb2fc4b1c8efecd5a79c0af3f093b69f5d088eb72"
+    "components": {
+      "BGE-M3": "REAL",
+      "Milvus": "REAL",
+      "CrossEncoder": "REAL"
     },
     "model_snapshot": {
       "embedding": "local/bge-m3",
@@ -36,8 +32,18 @@
       "device": "cpu",
       "use_fp16": false
     },
+    "analyzer_type": "Stage5_rules_fallback",
+    "planner_type": "none",
+    "planner_model": null,
+    "fast_path_snapshot_sha256": "432a95afac929a78c23a8e4e9a33b709fef818be797e120ebc31b9d8f49654e9",
+    "mode": "direct",
+    "dataset_type": "controlled_synthetic",
+    "provenance_note": "SYNTHETIC / NOT PRODUCTION FACTS; authored equipment, values and repair examples, not approved production data.",
+    "sample_count": 25,
+    "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
     "production_quality_claim": false,
-    "production_tuning": "NOT AUTHORIZED BY DATA"
+    "production_tuning": "NOT AUTHORIZED BY DATA",
+    "quality_scope": "controlled_synthetic"
   },
   "config_snapshot": {
     "retrieval_contract_version": "manufacturing_retrieval_v1",
@@ -51,25 +57,1182 @@
     "profile_name": "baseline"
   },
   "retrieval_config_fingerprint": "26ed3f2f1b78ee5c123f008059bab108fdbe4525c850ef3ed0d7f04d6b2cf344",
-  "status": "PARTIAL",
-  "preflight": {
-    "ready": true,
-    "missing_dependencies": [],
-    "model_weights_present": {
-      "bge-m3": true,
-      "bge-reranker-large": true
+  "aggregate_metrics": {
+    "child": {
+      "cutoff": 5,
+      "sample_count": 25,
+      "hit": 1.0,
+      "recall": 0.87,
+      "mrr": 0.9333333333333332
     },
-    "service_connectivity": "NOT RUN"
+    "parent": {
+      "cutoff": 2,
+      "sample_count": 25,
+      "hit": 1.0,
+      "recall": 1.0,
+      "mrr": 1.0
+    },
+    "document": {
+      "cutoff": 2,
+      "sample_count": 25,
+      "hit": 1.0,
+      "recall": 1.0,
+      "mrr": 1.0
+    },
+    "sample_count": 25,
+    "error_count": 0,
+    "zero_result_count": 0,
+    "zero_result_rate": 0.0,
+    "hard_identifier_sample_count": 25,
+    "hard_identifier_leak_count": 0,
+    "hard_identifier_leak_rate": 0.0,
+    "hard_identifier_leaked_item_count": 0,
+    "identifier_analysis_mismatch_count": 0,
+    "intent_mismatch_count": 3,
+    "strategy_counts": {
+      "direct": 25,
+      "rewrite": 0,
+      "subquery": 0
+    },
+    "planner_fallback_count": 0,
+    "variant_rejection_count": 0,
+    "fast_path_accepted_count": 0,
+    "fast_path_fallback_count": 0
   },
-  "aggregate_metrics": null,
-  "metrics_by_intent": {},
-  "metrics_by_tag": {},
-  "fast_path_metrics": null,
-  "strategy_metrics": null,
-  "latency_metrics": null,
-  "ragas": {
-    "status": "NOT RUN",
-    "reason": "ragas_and_explicit_judges_unavailable"
+  "metrics_by_intent": {
+    "alarm_fault": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 9,
+        "hit": 1.0,
+        "recall": 0.8333333333333334,
+        "mrr": 0.8148148148148148
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 9,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 9,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 9,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 9,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 9,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "knowledge": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "maintenance": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 6,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 6,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 6,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "parameter": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 0.5,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "parts": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "unlabeled": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 0.75,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 1,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 1,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 1,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    }
+  },
+  "metrics_by_tag": {
+    "SYN-CNC-100": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 0.875,
+        "mrr": 0.9375
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 8,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 8,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 1,
+      "strategy_counts": {
+        "direct": 8,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "SYN-CNC-200": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 0.875,
+        "mrr": 0.9375
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 8,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 8,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 1,
+      "strategy_counts": {
+        "direct": 8,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "SYN-CNC-300": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 0.875,
+        "mrr": 0.9166666666666667
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 8,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 8,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 8,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 1,
+      "strategy_counts": {
+        "direct": 8,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "SYNTHETIC": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 0.87,
+        "mrr": 0.9333333333333332
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 25,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 25,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 25,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "active_V2_not_historical_V1": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 0.5,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "alarm": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "case": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "fault": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 0.5,
+        "mrr": 0.4444444444444444
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "maintenance": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 6,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 6,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 6,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "manual": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "multiple_relevant": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 0.75,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 1,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 1,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 1,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 1,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "parameter": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 0.5,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "parts": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "same_alarm_different_model": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "similar_fault": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 0.75,
+        "mrr": 0.7222222222222222
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 6,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 6,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 6,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 6,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "similar_part_number": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    }
+  },
+  "metrics_by_identifier": {
+    "hard": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 0.87,
+        "mrr": 0.9333333333333332
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 25,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 25,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 25,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 25,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "no_hard": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null
+      },
+      "sample_count": 0,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": null,
+      "hard_identifier_sample_count": 0,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": null,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 0,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    }
+  },
+  "metrics_by_alarm": {
+    "alarm": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 3,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 3,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 3,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 0,
+      "strategy_counts": {
+        "direct": 3,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    },
+    "non_alarm": {
+      "child": {
+        "cutoff": 5,
+        "sample_count": 22,
+        "hit": 1.0,
+        "recall": 0.8522727272727273,
+        "mrr": 0.9242424242424243
+      },
+      "parent": {
+        "cutoff": 2,
+        "sample_count": 22,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "document": {
+        "cutoff": 2,
+        "sample_count": 22,
+        "hit": 1.0,
+        "recall": 1.0,
+        "mrr": 1.0
+      },
+      "sample_count": 22,
+      "error_count": 0,
+      "zero_result_count": 0,
+      "zero_result_rate": 0.0,
+      "hard_identifier_sample_count": 22,
+      "hard_identifier_leak_count": 0,
+      "hard_identifier_leak_rate": 0.0,
+      "hard_identifier_leaked_item_count": 0,
+      "identifier_analysis_mismatch_count": 0,
+      "intent_mismatch_count": 3,
+      "strategy_counts": {
+        "direct": 22,
+        "rewrite": 0,
+        "subquery": 0
+      },
+      "planner_fallback_count": 0,
+      "variant_rejection_count": 0,
+      "fast_path_accepted_count": 0,
+      "fast_path_fallback_count": 0
+    }
+  },
+  "fast_path_metrics": {
+    "exact_alarm": {
+      "eligible_samples": 3,
+      "accepted_samples": 0,
+      "correct_accepted_samples": 0,
+      "incorrect_accepted_samples": 0,
+      "accepted_without_eligibility_label": 0,
+      "fallback_samples": 3,
+      "coverage": 0.0,
+      "precision": null,
+      "fallback_rate": 1.0
+    },
+    "exact_faq": {
+      "eligible_samples": 18,
+      "accepted_samples": 0,
+      "correct_accepted_samples": 0,
+      "incorrect_accepted_samples": 0,
+      "accepted_without_eligibility_label": 0,
+      "fallback_samples": 18,
+      "coverage": 0.0,
+      "precision": null,
+      "fallback_rate": 1.0
+    },
+    "bm25_faq": {
+      "eligible_samples": 3,
+      "accepted_samples": 0,
+      "correct_accepted_samples": 0,
+      "incorrect_accepted_samples": 0,
+      "accepted_without_eligibility_label": 0,
+      "fallback_samples": 3,
+      "coverage": 0.0,
+      "precision": null,
+      "fallback_rate": 1.0
+    }
   },
   "per_sample_results": [
     {
@@ -99,11 +1262,84 @@
       "fast_path_labels": [
         "exact_alarm"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "670716a90bc212b8ba5c8484bbf52e35d5dbb0419b2009a6f5cd1d18eb248aa8",
+        "94a72af27d549685229043b3bff031d874a0652737d0d39976e52c218137f711"
+      ],
+      "returned_parent_ids": [
+        "0e93659deb7e79d515d8998baa0305a1d9129be2a641e05940244828a32dc3d1"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-alarm"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 报警码 E102 的原因是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\" and alarm_code == \"E102\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100",
+            "alarm_code": "E102"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": "E102",
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 148.30650000112655,
+        "rerank": 2555.490299999292,
+        "aggregation_and_rerank": 2555.6852000008803,
+        "total_retrieval": 2709.0540999997756
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-case",
@@ -132,11 +1368,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0",
+        "9d34c5365dda83922d396976a7c23d19d45fe582c4a73b341ccf1fea274d688d",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "b44debdb754d7991ab93b59ec0e63e21833177e4133e10cfa624fd250f56860e"
+      ],
+      "returned_parent_ids": [
+        "099e3e4faaeee7d4c6fbb7c5b6f011d0586872734e2e496fc2fc17022ae27b9f",
+        "860189a6655aca8c74c62eea29b41d919ebad7aaaf2d7e95a48aac46fa7298cf"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-case",
+        "SYNTHETIC-SYN-CNC-100-fault"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 主轴振动故障维修案例是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 158.5465000007389,
+        "rerank": 535.482299999785,
+        "aggregation_and_rerank": 535.8178999995289,
+        "total_retrieval": 694.6871999989526
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-fault",
@@ -165,11 +1478,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "9d34c5365dda83922d396976a7c23d19d45fe582c4a73b341ccf1fea274d688d",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "b44debdb754d7991ab93b59ec0e63e21833177e4133e10cfa624fd250f56860e"
+      ],
+      "returned_parent_ids": [
+        "860189a6655aca8c74c62eea29b41d919ebad7aaaf2d7e95a48aac46fa7298cf",
+        "099e3e4faaeee7d4c6fbb7c5b6f011d0586872734e2e496fc2fc17022ae27b9f"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-fault",
+        "SYNTHETIC-SYN-CNC-100-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 主轴振动故障如何排查？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 142.50230000106967,
+        "rerank": 530.3930999998556,
+        "aggregation_and_rerank": 530.7065999986662,
+        "total_retrieval": 673.4840000008262
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 0.5,
+          "first_relevant_rank": 2
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-maintenance",
@@ -197,11 +1587,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "3e59d35305d68de7a41edfcbae984a06f0d7035736be87561b61345c65ec093b",
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277",
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568"
+      ],
+      "returned_parent_ids": [
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409",
+        "a66e1fc147e31ded33e7dee9664f1cc343d54a67737dc8c2c73f7809ffeaeee1"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-maintenance",
+        "SYNTHETIC-SYN-CNC-100-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 维护保养周期是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 147.4115000000893,
+        "rerank": 465.89490000042133,
+        "aggregation_and_rerank": 466.17950000108976,
+        "total_retrieval": 613.8575999993918
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-maintenance-paraphrase",
@@ -229,11 +1696,88 @@
       "fast_path_labels": [
         "bm25_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "3e59d35305d68de7a41edfcbae984a06f0d7035736be87561b61345c65ec093b",
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277",
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568"
+      ],
+      "returned_parent_ids": [
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409",
+        "a66e1fc147e31ded33e7dee9664f1cc343d54a67737dc8c2c73f7809ffeaeee1"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-maintenance",
+        "SYNTHETIC-SYN-CNC-100-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 需要多久进行维护保养？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 147.9153000000224,
+        "rerank": 467.41260000089824,
+        "aggregation_and_rerank": 467.74079999886453,
+        "total_retrieval": 615.9711999989668
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-manual",
@@ -261,11 +1805,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0",
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "3bc88c7ee30d3631e38b62e236f7e3a37cf0ed287ee1db7f77f1775ce78839b6"
+      ],
+      "returned_parent_ids": [
+        "a66e1fc147e31ded33e7dee9664f1cc343d54a67737dc8c2c73f7809ffeaeee1",
+        "fce84a28f1671365fe0e69f8242f1bdd50bc75377bd4f3c9fb5b9546fad7354f"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-manual",
+        "SYNTHETIC-SYN-CNC-100-parameter"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 操作手册中的启动顺序是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "knowledge",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 169.37229999894043,
+        "rerank": 505.7584999995015,
+        "aggregation_and_rerank": 506.08509999983653,
+        "total_retrieval": 675.7627999995748
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-parameter",
@@ -294,11 +1915,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0",
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "670716a90bc212b8ba5c8484bbf52e35d5dbb0419b2009a6f5cd1d18eb248aa8"
+      ],
+      "returned_parent_ids": [
+        "fce84a28f1671365fe0e69f8242f1bdd50bc75377bd4f3c9fb5b9546fad7354f",
+        "099e3e4faaeee7d4c6fbb7c5b6f011d0586872734e2e496fc2fc17022ae27b9f"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-parameter",
+        "SYNTHETIC-SYN-CNC-100-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 主轴转速参数是多少？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 157.11069999997562,
+        "rerank": 614.6042000000307,
+        "aggregation_and_rerank": 614.8396999997203,
+        "total_retrieval": 772.2333999990951
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-100-parts",
@@ -327,11 +2025,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "3e59d35305d68de7a41edfcbae984a06f0d7035736be87561b61345c65ec093b",
+        "d26ab0813c10b6c7f0258d259ff4a7d04d21fd60988d740a1836efab303bbd9c"
+      ],
+      "returned_parent_ids": [
+        "a5a3223f5f8eb7170640bf7bd675b80226ddbc28823d88d5eb63c25b5e58c692"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-parts"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 备件号 PN-001 的规格是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\" and part_number == \"PN-001\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100",
+            "part_number": "PN-001"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": [
+            "multiple_intent_cues"
+          ]
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": false,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "low",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": "PN-001",
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": [
+          "multiple_intent_cues"
+        ]
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 152.73619999970833,
+        "rerank": 179.711299999326,
+        "aggregation_and_rerank": 179.88429999968503,
+        "total_retrieval": 332.911100000274
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-alarm",
@@ -360,11 +2135,84 @@
       "fast_path_labels": [
         "exact_alarm"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "e8e28461baac0a4ea72de61f7bd72aba6ab61b346b6d3e95e751accb19aff4f9",
+        "8e15e8aac84775b3449f434f9c4ae3dffc1d672d248324980367047fc9c5d03c"
+      ],
+      "returned_parent_ids": [
+        "6d5f2c5e31d5ba2b6a8433fbbf7947a7d475f7b80d2e511b790036c6a1b6b819"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-alarm"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 报警码 E102 的原因是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\" and alarm_code == \"E102\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200",
+            "alarm_code": "E102"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": "E102",
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 140.61580000088725,
+        "rerank": 185.27399999948102,
+        "aggregation_and_rerank": 185.44590000055905,
+        "total_retrieval": 326.2862999999925
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-case",
@@ -393,11 +2241,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366",
+        "fc72dfff56cb84a7227068439a1b602b0bf61cd91db7494cd1e0050d8da817d0",
+        "d5e2a537ceb3596384d7a4879139472e349cd9aa14ced96792c3943579c9a11b",
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8",
+        "83a8c30c158652169b7808809c6ac58bb522ea8d576db8f14166882f9f0d96b2"
+      ],
+      "returned_parent_ids": [
+        "b6adc8b83ea26f3ab9fdca6794ebff7c0089e4826097d1919ef35cb637ca7e31",
+        "2890d91eb1e5f41baf2b984a840156eb2c2f4e646aaf8c054dc2482dde585f45"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-case",
+        "SYNTHETIC-SYN-CNC-200-fault"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 主轴振动故障维修案例是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 143.27569999841216,
+        "rerank": 524.9698999996326,
+        "aggregation_and_rerank": 525.2352000006795,
+        "total_retrieval": 668.7672999996721
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-fault",
@@ -426,11 +2351,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366",
+        "d5e2a537ceb3596384d7a4879139472e349cd9aa14ced96792c3943579c9a11b",
+        "fc72dfff56cb84a7227068439a1b602b0bf61cd91db7494cd1e0050d8da817d0",
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "83a8c30c158652169b7808809c6ac58bb522ea8d576db8f14166882f9f0d96b2"
+      ],
+      "returned_parent_ids": [
+        "2890d91eb1e5f41baf2b984a840156eb2c2f4e646aaf8c054dc2482dde585f45",
+        "b6adc8b83ea26f3ab9fdca6794ebff7c0089e4826097d1919ef35cb637ca7e31"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-fault",
+        "SYNTHETIC-SYN-CNC-200-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 主轴振动故障如何排查？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 140.64060000055179,
+        "rerank": 525.8929999999964,
+        "aggregation_and_rerank": 526.2063999998645,
+        "total_retrieval": 667.1347999999853
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 0.5,
+          "first_relevant_rank": 2
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-maintenance",
@@ -458,11 +2460,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8",
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "54ebe2b042f5984e9778d32308cbb4731dcfcf3b462ffe76cbb93d1c1b515326",
+        "c6e126755af911391250be05885e54a54b67f7f52138b565f28a5144b4f78ea1",
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366"
+      ],
+      "returned_parent_ids": [
+        "52b9a0d4f31a67461d56a68559f7ae1180ee0c01a8327ffeec427ecee9cf0c5d",
+        "6651855df3638d08a098b636c9d93a49990c700599f68a14e871a49f6614fa5f"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-maintenance",
+        "SYNTHETIC-SYN-CNC-200-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 维护保养周期是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 142.60420000027807,
+        "rerank": 494.4305999997596,
+        "aggregation_and_rerank": 494.7818000000552,
+        "total_retrieval": 637.620200001038
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-maintenance-paraphrase",
@@ -490,11 +2569,88 @@
       "fast_path_labels": [
         "bm25_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8",
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "54ebe2b042f5984e9778d32308cbb4731dcfcf3b462ffe76cbb93d1c1b515326",
+        "c6e126755af911391250be05885e54a54b67f7f52138b565f28a5144b4f78ea1",
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366"
+      ],
+      "returned_parent_ids": [
+        "52b9a0d4f31a67461d56a68559f7ae1180ee0c01a8327ffeec427ecee9cf0c5d",
+        "6651855df3638d08a098b636c9d93a49990c700599f68a14e871a49f6614fa5f"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-maintenance",
+        "SYNTHETIC-SYN-CNC-200-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 需要多久进行维护保养？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 155.30330000001413,
+        "rerank": 470.4137999997329,
+        "aggregation_and_rerank": 470.7226999998966,
+        "total_retrieval": 626.2453999988793
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-manual",
@@ -522,11 +2678,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8",
+        "fc72dfff56cb84a7227068439a1b602b0bf61cd91db7494cd1e0050d8da817d0",
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366",
+        "8e28c611de405cc8e81bc0c5ad4d40f77a25381efe7ec4106c4044edb6938297"
+      ],
+      "returned_parent_ids": [
+        "6651855df3638d08a098b636c9d93a49990c700599f68a14e871a49f6614fa5f",
+        "cde52aa035b2a6b09dfa71258c1b047d5c07ddc94d03dab4faa6a0d941133c61"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-manual",
+        "SYNTHETIC-SYN-CNC-200-parameter"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 操作手册中的启动顺序是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "knowledge",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 156.16460000092047,
+        "rerank": 504.30340000093565,
+        "aggregation_and_rerank": 504.51840000096126,
+        "total_retrieval": 660.8929999983957
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-parameter",
@@ -555,11 +2788,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "fc72dfff56cb84a7227068439a1b602b0bf61cd91db7494cd1e0050d8da817d0",
+        "a2eb5871294c247f8be63de7c5d478b9ceab676bf7e56b8ccd65da9cbe2dd366",
+        "faa50eb674eec42407d562e74ab6adfbc48ce0cd6ab75ecf03037d501f532cb8",
+        "364a448ce6b9153d9d3f7b423568087552a84c1afdbcd0adf07bf42f1a5e3a0f",
+        "e8e28461baac0a4ea72de61f7bd72aba6ab61b346b6d3e95e751accb19aff4f9"
+      ],
+      "returned_parent_ids": [
+        "cde52aa035b2a6b09dfa71258c1b047d5c07ddc94d03dab4faa6a0d941133c61",
+        "b6adc8b83ea26f3ab9fdca6794ebff7c0089e4826097d1919ef35cb637ca7e31"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-parameter",
+        "SYNTHETIC-SYN-CNC-200-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 主轴转速参数是多少？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 156.1400999999023,
+        "rerank": 606.8931999998313,
+        "aggregation_and_rerank": 607.2189999995317,
+        "total_retrieval": 763.613200000691
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-200-parts",
@@ -588,11 +2898,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "54ebe2b042f5984e9778d32308cbb4731dcfcf3b462ffe76cbb93d1c1b515326",
+        "36f9fbae118c19d43cd24eac90266344ef907334b8b373f08734a1919626c71e"
+      ],
+      "returned_parent_ids": [
+        "e6f7851bb23c8762f44b3f356b0e9672eb00c0534b7ce35628e5fc161d3760e4"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-200-parts"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-200 备件号 PN-001A 的规格是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-200\" and part_number == \"PN-001A\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-200",
+            "part_number": "PN-001A"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": [
+            "multiple_intent_cues"
+          ]
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": false,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "low",
+        "entities": {
+          "equipment_model": "SYN-CNC-200",
+          "alarm_code": null,
+          "part_number": "PN-001A",
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": [
+          "multiple_intent_cues"
+        ]
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 155.45230000134325,
+        "rerank": 183.7431000003562,
+        "aggregation_and_rerank": 183.91870000050403,
+        "total_retrieval": 339.6597000009933
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-alarm",
@@ -621,11 +3008,84 @@
       "fast_path_labels": [
         "exact_alarm"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "d1863040d87a7efd38585858610a676a085c84522efa31e0e7dbd807ef8401d1",
+        "5e735f3f1175411df20ca5980435384feb49651ad860aa0cd497d12cc8706bdf"
+      ],
+      "returned_parent_ids": [
+        "0e03401e470f37b9c9262d0aa61b7a2784b14a23268765a88b00c7b81ca39b52"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-alarm"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 报警码 E102 的原因是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\" and alarm_code == \"E102\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300",
+            "alarm_code": "E102"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": "E102",
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 148.1019999991986,
+        "rerank": 191.62260000121023,
+        "aggregation_and_rerank": 191.8083000000479,
+        "total_retrieval": 340.170899999066
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-case",
@@ -654,11 +3114,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "4f38f9fa00310e75782c3272e46057eb5fd3c33da6b648f39e90cd00e3ec1acf",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "0f1e408627e41fd7820cbdfae945a24cd1742a52898b1c51ce0ef80d69836e25",
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "6857b0e4fb784d7b671ba2e89fe9ac13c65907caf34be7b8ff55636368d810af"
+      ],
+      "returned_parent_ids": [
+        "b4340bfe1c8eb9b62d17b7d6fa16018ac8302f02be16af5f04cbcb134b6e963b",
+        "a48eb4d3d58f2ea4f04d3ce774b5a33cfa320e2ad668922c109dc9ebe1824a75"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-case",
+        "SYNTHETIC-SYN-CNC-300-fault"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 主轴振动故障维修案例是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 157.1710999996867,
+        "rerank": 536.7784999998548,
+        "aggregation_and_rerank": 537.0882000006532,
+        "total_retrieval": 694.5303000011336
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-fault",
@@ -687,11 +3224,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "4f38f9fa00310e75782c3272e46057eb5fd3c33da6b648f39e90cd00e3ec1acf",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "0f1e408627e41fd7820cbdfae945a24cd1742a52898b1c51ce0ef80d69836e25",
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "6857b0e4fb784d7b671ba2e89fe9ac13c65907caf34be7b8ff55636368d810af"
+      ],
+      "returned_parent_ids": [
+        "a48eb4d3d58f2ea4f04d3ce774b5a33cfa320e2ad668922c109dc9ebe1824a75",
+        "b4340bfe1c8eb9b62d17b7d6fa16018ac8302f02be16af5f04cbcb134b6e963b"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-fault",
+        "SYNTHETIC-SYN-CNC-300-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 主轴振动故障如何排查？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "alarm_fault",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 138.62559999870427,
+        "rerank": 518.3521999988443,
+        "aggregation_and_rerank": 518.6541999992187,
+        "total_retrieval": 657.503499998711
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 0.3333333333333333,
+          "first_relevant_rank": 3
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-maintenance",
@@ -719,11 +3333,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "f774499000304b9c9736dda5d716c290c56a3324ecac623444229f446d7cb19f",
+        "4e8ea19a537804a9f1385f814575c8bffa0c839dad27cfa1eda7b247ea096e61",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "f88d2c2ccaa2d33a3b49e3b5b8dbeb83f9c6dcf4b290c15163ea464398259751"
+      ],
+      "returned_parent_ids": [
+        "9b03c268e9011b3855aad3881e0e3ee96d31aa5cb3bd88ca82884e7559673459",
+        "aa3897b5db683374f2327af479c0d364ff709bfe581444c6cfa4b6fd2bfe3b02"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-maintenance",
+        "SYNTHETIC-SYN-CNC-300-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 维护保养周期是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 136.92149999951653,
+        "rerank": 497.10919999961334,
+        "aggregation_and_rerank": 497.34030000036,
+        "total_retrieval": 634.5086000001174
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-maintenance-paraphrase",
@@ -751,11 +3442,88 @@
       "fast_path_labels": [
         "bm25_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "f774499000304b9c9736dda5d716c290c56a3324ecac623444229f446d7cb19f",
+        "4e8ea19a537804a9f1385f814575c8bffa0c839dad27cfa1eda7b247ea096e61",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "f88d2c2ccaa2d33a3b49e3b5b8dbeb83f9c6dcf4b290c15163ea464398259751"
+      ],
+      "returned_parent_ids": [
+        "9b03c268e9011b3855aad3881e0e3ee96d31aa5cb3bd88ca82884e7559673459",
+        "aa3897b5db683374f2327af479c0d364ff709bfe581444c6cfa4b6fd2bfe3b02"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-maintenance",
+        "SYNTHETIC-SYN-CNC-300-manual"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 需要多久进行维护保养？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 148.09270000114338,
+        "rerank": 503.06970000019646,
+        "aggregation_and_rerank": 503.3842000011646,
+        "total_retrieval": 651.7504999992525
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-manual",
@@ -783,11 +3551,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "f774499000304b9c9736dda5d716c290c56a3324ecac623444229f446d7cb19f",
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "4e8ea19a537804a9f1385f814575c8bffa0c839dad27cfa1eda7b247ea096e61",
+        "0244047e4d70601626b2d2c20e88d6c121cdbcf3cb3466a41d6f070c5eed571d"
+      ],
+      "returned_parent_ids": [
+        "aa3897b5db683374f2327af479c0d364ff709bfe581444c6cfa4b6fd2bfe3b02",
+        "3223f4293fc76eab21f3bc24573f8d4e47a2d1a9a69725c80b1676053c09c690"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-manual",
+        "SYNTHETIC-SYN-CNC-300-parts"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 操作手册中的启动顺序是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "knowledge",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 141.9624999998632,
+        "rerank": 512.6603999997315,
+        "aggregation_and_rerank": 512.9731000015454,
+        "total_retrieval": 655.1729000002524
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-parameter",
@@ -816,11 +3661,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "c912b8451034ceda14222220746ce6df30ea9b1fe1c3e59a0f33cb76a46be3fc",
+        "4f38f9fa00310e75782c3272e46057eb5fd3c33da6b648f39e90cd00e3ec1acf",
+        "42fb42c45ca0db73eb4e27e7252ef5b7effbcadc5a09b36ffd0247b6f7c11dd7",
+        "f774499000304b9c9736dda5d716c290c56a3324ecac623444229f446d7cb19f",
+        "d1863040d87a7efd38585858610a676a085c84522efa31e0e7dbd807ef8401d1"
+      ],
+      "returned_parent_ids": [
+        "f9265c6bbf1ce7fe28b998d22051a3588f9d35c784ec41c086f6ee76bd851948",
+        "b4340bfe1c8eb9b62d17b7d6fa16018ac8302f02be16af5f04cbcb134b6e963b"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-parameter",
+        "SYNTHETIC-SYN-CNC-300-case"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 主轴转速参数是多少？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": []
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": true,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "medium",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": []
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 141.92089999960444,
+        "rerank": 611.7504000012559,
+        "aggregation_and_rerank": 612.0568999995157,
+        "total_retrieval": 754.1953999989346
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.5,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "SYN-CNC-300-parts",
@@ -849,11 +3771,88 @@
       "fast_path_labels": [
         "exact_faq"
       ],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "4e8ea19a537804a9f1385f814575c8bffa0c839dad27cfa1eda7b247ea096e61",
+        "0b96258d6d002f1484b8b0ec0544ceb2f903952ac13bce5338bd2e4272b56e46"
+      ],
+      "returned_parent_ids": [
+        "3223f4293fc76eab21f3bc24573f8d4e47a2d1a9a69725c80b1676053c09c690"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-300-parts"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-300 备件号 PN-010 的规格是什么？",
+          "hit_count": 2,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-300\" and part_number == \"PN-010\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-300",
+            "part_number": "PN-010"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": [
+            "multiple_intent_cues"
+          ]
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": false,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "parameter",
+        "confidence": "low",
+        "entities": {
+          "equipment_model": "SYN-CNC-300",
+          "alarm_code": null,
+          "part_number": "PN-010",
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": [
+          "multiple_intent_cues"
+        ]
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 156.11129999888362,
+        "rerank": 175.8732999987842,
+        "aggregation_and_rerank": 176.05710000134422,
+        "total_retrieval": 332.4252999991586
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     },
     {
       "sample_id": "multi-relevant",
@@ -882,12 +3881,120 @@
         "multiple_relevant"
       ],
       "fast_path_labels": [],
-      "status": "NOT RUN",
-      "metrics": null,
-      "returned_child_ids": null,
-      "returned_parent_ids": null,
-      "returned_document_ids": null
+      "returned_child_ids": [
+        "8100532d92a9a9b3456c1247396ae35b1e945f757b69e51958de50f1ec92cfd7",
+        "f9a2ba538efdc4da328e8a72f744be718fe8988b9703ffec806fe6221edd05a0",
+        "50bc08e839f14515d4ae9790296855c89dc96aeec46bb0ca0d2f4d8951d32568",
+        "6fa02e3323068f35c4943c482ed05675634f1b4cbc70b6a2d6c280b54b678f5c",
+        "1c9905c42751517b7d0f8f5de34d72aaa39a88e4d83635c4e1f15193c3dad277"
+      ],
+      "returned_parent_ids": [
+        "fce84a28f1671365fe0e69f8242f1bdd50bc75377bd4f3c9fb5b9546fad7354f",
+        "760a598eca618cefe9a846efa84a06798fa7433c05bbeb98c87943016da4a409"
+      ],
+      "returned_document_ids": [
+        "SYNTHETIC-SYN-CNC-100-parameter",
+        "SYNTHETIC-SYN-CNC-100-maintenance"
+      ],
+      "strategy": "direct",
+      "decision_source": "default",
+      "fallback_reason": null,
+      "fast_path": null,
+      "filter_attempts": [
+        {
+          "query": "设备型号 SYN-CNC-100 维护保养周期和主轴转速参数分别是什么？",
+          "hit_count": 5,
+          "mode": "RELAXED",
+          "expression": "equipment_model == \"SYN-CNC-100\"",
+          "hard_filters": {
+            "equipment_model": "SYN-CNC-100"
+          },
+          "soft_filters": {},
+          "removed_fields": [],
+          "warnings": [
+            "multiple_intent_cues"
+          ]
+        }
+      ],
+      "hard_identifier_leaks": [],
+      "analysis_identifier_mismatches": [],
+      "intent_match": null,
+      "has_hard_identifier": true,
+      "analysis": {
+        "intent": "maintenance",
+        "confidence": "low",
+        "entities": {
+          "equipment_model": "SYN-CNC-100",
+          "alarm_code": null,
+          "part_number": null,
+          "manufacturer": null,
+          "equipment_type": null,
+          "fault_symptom": null
+        },
+        "analysis_source": "rules",
+        "warnings": [
+          "multiple_intent_cues"
+        ]
+      },
+      "error": null,
+      "timings_ms": {
+        "child_retrieval": 158.04039999966335,
+        "rerank": 525.7485999991331,
+        "aggregation_and_rerank": 526.0834000000614,
+        "total_retrieval": 684.4323999994231
+      },
+      "child_metric_scope": "retrieved_children",
+      "metrics": {
+        "child": {
+          "k": 5,
+          "hit": 1.0,
+          "recall": 0.75,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "parent": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        },
+        "document": {
+          "k": 2,
+          "hit": 1.0,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "first_relevant_rank": 1
+        }
+      }
     }
   ],
-  "live_failure": "ManufacturingSchemaMismatchError"
+  "latency_metrics": {
+    "aggregation_and_rerank": {
+      "sample_count": 25,
+      "mean_ms": 537.2173160001694,
+      "p95_ms": 614.8396999997203
+    },
+    "child_retrieval": {
+      "sample_count": 25,
+      "mean_ms": 149.6418360000098,
+      "p95_ms": 158.5465000007389
+    },
+    "rerank": {
+      "sample_count": 25,
+      "mean_ms": 536.9453239998984,
+      "p95_ms": 614.6042000000307
+    },
+    "total_retrieval": {
+      "sample_count": 25,
+      "mean_ms": 687.3148439997021,
+      "p95_ms": 772.2333999990951
+    }
+  },
+  "ragas": {
+    "status": "NOT RUN",
+    "reason": "requires_answer_context_reference_and_explicit_judge"
+  },
+  "latency_scope": "local_real_components",
+  "status": "PASS"
 }

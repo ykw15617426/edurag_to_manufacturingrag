@@ -1,0 +1,131 @@
+{
+  "status": "PASS",
+  "baseline_git_sha": "ac57fca5763c3b38405ad0b9d4057038f60c7cd3",
+  "correctness_fix_commit": "91d980ac33138ac51b44c36fc560afe577ef54bb",
+  "dataset_type": "controlled_synthetic",
+  "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
+  "sample_count": 25,
+  "milvus": {
+    "server_version": "pkg/v2.5.4",
+    "client_version": "2.5.4",
+    "host": "localhost",
+    "port": 19531,
+    "database": "stage12_eval_v2",
+    "collection": "manufacturing_rag_eval_v4"
+  },
+  "nullable_probe": {
+    "status": "PASS",
+    "host": "localhost",
+    "port": 19531,
+    "database": "stage12_eval_v2",
+    "collection": "manufacturing_rag_eval_nullable_probe_v3",
+    "client_version": "2.5.4",
+    "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
+    "sample_count": 25,
+    "server_version": "pkg/v2.5.4",
+    "describe_fields": [
+      {
+        "name": "id",
+        "nullable": false,
+        "params": {}
+      },
+      {
+        "name": "vector",
+        "nullable": false,
+        "params": {
+          "dim": 4
+        }
+      },
+      {
+        "name": "equipment_type",
+        "nullable": true,
+        "params": {
+          "max_length": 128
+        }
+      }
+    ],
+    "evidence_recovery": "read_only_existing_probe_after_output_serialization_error",
+    "row_count": 1,
+    "readback": [
+      {
+        "id": 1,
+        "equipment_type": null
+      }
+    ]
+  },
+  "manifest": "runtime/evaluation/manufacturing_rag_eval_v4.sqlite3",
+  "actual_child_count": 42,
+  "active_document_count": 21,
+  "schema_validation": "PASS",
+  "index_validation": "PASS",
+  "snapshot_validation": "PASS",
+  "ground_truth_id_validation": "PASS",
+  "knowledge_revision": "bb0502be277fc6ccb09ce49c4101020e67ae130fcdf19c604553df4678b176c7",
+  "knowledge_revision_stable": true,
+  "sample_execution": {
+    "provision_direct": {
+      "executed": 25,
+      "error_count": 0,
+      "hard_identifier_leak_count": 0
+    },
+    "paired_direct": {
+      "executed": 25,
+      "error_count": 0,
+      "hard_identifier_leak_count": 0
+    },
+    "strategy": {
+      "executed": 25,
+      "error_count": 0,
+      "hard_identifier_leak_count": 0
+    }
+  },
+  "real_components": {
+    "BGE-M3": "REAL",
+    "Milvus": "REAL",
+    "CrossEncoder": "REAL"
+  },
+  "production_tuning": "NO",
+  "production_quality_claim": false,
+  "latency_scope": "local CPU controlled synthetic benchmark",
+  "ragas": "NOT RUN",
+  "real_llm_planner": "NOT RUN",
+  "preserved_failures": {
+    "old_server": "v2.4.10 nullable expected True / actual False; v1/v2 left intact",
+    "server_254_first_direct": {
+      "collection": "manufacturing_rag_eval_v3",
+      "row_count": 0,
+      "manifest_exists": false,
+      "exception_type": "ManufacturingSchemaMismatchError",
+      "field": "dense_index.nlist",
+      "expected": 128,
+      "observed_top_level": "128",
+      "incorrect_nested_lookup": null
+    }
+  },
+  "infrastructure": {
+    "compose": "runtime/stage12-milvus-v2/docker-compose.yml",
+    "tracked": false,
+    "containers": [
+      "stage12-v2-milvus",
+      "stage12-v2-etcd",
+      "stage12-v2-minio"
+    ],
+    "network": "stage12-v2-eval-network",
+    "volumes": [
+      "stage12-v2-eval-milvus-data",
+      "stage12-v2-eval-etcd-data",
+      "stage12-v2-eval-minio-data"
+    ],
+    "old_environment_changed": false,
+    "resources_deleted": false
+  },
+  "regression": {
+    "command": ".venv/stage1-validation/Scripts/python.exe -m pytest tests -q -rs --tb=short",
+    "passed": 1012,
+    "failed": 0,
+    "skipped": 13,
+    "status": "PASS",
+    "python": "3.13.9",
+    "scope": "existing lightweight validation venv; live evaluation separately executed with EduRAG Python3.10.18"
+  }
+}
