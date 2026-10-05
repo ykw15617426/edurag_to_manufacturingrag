@@ -99,6 +99,8 @@ def build_runtime():
         from rag_qa.core.vector_store import VectorStore
         vector_store = VectorStore(schema_mode="manufacturing")
         resources.append(vector_store.client)
+        from rag_qa.retrieval.settings import baseline_settings
+        settings = getattr(vector_store, "retrieval_settings", None) or baseline_settings(config.RETRIEVAL_K, config.CANDIDATE_M)
         child = ManufacturingRetriever(vector_store)
         fast_path = ManufacturingFastPath(corpus, child, acceptance_policy=None) if corpus is not None else None
         cache, cache_degraded = None, False
@@ -116,7 +118,7 @@ def build_runtime():
         service = ManufacturingOnlineService(QueryAnalyzer(JSONSemanticClassifier(completion)),
             ManufacturingStrategyRetriever(child, planner=OpenAIManufacturingStrategyPlanner(completion), fast_path=fast_path),
             StructuredAnswerGenerator(completion), revision, cache=cache, llm_model=config.LLM_MODEL,
-            retrieval_k=config.RETRIEVAL_K, candidate_m=config.CANDIDATE_M)
+            retrieval_k=config.RETRIEVAL_K, candidate_m=config.CANDIDATE_M, retrieval_settings=settings)
         return ManufacturingRuntime(service, tuple(resources), cache_degraded)
     except BaseException:
         for resource in reversed(resources):

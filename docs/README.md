@@ -2,7 +2,7 @@
 
 ## 当前状态
 
-Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: PASS；Stage 11: PASS；Stage 12–13: PENDING；Full Integration Readiness: NO。
+Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification 均为 PASS，提交为 `b6db2e8d70f6c701975e24cefd10a04514139d2e`。Stage 0 技术验证保留 **PARTIAL（7 passed / 9 skipped）** 的历史结论。Stage 1: PASS；Stage 2: PASS；Stage 3: PASS；Stage 4: PASS；Stage 5: PASS；Stage 6: PASS；Stage 7: PASS；Stage 8: PASS；Stage 9: PASS；Stage 10: PASS；Stage 11: PASS；Stage 12: PARTIAL（real retrieval/RAGAS NOT RUN）；Stage 13: PENDING（readiness NO）；Full Integration Readiness: NO。
 
 ## 文档职责
 
@@ -23,6 +23,9 @@ Stage 0 已完成基线交付，其 Commit、GitHub Push 与 Remote Verification
 | [MANUFACTURING_GENERATION.md](MANUFACTURING_GENERATION.md) | Stage 10 Evidence完整性/版本/标识符保护、严格生成和逐Claim引用合约 |
 | [MANUFACTURING_API.md](MANUFACTURING_API.md) | Stage 11 独立API/SSE、运行时、线程/断连、错误与readiness合约 |
 | [MANUFACTURING_CACHE.md](MANUFACTURING_CACHE.md) | Stage 11 validated answer TTL、hashed key与Manifest/FastPath修订 |
+| [MANUFACTURING_EVALUATION.md](MANUFACTURING_EVALUATION.md) | Stage 12 严格标签/确定指标/逐样本观测/实验配置/Live保护/RAGAS边界 |
+| [Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md) | 999 passed / 13 skipped，真实检索NOT RUN，Overall PARTIAL |
+| [evaluation_results.json](evaluation_results.json) | 25条 synthetic 数据集与预检来源；真实指标null，未虚构质量 |
 | [Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md) | TestClient/recording/SQLite验证、真实运行限制及Git发布证据 |
 | [Stage 10 报告](STAGE_REPORTS/STAGE10_REPORT.md) | 正常化/Prompt/生成guard验证、真实LLM限制及Git发布证据 |
 | [Stage 9 报告](STAGE_REPORTS/STAGE9_REPORT.md) | 策略治理离线测试、真实集成限制与Git发布证据 |

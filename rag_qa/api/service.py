@@ -19,10 +19,11 @@ async def check_connected(disconnected):
 
 class ManufacturingOnlineService:
     def __init__(self, analyzer, retriever, generator, revision_provider, *, cache=None,
-                 llm_model, retrieval_k, candidate_m):
+                 llm_model, retrieval_k, candidate_m, retrieval_settings=None):
         self.analyzer, self.retriever, self.generator = analyzer, retriever, generator
         self.revision_provider, self.cache = revision_provider, cache
-        self.key_options = dict(llm_model=llm_model, retrieval_k=retrieval_k, candidate_m=candidate_m)
+        self.key_options = dict(llm_model=llm_model, retrieval_k=retrieval_k, candidate_m=candidate_m,
+                                retrieval_settings=retrieval_settings)
 
     async def events(self, query, disconnected):
         await check_connected(disconnected)

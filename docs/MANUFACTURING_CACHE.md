@@ -1,10 +1,10 @@
-# Manufacturing Answer Cache Governance（Stage 11）
+# Manufacturing Answer Cache Governance（Stage 11 + Stage 12 指纹增量）
 
 `rag_qa/api/cache.py:ManufacturingAnswerCache`使用独立namespace，不复用旧RedisClient或answer:{query}。Redis只优化经过Stage 10 guard的answered GroundedAnswerResult；raw LLM JSON/token、错误、insufficient不缓存，无Negative Cache。服务也重新验证注入runtime结果的结构/claim-citation links与确切渲染后才返回，不能假装fake generator输出都是validated。
 
 ## Key 与 TTL
 
-`manufacturing:answer:v1:<sha256>`；SHA256来自canonical JSON(sort_keys/紧凑分隔/UTF8/无NaN)，包含cache_contract_version、generation_contract_version、knowledge_revision、normalized query、QueryAnalysis.to_metadata、LLM_MODEL、RETRIEVAL_K、CANDIDATE_M。query只NFC+outer/whitespace合并，不改大小写/-/_/前导零。session不参与，不存在对话语义；key不暴露raw query。只对query规范化，analysis保持Stage 5原结果，等价query可能因分析描述不同得到不同key，保守miss。
+`manufacturing:answer:v1:<sha256>`；SHA256来自canonical JSON(sort_keys/紧凑分隔/UTF8/无NaN)，包含cache_contract_version、generation_contract_version、knowledge_revision、normalized query、QueryAnalysis.to_metadata、LLM_MODEL、RETRIEVAL_K、CANDIDATE_M。2026-10-05 Stage 12 增加 retrieval_contract_version 和 retrieval_config_fingerprint，覆盖 k/M、Dense/Sparse weights、nprobe、BM25 acceptance mode/threshold；在线工厂从实际 VectorStore settings 传递，不只依靠 k/M 判断语义。query只NFC+outer/whitespace合并，不改大小写/-/_/前导零。session不参与，不存在对话语义；key不暴露raw query。只对query规范化，analysis保持Stage 5原结果，等价query可能因分析描述不同得到不同key，保守miss。
 
 所有SET明确EX positive integer TTL，fallback300秒仅bound lifetime，不是调优。旧版本key无需FLUSHDB/主动删除，自然过期；不提交query/缓存/密钥到Git。Redis值含最终已验证答案与来源，本阶段未新增数据加密或多租户隔离要求。
 
@@ -24,4 +24,4 @@ get miss或Redis异常直接走完整Stage 5–10；只有固定状态cache=degr
 
 可观察disconnect时不写缓存；已提交的同步Redis命令和随后断连有竞态，无法撤回。JSON与SSE使用同一Service/Cache，无协议切换导致的双生成。Manifest V1答案留在旧key，V2同query用新key并再次执行pipeline，旧值依TTL回收。
 
-参数/启动与错误协议见[API合约](MANUFACTURING_API.md)，command/result见[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。真实Redis/Milvus/API端到端NOT RUN；Stage 12–13 PENDING。
+参数/启动与错误协议见[API合约](MANUFACTURING_API.md)，command/result见[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。真实Redis/Milvus/API端到端NOT RUN；Stage 12 PARTIAL，Stage 13 PENDING。检索指纹/实验边界见[评估合约](MANUFACTURING_EVALUATION.md)，本次证据见[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。

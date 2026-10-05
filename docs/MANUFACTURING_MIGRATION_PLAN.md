@@ -21,7 +21,7 @@
 
 ## 阶段与验收边界
 
-用户已明确以下 Stage 0–13 正式路线；Stage 1–11 已完成；2026-10-02 已按授权完成 Stage 11，后续阶段不自动推进。
+用户已明确以下 Stage 0–13 正式路线；Stage 1–11 已完成；2026-10-05 已按授权实现 Stage 12 评估框架，真实检索未运行，Stage 12 保持 PARTIAL；后续阶段不自动推进。
 
 ```text
 Stage 0: PASS
@@ -37,7 +37,8 @@ Stage 8: PASS
 Stage 9: PASS
 Stage 10: PASS
 Stage 11: PASS
-Stage 12-13: PENDING
+Stage 12: PARTIAL
+Stage 13: PENDING (readiness NO)
 ```
 
 | Stage | 目标 | 入口/复用 | 验收重点 |
@@ -57,7 +58,7 @@ Stage 12-13: PENDING
 | 12 | Retrieval Evaluation + Hit@K + MRR + RAGAS | 独立 retrieval evaluator | 带期望 Document/Child/Parent ID 的标注集；隔离型号/报警；留原始召回与配置快照 |
 | 13 | Docker + Integration Tests + README + Final Acceptance | Docker / Compose / README / 现有测试 | 完整依赖约定、集成测试、启动/停止与最终验收 |
 
-Dense/Sparse 权重保持 `0.8 / 0.3`；Dense param 的 nprobe 字面值保持 10。Parent/Child 本地示例与 Docker 当前有配置漂移。此阶段不选择“最佳值”，Stage 12 用制造业检索回放决定。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
+Dense/Sparse 权重保持 `0.8 / 0.3`；制造业 Dense param 的 nprobe 集中默认值保持 10，Legacy 字面量不变。Parent/Child 本地示例与 Docker 当前有配置漂移。不选择“最佳值”；Stage 12 先测量，只有批准的代表性数据及配对证据才允许决定生产调参，本次保持全部默认值。Stage 1 开始前记录实际运行配置和已有入库参数；旧集合不可直接用新切分参数覆盖。
 
 ## 制造业术语与 Metadata 候选合约
 
@@ -164,3 +165,10 @@ Stage 3 交付时 Stage 4: PENDING；Readiness: YES（限定版本/增量设计�
 独立制造业FastAPI/lifespan、Stage 5→9→10 Service共享SDK/finite timeout、同步off-loop、JSON完整一次生成与只发validated answer的SSE、安全错误/单Terminal/断连检查、startup/readiness/关闭资源与显式CORS已实现。独立缓存answered-only/TTL/hashed query、只读Manifest与FastPath bytes修订、坏值delete-miss/Redis降级，不改旧在线及业务语义。
 
 合约见[MANUFACTURING_API.md](MANUFACTURING_API.md)、[MANUFACTURING_CACHE.md](MANUFACTURING_CACHE.md)；证据见[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。真实服务/模型/生产启动未验证；readiness仅初始化检查，不能强制停止同步线程。Stage 12–13 PENDING，Full Integration Readiness: NO；不开始RAGAS/Hit@K/MRR/tuning或Docker最终验收。
+
+
+## Stage 12 交付检查点（2026-10-05）
+
+Implementation/Metric Unit Validation PASS，Overall Stage 12 PARTIAL。独立评估/25条synthetic标签/三层ID指标/观察/小规模profile/显式RAGAS及缓存配置指纹已实现；真实检索评估 NOT RUN，不能据此声明生产质量或调参。生产k5/M2/weights0.8,0.3/nprobe10/BM25 disabled保持；Legacy教育评估和Stage 2–10业务语义不变。
+
+详见[评估合约](MANUFACTURING_EVALUATION.md)和[阶段证据](STAGE_REPORTS/STAGE12_REPORT.md)。Stage 13 readiness NO，PENDING，未获实施授权。

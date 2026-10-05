@@ -1,8 +1,8 @@
 # 项目维护计划
 
-更新日期：2026-10-02。
+更新日期：2026-10-05。
 
-Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12–13: PENDING。
+Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12: PARTIAL；Stage 13: PENDING（readiness NO）。
 
 ## 已确认检查点
 
@@ -25,7 +25,8 @@ Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12–13: PE
 | Stage 9 | PASS | 严格策略/保护/融合、689 passed / 12 skipped及Git发布完成 |
 | Stage 10 | PASS | Evidence/结构化生成/claim引用guard、813 passed / 12 skipped及Git发布完成 |
 | Stage 11 | PASS | API/SSE/TTL知识修订缓存、907 passed / 12 skipped及Git发布完成 |
-| Stage 12–13 | PENDING | 尚未授权实施 |
+| Stage 12 | PARTIAL | 评估框架/配置缓存指纹已实现；999 passed / 13 skipped；真实检索和 RAGAS NOT RUN |
+| Stage 13 | PENDING | 尚未授权实施 |
 
 ## 已完成任务：Repository Governance & Documentation Setup
 
@@ -45,7 +46,7 @@ Last Completed Stage: Stage 11 — PASS；Active Stage: NONE；Stage 12–13: PE
 
 正式任务若产生需保留的仓库文件变化，按 AGENTS.md 默认完成 Commit、Push、Remote Verification 与 clean 检查，无需用户另行要求 Push；无变化不创建空提交。此规则不授权推进后续阶段。
 
-Stage 11已完成，当前停止，不自行进入Stage 12。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在 Stage 0 报告；本任务不安装完整运行依赖、不重新执行审计或集成测试；可运行已有 Smoke Tests 作最终检查。
+Stage 12已完成可用环境内的实现与验证，真实评估受依赖限制保持PARTIAL，当前停止，不进入Stage 13。未来业务阶段定义统一引用 [MANUFACTURING_MIGRATION_PLAN.md](../docs/MANUFACTURING_MIGRATION_PLAN.md)。完整集成尚未验证等已知限制保留在历史报告，不把单测或 synthetic 结果当生产质量。
 
 ## 已完成任务：Stage 1 — Manufacturing Document Schema + YAML Metadata
 
@@ -223,3 +224,18 @@ Stage 10实现提交 `699b730bb5ff9502395318020d4cc9cd5bc22c2a` 已正常Push；
 仅在ignored venv装已有锁定轻量API依赖；不改业务语义/Legacy，不连接真实数据库，不开始Stage 12。报告：[STAGE11_REPORT.md](../docs/STAGE_REPORTS/STAGE11_REPORT.md)。Stage 12–13 PENDING；Full Integration Readiness: NO。
 
 Stage 11实现提交 `c6fe27c6e3665445d202d4a3cd16e614455d4972` 已正常Push；fetch后Local HEAD == origin/main，Working Tree clean。完成状态以独立文档提交正常发布，最终SHA在回复核验提供，不重写历史。
+
+
+## 当前交付：Stage 12 — Retrieval Evaluation + Hit@K + MRR + RAGAS
+
+状态：PARTIAL；Implementation/Metric Unit Validation PASS，Real Retrieval/RAGAS NOT RUN。起始main HEAD d4ea1fd58544e88a789d94b96f4a8f4436ddb0bf，初始clean且fetch后远端一致。
+
+- [x] 阅读用户阶段要求、治理/事实/源码及核对基线。
+- [x] 实现严格synthetic标签、确定指标、逐样本观测/配对/隔离Live runner及RAGAS 0.2.6边界。
+- [x] 集中生产不变的检索settings，修复cache完整配置fingerprint。
+- [x] 999 passed / 0 failed / 13 skipped；真实运行缺依赖，拒绝虚构Stage 12 PASS或质量分数。
+- [x] 增量文档/导航/架构/状态，保留历史与教育数据，生产参数无调整。
+- [x] AST/链接/Diff/保护范围最终检查：18 Python / 184相对链接，Legacy及既有业务合约保持。
+- [ ] Commit、Push、fetch/equal与clean核验。
+
+交付：[Stage 12报告](../docs/STAGE_REPORTS/STAGE12_REPORT.md)。真实评估是剩余限制，当前停止，Stage 13 readiness NO；不把模型文件存在、fake控制单测或Git发布视作完整集成PASS。

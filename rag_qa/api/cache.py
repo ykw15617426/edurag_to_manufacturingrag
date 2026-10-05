@@ -14,12 +14,18 @@ def canonical_hash(value):
         separators=(",", ":"), allow_nan=False).encode("utf-8")).hexdigest()
 
 
-def build_cache_key(query, analysis, revision, *, llm_model, retrieval_k, candidate_m):
+def build_cache_key(query, analysis, revision, *, llm_model, retrieval_k, candidate_m, retrieval_settings=None):
+    from rag_qa.retrieval.settings import RetrievalSettings, baseline_settings
+    settings = retrieval_settings or baseline_settings(retrieval_k, candidate_m)
+    if type(settings) is not RetrievalSettings or (settings.retrieval_k, settings.candidate_m) != (retrieval_k, candidate_m):
+        raise ValueError("cache retrieval settings mismatch")
     normalized = " ".join(unicodedata.normalize("NFC", query).split())
     return "manufacturing:answer:v1:" + canonical_hash(dict(cache_contract_version=CACHE_CONTRACT_VERSION,
         generation_contract_version=GENERATION_CONTRACT_VERSION, knowledge_revision=revision,
         query=normalized, analysis=analysis.to_metadata(), llm_model=llm_model,
-        retrieval_k=retrieval_k, candidate_m=candidate_m))
+        retrieval_k=retrieval_k, candidate_m=candidate_m,
+        retrieval_config_fingerprint=settings.fingerprint(),
+        retrieval_contract_version=settings.retrieval_contract_version))
 
 
 def validate_cached_answer(payload):

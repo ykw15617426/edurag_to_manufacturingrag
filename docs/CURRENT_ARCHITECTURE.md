@@ -1,6 +1,8 @@
-# 当前真实架构（Stage 0 基线 + Stage 1–11 增量）
+# 当前真实架构（Stage 0 基线 + Stage 1–12 增量）
 
 审计日期：2026-10-01。源代码基线：`ff95920`，`main`。下列 Implemented 表示实际代码中存在该路径，不等于本次已完成端到端运行验证。
+
+当前检查点（2026-10-05）：Stage 0–11 PASS；Stage 12 PARTIAL（框架/指标单测完成，真实检索/RAGAS NOT RUN）；Stage 13 PENDING，Full Integration Readiness: NO。以下历史章节保留其交付时状态。
 
 ## 1. 入口与模块职责
 
@@ -19,6 +21,7 @@
 | `static/index.html` | 当前 `/` 页，同源 HTTP + WebSocket，Markdown 渲染 |
 | `static/old_index.html` / `static/src/App.jsx` | 旧页面/未接入 React 原型；React 期待 8000 `/query` SSE，与当前 API 不符 |
 | `demo/` | LangChain、Milvus、Redis、BM25、日志等教学脚本，不属于生产调用链；部分有顶层副作用 |
+| `rag_qa/evaluation/` | Stage 12 独立制造业标签/ID指标/真实组件观察适配与可选RAGAS，当前真实评估NOT RUN |
 | `rag_qa/rag_assessment/` | 教育数据的独立 RAGAS 脚本和历史输出，未接在线真实召回 |
 
 ## 2. 离线入库链路
@@ -290,3 +293,12 @@ JSON POST `/api/manufacturing/query`完整执行一次、严格请求、session�
 Manifest只读fingerprint派生active事实/revision，排除updated_at；在线mode=ro新连接不创建DB。Cache key hash包含revision+loaded snapshot bytes hash、query/analysis/model/k/Top-M及合约版本；answered-only且TTL、坏值delete+miss、Redis失败降级，不复用answer:{query}。base/config.py/example仅新增runtime/CORS参数，旧业务配置值不变。health live/ready分离、关闭持有clients，显式CORS无wildcard/credentials。
 
 94项Stage 11核心及Stage 0–10回归：907 passed / 0 failed / 12 skipped。实际FastAPI/StreamingResponse、临时SQLite与fake SDK验证控制，不是真实模型/服务端到端PASS。真实runtime启动/Redis/Milvus/BGE/CrossEncoder/API未执行，Full Integration Readiness: NO。合约：[API](MANUFACTURING_API.md)、[Cache](MANUFACTURING_CACHE.md)；证据：[Stage 11报告](STAGE_REPORTS/STAGE11_REPORT.md)。Stage 12–13 PENDING。
+
+
+## 17. Stage 12 增量（2026-10-05）
+
+独立 rag_qa/evaluation 严格标签/Canonical SHA、三层 Hit/Recall/MRR、逐样本观察与intent/tag/hard/alarm切片；真实组件 adapter 复用 Stage 5–9，同轮捕获Child/FastPath/filter/planner与一次重排。固定25条 synthetic 数据用Stage 2 ID公式，不能视为生产语料或实际真实检索；JSON预检真实质量指标null。RAGAS按锁定0.2.6源码实现显式judge边界，缺依赖/模型API则NOT RUN，不运行旧教育评估。
+
+retrieval/settings.py 集中制造业权重0.8/0.3、nprobe10与retrieval contract；VectorStore实例可带EvaluationProfile派生settings，生产默认不变。API cache/runtime/service增量传递真实settings fingerprint，覆盖k/M/weights/nprobe/BM25 mode及threshold，所有语义变化导致新key；不调整TTL/生产BM25 policy/Stage 2–10算法和Legacy。
+
+999 passed / 0 failed / 13 skipped；Stage 12核心92项单测，真实BGE/Milvus/CrossEncoder/LLM Planner/RAGAS judge/真实性能均NOT RUN。当前验证venv缺milvus_model/sentence_transformers/torch/langchain_core，weights目录和文件存在不代表实际推理通过。Stage 12整体PARTIAL，Last Completed Stage仍11 PASS；Active NONE，Stage 13 PENDING/readiness NO，Full Integration Readiness NO。证据：[评估合约](MANUFACTURING_EVALUATION.md)、[机器预检](evaluation_results.json)、[Stage 12报告](STAGE_REPORTS/STAGE12_REPORT.md)。

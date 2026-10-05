@@ -16,6 +16,7 @@ from sentence_transformers import CrossEncoder
 import hashlib
 import json
 from rag_qa.core.milvus_schema import HASH_PATTERN
+from rag_qa.retrieval.settings import RetrievalSettings, baseline_settings
 from rag_qa.core.milvus_schema import (
     select_collection, ensure_manufacturing_collection,
     validate_manufacturing_document, build_manufacturing_row,
@@ -30,9 +31,12 @@ class VectorStore:
                  host=config.MILVUS_HOST,
                  port=config.MILVUS_PORT,
                  database=config.MILVUS_DATABASE_NAME,
-                 *, schema_mode="legacy"):
+                 *, schema_mode="legacy", retrieval_settings=None):
         # 设置 Milvus 集合名称
         self.schema_mode = schema_mode
+        if retrieval_settings is not None and (schema_mode != "manufacturing" or type(retrieval_settings) is not RetrievalSettings):
+            raise ValueError("explicit retrieval settings require manufacturing mode")
+        self.retrieval_settings = (retrieval_settings or baseline_settings(config.RETRIEVAL_K, config.CANDIDATE_M)) if schema_mode == "manufacturing" else None
         self.collection_name = select_collection(
             schema_mode, collection_name, config.MILVUS_COLLECTION_NAME,
             config.MILVUS_MANUFACTURING_COLLECTION_NAME)
@@ -255,15 +259,16 @@ class VectorStore:
             raise TypeError("MetadataFilterPlan required; arbitrary expressions are forbidden")
         expression = filter_plan.expression
         embeddings = self.embedding_function([query])
+        settings = getattr(self, "retrieval_settings", None) or baseline_settings()
         dense = AnnSearchRequest(data=[embeddings["dense"][0]], anns_field="dense_vector",
-                                 param={"metric_type": "IP", "nprobe": 10}, limit=k, expr=expression)
+                                 param={"metric_type": "IP", "nprobe": settings.nprobe}, limit=k, expr=expression)
         sparse = AnnSearchRequest(data=[self.get_sparse_dict(embeddings, 0)], anns_field="sparse_vector",
                                   param={"metric_type": "IP"}, limit=k, expr=expression)
         fields = [f.name for f in manufacturing_fields(self.dense_dim)
                   if f.datatype not in {"FLOAT_VECTOR", "SPARSE_FLOAT_VECTOR"}]
         results = self.client.hybrid_search(
             collection_name=self.collection_name, reqs=[dense, sparse],
-            ranker=WeightedRanker(0.8, 0.3), limit=k, output_fields=fields)
+            ranker=WeightedRanker(settings.dense_weight, settings.sparse_weight), limit=k, output_fields=fields)
         if not isinstance(results, list) or len(results) != 1:
             raise ValueError("expected one query result group")
         return [self._manufacturing_child_from_hit(hit, fields) for hit in results[0]]
