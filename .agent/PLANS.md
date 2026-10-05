@@ -255,6 +255,6 @@ Stage 12实现提交正常Push/fetch/equal/clean后，在干净的实现HEAD复�
 - [x] 原validation环境完整回归999 passed / 0 failed / 13 skipped；Dataset SHA和源码/生产参数保持。
 - [x] 更新Completion预检/Direct失败机器证据、Stage 12报告及当前事实导航；不虚构paired结果或Stage 12 PASS。
 - [x] 最终197个相对链接、Dataset SHA、保护范围和git diff --check通过；仅本任务文档/证据变化。
-- [ ] Commit/Push/fetch/equal/clean。
+- [x] Completion证据提交 `8e936846589746cb32a6d6dd6a7281510243a81a` 已Push；fetch后Local HEAD == origin/main，Working Tree clean。发布记录通过独立文档提交同步，最终HEAD在回复核验提供。
 
 Stage 12 PARTIAL；Last Completed仍11 PASS；Active NONE；Stage 13 readiness NO，PENDING；Full Integration Readiness NO。下一次需要支持当前nullable合约的Milvus环境及新隔离资源，本任务不升级服务或实施Stage 13。
