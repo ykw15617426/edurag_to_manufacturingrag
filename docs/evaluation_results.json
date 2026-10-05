@@ -5,7 +5,7 @@
     "sample_count": 25,
     "dataset_sha256": "93764ff2054c900a5a4991b4bc2296edc37fa21621e33d988c217443b3d2ea7b",
     "knowledge_revision": null,
-    "git_sha": "d4ea1fd58544e88a789d94b96f4a8f4436ddb0bf",
+    "git_sha": "7d9e7a38c56e77153d7879c5e56df38323702d3d",
     "collection": "manufacturing_rag_eval_v1",
     "schema_version": "manufacturing_v1",
     "execution_mode": "not_run",
@@ -27,7 +27,7 @@
       }
     },
     "source_snapshot": {
-      "source_tree_dirty": true,
+      "source_tree_dirty": false,
       "evaluated_code_sha256": "cc8fc0ac56daa61742bdc3feb2fc4b1c8efecd5a79c0af3f093b69f5d088eb72"
     },
     "model_snapshot": {

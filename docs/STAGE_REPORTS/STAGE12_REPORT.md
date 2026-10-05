@@ -2,6 +2,8 @@
 
 日期：2026-10-05；分支 main；起始 HEAD `d4ea1fd58544e88a789d94b96f4a8f4436ddb0bf`，fetch 后 origin/main 相同且 Working Tree clean。Implementation: PASS；Metric Unit Validation: PASS；Real Retrieval Evaluation: NOT RUN；**Overall Stage 12: PARTIAL**。Last Completed Stage 保持 11 — PASS；Active Stage: NONE；Stage 13: PENDING / readiness NO；Full Integration Readiness: NO。
 
+GitHub Sync: PASS。实现提交 `7d9e7a38c56e77153d7879c5e56df38323702d3d` 已正常 Push；随后 fetch、两个 rev-parse 返回相同 SHA，git status 为 clean。在该干净实现提交上复跑离线预检，机器报告记录该 Git SHA 和 source_tree_dirty=false；最终发布记录用独立文档提交同步，最终 HEAD 在回复核验提供，不预写自身哈希。Git发布不改变Stage 12 PARTIAL或真实检索NOT RUN结论。
+
 ## 范围与文件
 
 新增 `rag_qa/evaluation/` 的 schemas/metrics/evaluator/adapters/runner/ragas_runner/provenance/benchmark，独立制造业 canonical 标签集和 [机器报告](../evaluation_results.json)。复用已有 Stage 5/6/7/8/9 实际组件；fake/recording 仅用于单测，不输出受控真实检索质量分数。教育 rag_assessment、旧 CSV/输出、业务语料、requirements/config/Stage 2–10 业务语义与历史报告保持。
@@ -46,7 +48,7 @@ Python 为 `.venv/stage1-validation/Scripts/python.exe`（3.13.9），pytest 8.4
 | `python -m rag_qa.evaluation.runner --output docs/evaluation_results.json` | preflight ready=false；全部真实 metrics null / NOT RUN | PASS（预检），质量 NOT RUN |
 | real BGE→Milvus Dense/Sparse→filter→aggregation→CrossEncoder / RAGAS judge | 缺依赖及显式 judge，未启用 Live | NOT RUN |
 | AST / 相对链接 / git diff --check / 受保护范围 | 18个Python文件、184个相对链接；Legacy方法及Stage 2–10/教育评估/config/requirements保持；机器报告代码指纹一致 | PASS |
-| Commit / Push / fetch/equal / clean | 实现/验证可交付，质量仍 PARTIAL；发布结果随后补充 | PENDING |
+| Commit / Push / fetch/equal / clean | 实现7d9e7a3正常发布，Local HEAD == origin/main且clean；完成发布记录独立文档提交，最终SHA在回复核验 | PASS |
 
 13 skipped = 历史12项缺完整依赖或 Stage 3 Live 未启用，加 Stage 12 Live 未启用1项；不把 skip 当 PASS。增加helper拒绝生产资源测试后最终999 passed / 13 skipped；此前完整轮998 passed / 13 skipped。未发生测试失败轮。审阅时修正 scripted planner 返回类型及 rejection reason-code 统计，并加对应实际 Stage 9 控制验证；没有修改生产 Stage 9。
 
