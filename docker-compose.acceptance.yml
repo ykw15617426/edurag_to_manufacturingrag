@@ -1,0 +1,28 @@
+services:
+  manufacturing-bootstrap:
+    extends:
+      file: docker-compose.yml
+      service: manufacturing-api
+    command: ["python", "-m", "scripts.bootstrap_manufacturing_demo", "--output", "/app/runtime/bootstrap.json"]
+    ports: !reset []
+    healthcheck:
+      disable: true
+    restart: "no"
+    environment:
+      MILVUS_MANUFACTURING_COLLECTION_NAME: manufacturing_rag_acceptance_v1
+      MANUFACTURING_MANIFEST_DB_PATH: /app/runtime/acceptance_manifest.sqlite3
+    volumes:
+      - ./rag_qa/models:/app/rag_qa/models:ro
+      - ./runtime/stage13/acceptance:/app/runtime
+      - ./runtime/stage13/logs:/app/logs
+  manufacturing-api:
+    environment:
+      MILVUS_MANUFACTURING_COLLECTION_NAME: manufacturing_rag_acceptance_v1
+      MANUFACTURING_MANIFEST_DB_PATH: /app/runtime/acceptance_manifest.sqlite3
+    volumes:
+      - ./rag_qa/models:/app/rag_qa/models:ro
+      - ./runtime/stage13/acceptance:/app/runtime
+      - ./runtime/stage13/logs:/app/logs
+    depends_on:
+      manufacturing-bootstrap:
+        condition: service_completed_successfully

@@ -1,0 +1,3 @@
+SYNTHETIC / NOT PRODUCTION FACTS。
+设备型号 SYN-DEMO-100 的模拟主轴额定转速为 1200 rpm。
+此参数仅用于软件演示，不是真实设备参数，不用于实际设备操作。

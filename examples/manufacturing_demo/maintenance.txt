@@ -1,0 +1,3 @@
+SYNTHETIC / NOT PRODUCTION FACTS。
+设备型号 SYN-DEMO-100 的模拟维护周期为 250 小时。
+此维护周期仅用于软件演示，不是真实维保要求，不用于实际设备操作。

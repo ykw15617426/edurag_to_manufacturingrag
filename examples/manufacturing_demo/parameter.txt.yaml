@@ -1,0 +1,8 @@
+document_id: SYN-DEMO-PARAMETER-001
+document_version: "1.0"
+title: SYN-DEMO-100 合成参数演示
+knowledge_type: parameter
+equipment_type: 合成演示设备
+equipment_model: SYN-DEMO-100
+manufacturer: Synthetic Demo
+language: zh-CN

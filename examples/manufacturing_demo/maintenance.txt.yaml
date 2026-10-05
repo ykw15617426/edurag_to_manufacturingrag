@@ -1,0 +1,12 @@
+document_id: SYN-DEMO-MAINTENANCE-001
+document_version: "1.0"
+title: SYN-DEMO-100 合成维护演示
+knowledge_type: maintenance
+equipment_type: 合成演示设备
+equipment_model: SYN-DEMO-100
+manufacturer: Synthetic Demo
+maintenance_type: 合成周期维护
+maintenance_cycle:
+  value: 250.0
+  unit: hour
+language: zh-CN

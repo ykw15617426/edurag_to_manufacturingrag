@@ -1,54 +1,121 @@
+name: manufacturing-rag
 services:
-  edurag-app:
+  manufacturing-api:
     build: .
-    image: edurag:7.0
-    container_name: edurag7
-    ports:
-      # 宿主机端口:容器运行占用的端口
-      - "${APP_PORT:-8080}:8080"
+    image: manufacturing-rag:stage13
     environment:
-      # 应用配置
-      - HOST=${HOST:-0.0.0.0}
-      - PORT=${PORT:-8080}
-      - PROJECT_ROOT=${PROJECT_ROOT:-/app}
-      
-      # MySQL 配置
-      - MYSQL_HOST=${MYSQL_HOST:-mysql}
-      - MYSQL_PORT=${MYSQL_PORT:-3307}
-      - MYSQL_USER=${MYSQL_USER:-root}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-subjects_kg}
-      
-      # Redis 配置
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-123456}
-      - REDIS_DB=${REDIS_DB:-0}
-      
-      # Milvus 配置
-      - MILVUS_HOST=${MILVUS_HOST:-milvus}
-      - MILVUS_PORT=${MILVUS_PORT:-19530}
-      - MILVUS_DATABASE_NAME=${MILVUS_DATABASE_NAME:-itcast}
-      - MILVUS_COLLECTION_NAME=${MILVUS_COLLECTION_NAME:-edurag}
-      - MILVUS_MANUFACTURING_COLLECTION_NAME=${MILVUS_MANUFACTURING_COLLECTION_NAME:-manufacturing_rag_v1}
-      
-      # LLM 配置
-      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
-      - LLM_MODEL=${LLM_MODEL:-qwen3.7-max-preview}
-      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
-      
-      # 检索参数配置
-      - PARENT_CHUNK_SIZE=${PARENT_CHUNK_SIZE:-1000}
-      - CHILD_CHUNK_SIZE=${CHILD_CHUNK_SIZE:-200}
-      - PARENT_CHUNK_OVERLAP=${CHUNK_OVERLAP:-150}
-      - CHILD_CHUNK_OVERLAP=${CHUNK_OVERLAP:-30}
-      - RETRIEVAL_K=${RETRIEVAL_K:-5}
-      - CANDIDATE_M=${CANDIDATE_M:-2}
-      
-      # 应用配置
-      - VALID_SOURCES=${VALID_SOURCES:-["ai", "java", "test", "ops", "bigdata"]}
-      - CUSTOMER_SERVICE_PHONE=${CUSTOMER_SERVICE_PHONE:-12345678}
-
+      HOST: 0.0.0.0
+      PORT: "8080"
+      MILVUS_HOST: milvus
+      MILVUS_PORT: "19530"
+      MILVUS_DATABASE_NAME: ${MILVUS_DATABASE_NAME:-default}
+      MILVUS_MANUFACTURING_COLLECTION_NAME: ${MILVUS_MANUFACTURING_COLLECTION_NAME:-manufacturing_rag_v1}
+      MANUFACTURING_MANIFEST_DB_PATH: ${MANUFACTURING_MANIFEST_DB_PATH:-/app/runtime/manufacturing_manifest.sqlite3}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_DB: "0"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD required}
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:?DASHSCOPE_API_KEY required}
+      LLM_MODEL: ${LLM_MODEL:?LLM_MODEL required}
+      DASHSCOPE_BASE_URL: ${DASHSCOPE_BASE_URL:?DASHSCOPE_BASE_URL required}
+      MANUFACTURING_CACHE_TTL_SECONDS: ${MANUFACTURING_CACHE_TTL_SECONDS:-300}
+      MANUFACTURING_LLM_TIMEOUT_SECONDS: ${MANUFACTURING_LLM_TIMEOUT_SECONDS:-30}
+      MANUFACTURING_REDIS_TIMEOUT_SECONDS: ${MANUFACTURING_REDIS_TIMEOUT_SECONDS:-2}
+      MANUFACTURING_CORS_ORIGINS: ${MANUFACTURING_CORS_ORIGINS:-[]}
+      PARENT_CHUNK_SIZE: "512"
+      PARENT_CHUNK_OVERLAP: "120"
+      CHILD_CHUNK_SIZE: "128"
+      CHILD_CHUNK_OVERLAP: "30"
+      RETRIEVAL_K: "5"
+      CANDIDATE_M: "2"
     volumes:
-      - ./logs:/app/logs
+      - ./rag_qa/models:/app/rag_qa/models:ro
+      - ${MANUFACTURING_RUNTIME_DIR:-./runtime}:/app/runtime
+      - ${MANUFACTURING_LOG_DIR:-./logs}:/app/logs
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health/ready', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      start_period: 120s
+      retries: 12
+    depends_on:
+      milvus:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
+  redis:
+    image: redis:7.2.7
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD required}
+    command: ["sh", "-c", 'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"']
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$REDIS_PASSWORD" redis-cli ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.16
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    volumes:
+      - etcd-data:/etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+    restart: unless-stopped
+  minio:
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?MINIO_ROOT_USER required}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD required}
+    command: minio server /minio_data --console-address ":9001"
+    volumes:
+      - minio-data:/minio_data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+    restart: unless-stopped
+  milvus:
+    image: milvusdb/milvus:v2.5.4
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      MINIO_REGION: us-east-1
+      MINIO_ACCESS_KEY_ID: ${MINIO_ROOT_USER:?MINIO_ROOT_USER required}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD required}
+    volumes:
+      - milvus-data:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 10s
+      timeout: 10s
+      start_period: 90s
+      retries: 12
+    depends_on:
+      etcd:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  redis-data:
+  etcd-data:
+  minio-data:
+  milvus-data:
