@@ -270,6 +270,6 @@ Stage 12 PARTIAL；Last Completed仍11 PASS；Active NONE；Stage 13 readiness N
 - [x] 同v4资源/知识修订Paired scripted：25 Direct+25 Strategy，错误/leak/incorrect acceptance均0，真实CPU时延已记录。
 - [x] Live后回归1012 passed / 0 failed / 13 skipped；旧2.4.10失败归档，当前指标/事实已同步。
 - [x] 最终211个相对链接、2 Python AST、15文件任务范围、固定SHA/Schema合约/生产参数、失败归档内容与git diff --check均PASS。
-- [ ] Commit/Push/fetch/HEAD一致/clean核验并停止。
+- [x] 修复 `91d980ac33138ac51b44c36fc560afe577ef54bb` 与证据 `8ad0f8affcda20f7ea6be4b4c95f6742584d650a` 已Push；fetch后Local HEAD == origin/main且clean。发布记录独立文档提交同步，最终HEAD在回复核验；当前停止。
 
 Stage 12 PASS；Stage 13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS/真实LLM Planner NOT RUN；生产调参NO，BM25 disabled。临时基础设施和现场停止/重启命令见[报告](../docs/STAGE_REPORTS/STAGE12_REPORT.md)，不提交Compose/volumes/Manifest/logs。

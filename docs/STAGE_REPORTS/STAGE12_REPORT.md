@@ -214,4 +214,4 @@ docker compose -f runtime/stage12-milvus-v2/docker-compose.yml up -d --wait
 
 交付：[Paired](../evaluation_results.json)、[Direct](../evaluation_results_direct.json)、[V2机器核验](../stage12_completion_v2_verification.json)、[前次失败归档](../stage12_completion_v1_direct_failure.json)。Stage 0–12 PASS；Last Completed Stage12 PASS；Active NONE；Stage13 PENDING/readiness YES；Full Integration Readiness NO。RAGAS及真实LLM Planner NOT RUN。本任务结束后不开始Stage13。
 
-Completion V2 Git发布记录待最终验证后补充；最终HEAD在回复核验，不预写自身哈希。
+Completion V2 GitHub Sync: PASS。correctness fix `91d980ac33138ac51b44c36fc560afe577ef54bb` 和真实证据提交 `8ad0f8affcda20f7ea6be4b4c95f6742584d650a` 已正常Push；`git fetch origin` 后Local HEAD == origin/main == 8ad0f8affcda20f7ea6be4b4c95f6742584d650a，`git status`为clean。发布记录以独立文档提交同步，最终HEAD在回复核验，不预写自身哈希。Stage 12 PASS限真实受控检索范围，Stage 13仍PENDING，当前停止。
