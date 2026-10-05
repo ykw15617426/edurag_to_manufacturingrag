@@ -267,15 +267,20 @@ def validate_manufacturing_indexes(client, collection_name):
         for key in ("field_name", "index_type", "metric_type"):
             if actual.get(key) != spec[key]:
                 raise ManufacturingSchemaMismatchError(collection_name, f"{index_name}.{key}", spec[key], actual.get(key))
+        # SDK 2.5.4 describes server parameters either at top level or in params.
+        # Verify every representation when both exist; conflicting values fail closed.
+        parameters = actual.get("params", {})
+        if not isinstance(parameters, dict):
+            raise ManufacturingSchemaMismatchError(collection_name, f"{index_name}.params", "mapping", parameters)
         for key, expected in spec["params"].items():
-            value = actual.get("params", {}).get(key)
-            # SDK 2.5.4 parses nested params JSON; numeric strings may remain.
-            try:
-                equal = float(value) == expected
-            except (TypeError, ValueError):
-                equal = False
-            if not equal:
-                raise ManufacturingSchemaMismatchError(collection_name, f"{index_name}.{key}", expected, value)
+            values = ([parameters[key]] if key in parameters else []) + ([actual[key]] if key in actual else [])
+            for value in values or [None]:
+                try:
+                    equal = float(value) == expected
+                except (TypeError, ValueError):
+                    equal = False
+                if not equal:
+                    raise ManufacturingSchemaMismatchError(collection_name, f"{index_name}.{key}", expected, value)
 
 
 def ensure_manufacturing_collection(client, collection_name, dense_dim):

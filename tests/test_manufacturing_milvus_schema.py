@@ -308,6 +308,43 @@ def test_index_mismatch_never_loads(change):
     assert "load" not in client.events and "create" not in client.events
 
 
+def flattened_index_client():
+    client = RecordingClient()
+    for index in client.indexes.values():
+        index.update({key: str(value) for key, value in index.pop("params").items()})
+    return client
+
+
+def test_server_254_flattened_index_description_loads():
+    client = flattened_index_client()
+    ensure_manufacturing_collection(client, "synthetic_v1", 4)
+    assert client.events == ["inspect", "load"]
+
+
+@pytest.mark.parametrize("key", ["nlist", "drop_ratio_build"])
+@pytest.mark.parametrize("value", [None, "999", "invalid", "nan", "inf"])
+def test_flattened_index_invalid_or_missing_never_loads(key, value):
+    client = flattened_index_client()
+    index = client.indexes["dense_index" if key == "nlist" else "sparse_index"]
+    if value is None:
+        del index[key]
+    else:
+        index[key] = value
+    with pytest.raises(ManufacturingSchemaMismatchError):
+        ensure_manufacturing_collection(client, "synthetic_v1", 4)
+    assert client.events == ["inspect"]
+
+
+@pytest.mark.parametrize("key", ["nlist", "drop_ratio_build"])
+def test_conflicting_index_parameter_representations_never_load(key):
+    client = flattened_index_client()
+    index = client.indexes["dense_index" if key == "nlist" else "sparse_index"]
+    index["params"] = {key: 999}
+    with pytest.raises(ManufacturingSchemaMismatchError):
+        ensure_manufacturing_collection(client, "synthetic_v1", 4)
+    assert client.events == ["inspect"]
+
+
 @pytest.fixture
 def vector_store_unit(monkeypatch):
     # Isolate heavy imports while executing the repository's real VectorStore methods.
